@@ -16,7 +16,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     public IActionResult Index() {
-      //Sut pik
+      //Mathias er gay
       return View(); 
     }
 
