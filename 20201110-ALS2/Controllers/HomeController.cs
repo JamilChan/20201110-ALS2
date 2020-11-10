@@ -16,6 +16,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     public IActionResult Index() {
+      //Sut pik
       return View(); 
     }
 
