@@ -44,7 +44,6 @@ namespace _20201110_ALS2 {
       } else {
         app.UseExceptionHandler("/Home/Error");
       }
-      app.UseStaticFiles();
 
       app.UseRouting();
 
