@@ -8,7 +8,7 @@ namespace _20201110_ALS2.Models {
   public class Student {
     public long StudentId { get; set; }
     public string Name { get; set; }
-
-
+    public string Education { get; set; }
+    public int Semester { get; set; }
   }
 }
