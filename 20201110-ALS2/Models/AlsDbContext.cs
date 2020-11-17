@@ -11,5 +11,6 @@ namespace _20201110_ALS2.Models {
     }
 
     public DbSet<Student> Students { get; set; }
+
   }
 }

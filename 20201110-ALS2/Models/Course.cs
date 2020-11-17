@@ -10,6 +10,7 @@ namespace _20201110_ALS2.Models {
     public Educator Educator { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public List<Student> StudentList { get; set; }
 
   }
 }
