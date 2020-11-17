@@ -4,34 +4,43 @@
   ViewData["Title"] = "Home Page";
 }
 
+<label class="switch">
+  <input type="checkbox">
+  <span class="slider round"></span>
+</label>
 
 <form asp-action="AbsenceList" method="post">
   <table class="table-bordered bg-white">
     <thead>
-      <tr>
-        <th>Navn</th>
-        <th>Fremmødt</th>
-        <th>Fraværende</th>
-        <th>Virtuelt Tilstede</th>
-      </tr>
+    <tr>
+      <th>Navn</th>
+      <th>Fremmødt</th>
+      <th>Fraværende</th>
+      <th>Virtuelt Tilstede</th>
+    </tr>
     </thead>
     <tbody>
+    @{
+      int i = 0;
+
       @foreach (Student s in Model) {
         <tr>
           <td>
             @s.Name
           </td>
           <td class="text-center">
-            <input type="checkbox" name="attended" value="@s.StudentId" />
+            <input type="checkbox" name="[@i].status" value="attended" checked/>
           </td>
           <td class="text-center">
-            <input type="checkbox" name="absence" value="@s.StudentId" />
+            <input type="checkbox" name="[@i].status" value="absence" />
           </td>
           <td class="text-center">
-            <input type="checkbox" name="virtual" value="@s.StudentId" />
+            <input type="checkbox" name="[@i].status" value="virtuel" />
           </td>
         </tr>
+        i++;
       }
+    }
     </tbody>
   </table>
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace _20201110_ALS2.Controllers {
   public class EducatorController : Controller {
@@ -18,15 +19,23 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult AbsenceList(int[] attended, int[] absence) {
+    public IActionResult AbsenceList(IFormCollection status) {
       if (ModelState.IsValid) {
         
       }
-      List<int[]> list = new List<int[]>();
-      list.Add(attended);
-      list.Add(absence);
 
-      return View("TestView", list);
+      //List<string> temp = new List<string>();
+      //string s = status["1"];
+
+      //return View("TestView", s);
+
+      List<string> temp = new List<string>();
+
+      for (int i = 0; i < status.Count; i++) {
+        temp.Concat(status[i.ToString()]).ToList();
+      }
+
+      return View("TestView", temp);
     }
   }
 }
