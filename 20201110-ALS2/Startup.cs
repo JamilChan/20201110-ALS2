@@ -20,10 +20,13 @@ namespace _20201110_ALS2 {
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services) {
+      services.AddControllersWithViews();
+
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
-      services.AddControllersWithViews();
+      services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
+      services.AddScoped<IStudentRepository, EfStudentRepository>();
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });

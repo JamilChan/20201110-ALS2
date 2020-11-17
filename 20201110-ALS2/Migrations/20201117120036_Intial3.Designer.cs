@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201117120036_Intial3")]
+    partial class Intial3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,20 +113,6 @@ namespace _20201110_ALS2.Migrations
                             StudentId = 1L,
                             Education = "Computer Science",
                             Name = "Mathias",
-                            Semester = 3
-                        },
-                        new
-                        {
-                            StudentId = 2L,
-                            Education = "Computer Science",
-                            Name = "Hans",
-                            Semester = 3
-                        },
-                        new
-                        {
-                            StudentId = 3L,
-                            Education = "Computer Science",
-                            Name = "Claus",
                             Semester = 3
                         });
                 });
