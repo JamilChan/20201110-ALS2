@@ -28,5 +28,21 @@ namespace _20201110_ALS2.Controllers {
 
       return View("TestView", list);
     }
+
+    [HttpGet]
+    public ViewResult CreateCourse() {
+      ViewBag.EducatorList = new List<Educator> { new Educator { Name = "Flemming" }, new Educator { Name = "Hans" } };
+      return View("CreateCourse");
+    }
+
+    [HttpPost]
+    public IActionResult CreateCourse(Course course) {
+      if (ModelState.IsValid) {
+        return RedirectToAction("Index", "Home");
+      } else { 
+        return View("CreateCourse", course); 
+      }
+    }
+
   }
 }

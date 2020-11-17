@@ -1,20 +1,18 @@
 ﻿@model Course
 
-
 @{
   Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-
-  <form asp-action="CreateStudent" method="post">
+  <form asp-action="CreateCourse" method="post">
     <div asp-validation-summary="All"></div>
     <p>
       <label asp-for="Name">Course Name:</label>
       <input asp-for="Name" /> <br /><br />
 
       <label asp-for="Educator">Educator:</label>
-      <input asp-for="Educator" /> <br /><br />
+      @Html.DropDownList("Educator", new SelectList(ViewBag.EducatorList), "Select Educator"); 
+      <br /><br />
 
       <label asp-for="StartDate">Start Date:</label>
       <input asp-for="StartDate" /> <br /><br />
@@ -22,10 +20,7 @@
       <label asp-for="EndDate">End Date:</label>
       <input asp-for="EndDate" /> <br /><br />
 
-      <label asp-for="StudentList">Student List:</label>
-      <input asp-for="StudentList" /> <br /><br />
-
     </p>
 
-    <button type="submit">Submit student</button>
-  </form>
+    <button type="submit">Submit course</button>
+</form>
