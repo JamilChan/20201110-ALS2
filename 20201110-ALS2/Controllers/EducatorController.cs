@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using _20201110_ALS2.Models.ViewModels;
 
 namespace _20201110_ALS2.Controllers {
   public class EducatorController : Controller {
@@ -15,25 +16,20 @@ namespace _20201110_ALS2.Controllers {
     }
 
     public ViewResult AbsenceList() {
-      return View(repoistory.Students);
+      return View(new StudentListViewModel {
+        StatusList = new string[repoistory.Students.ToList().Count],
+        StudentsList = repoistory.Students.ToList()
+      }) ;
     }
 
     [HttpPost]
-    public IActionResult AbsenceList(IFormCollection status) {
+    public IActionResult AbsenceList(StudentListViewModel studenList) {
       if (ModelState.IsValid) {
         
       }
 
-      //List<string> temp = new List<string>();
-      //string s = status["1"];
+      List<string> temp = studenList.StatusList.ToList();
 
-      //return View("TestView", s);
-
-      List<string> temp = new List<string>();
-
-      for (int i = 0; i < status.Count; i++) {
-        temp.Concat(status[i.ToString()]).ToList();
-      }
 
       return View("TestView", temp);
     }
