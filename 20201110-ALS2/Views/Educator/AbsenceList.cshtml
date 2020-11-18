@@ -4,37 +4,45 @@
   ViewData["Title"] = "Home Page";
 }
 
-<label class="switch">
-  <input type="checkbox">
-  <span class="slider round"></span>
-</label>
+<form asp-controller="Educator" asp-action="NewMethod">
+  <div class="p-2 pt-3">
+    <label class="text-white h2"> Tag Fravær </label>
+    <label class="switch float-right">
+      <input type="checkbox" name="IsChecked" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "" )>
+      <span class="slider round"></span>
+    </label>
 
-<form asp-action="AbsenceList" method="post">
-  <table class="table-bordered bg-white">
+    <label class="text-white h6 float-right pt-2 pr-3 @(ViewBag.Check ? "text-success" : "text-danger")"> @(ViewBag.Check ? "Fremmødt" : "Fraværende" ) </label>
+    <label class="text-white h6 float-right pt-2 pr-1"> Automatisk vælg: </label>
+  </div>
+</form>
+
+<form asp-controller="Educator" asp-action="AbsenceList" method="post">
+  <table class="table-bordered table-sm table-striped bg-white">
     <thead>
       <tr>
-        <th>Navn</th>
-        <th>Fremmødt</th>
-        <th>Fraværende</th>
-        <th>Virtuelt Tilstede</th>
+        <th class="w-25 text-center">Navn</th>
+        <th class="w-25 text-center">Fremmødt</th>
+        <th class="w-25 text-center">Fraværende</th>
+        <th class="w-25 text-center">Virtuelt Tilstede</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       @for (int i = 0; i < Model.StudentsList.Count; i++) {
-         
+
         <tr>
           <td>
             @Model.StudentsList[i].Name
           </td>
           <td class="text-center">
-            @*<input type="checkbox" name="statusList[@i].status" value="attended" checked />*@
-            @Html.RadioButtonFor(sl => sl.StatusList[i], @Model.StudentsList[i].StudentId + ":attended")
+            <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == true)">
           </td>
           <td class="text-center">
-            @Html.RadioButtonFor(sl => sl.StatusList[i], @Model.StudentsList[i].StudentId + ":absent")
+            <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == false)">
           </td>
           <td class="text-center">
-            @Html.RadioButtonFor(sl => sl.StatusList[i], @Model.StudentsList[i].StudentId + ":virtual")
+            <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]">
           </td>
         </tr>
       }
@@ -46,3 +54,5 @@
     <input class="btn bg-white" type="submit" value="Submit" />
   </div>
 </form>
+
+<div id="mainframeContens"></div>

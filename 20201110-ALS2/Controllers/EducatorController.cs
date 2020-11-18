@@ -16,22 +16,40 @@ namespace _20201110_ALS2.Controllers {
     }
 
     public ViewResult AbsenceList() {
+      ViewBag.Check = false;
       return View(new StudentListViewModel {
         StatusList = new string[repoistory.Students.ToList().Count],
         StudentsList = repoistory.Students.ToList()
-      }) ;
+      });
     }
 
     [HttpPost]
-    public IActionResult AbsenceList(StudentListViewModel studenList) {
+    public IActionResult AbsenceList(StudentListViewModel studentList) {
       if (ModelState.IsValid) {
-        
-      }
 
-      List<string> temp = studenList.StatusList.ToList();
+      }
+      ViewBag.Check = false;
+      List<string> temp = studentList.StatusList.ToList();
 
 
       return View("TestView", temp);
+    }
+
+    public IActionResult GetFromMainFrame() {
+      return PartialView("AbsenceList");
+    }
+
+    [HttpPost]
+    public IActionResult NewMethod(StudentListViewModel StudentList) {
+      if (StudentList.IsChecked == "on") {
+        StudentList.StudentsList = repoistory.Students.ToList();
+        ViewBag.Check = true;
+        return View("AbsenceList", StudentList);
+      } else {
+        StudentList.StudentsList = repoistory.Students.ToList();
+        ViewBag.Check = false;
+        return View("AbsenceList", StudentList);
+      }
     }
   }
 }
