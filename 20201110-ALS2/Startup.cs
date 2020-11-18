@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +21,18 @@ namespace _20201110_ALS2 {
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services) {
+      //Db Contexts
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
+
+      services.AddDbContext<AlsIdentityDbContext>(options =>
+        options.UseSqlServer(Configuration.GetConnectionString("AlsIdentityDbConnection")));
+
+      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsIdentityDbContext>()
+        .AddDefaultTokenProviders();
+
+      //Dependancy Injected Repositories
+      services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
 
       services.AddControllersWithViews();
 
@@ -48,12 +59,14 @@ namespace _20201110_ALS2 {
       app.UseRouting();
 
       app.UseAuthorization();
+      app.UseAuthentication();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
       });
+      IdentitySeedData.EnsurePopulated(app);
     }
   }
 }

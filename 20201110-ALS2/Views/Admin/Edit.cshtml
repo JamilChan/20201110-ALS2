@@ -1,0 +1,30 @@
+﻿@model Educator
+@{
+  ViewBag.Title = "Rediger Underviser";
+  Layout = "_AdminLayout";
+}
+
+<html>
+<head>
+  <meta name="viewport" content="width-device-width" />
+  <title>Undervisere</title>
+</head>
+<style>
+  body {background-color: darkgray;} 
+</style>
+<body>
+  <form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="EducatorId" />
+    <div class="form-group">
+      <label asp-for="Name"></label>
+      <div><span class="text-danger" asp-validation-for="Name"></span></div>
+      <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="text-center">
+      <button class="btn btn-lg btn-success" type="submit">Gem</button>
+      <a class="btn btn-lg btn-light" asp-action="Index">Cancel</a>
+    </div>
+  </form>
+</body>
+</html>
+
