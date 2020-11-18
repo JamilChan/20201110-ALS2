@@ -1,4 +1,4 @@
-﻿@model Course
+﻿@model _20201110_ALS2.Models.ViewModels.CreateCourseViewModel
 
 @{
   Layout = "_Layout";
@@ -7,18 +7,18 @@
   <form asp-action="CreateCourse" method="post">
     <div asp-validation-summary="All"></div>
     <p>
-      <label asp-for="Name">Course Name:</label>
-      <input asp-for="Name" /> <br /><br />
+      <label asp-for="Crs.Name">Course Name:</label>
+      <input asp-for="Crs.Name" /> <br /><br />
 
-      <label asp-for="Educator">Educator:</label>
-      @Html.DropDownList("Educator", new SelectList(ViewBag.EducatorList), "Select Educator"); 
+      <label asp-for="SelectedEducator">Educator:</label>
+      @Html.DropDownListFor(m => m.SelectedEducator, new SelectList(Model.EducatorNameList), "Select Educator")
       <br /><br />
 
-      <label asp-for="StartDate">Start Date:</label>
-      <input asp-for="StartDate" /> <br /><br />
+      <label asp-for="Crs.StartDate">Start Date:</label>
+      <input asp-for="Crs.StartDate" /> <br /><br />
 
-      <label asp-for="EndDate">End Date:</label>
-      <input asp-for="EndDate" /> <br /><br />
+      <label asp-for="Crs.EndDate">End Date:</label>
+      <input asp-for="Crs.EndDate" /> <br /><br />
 
     </p>
 

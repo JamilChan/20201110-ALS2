@@ -27,6 +27,7 @@ namespace _20201110_ALS2 {
 
       services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
       services.AddScoped<IStudentRepository, EfStudentRepository>();
+      services.AddScoped<ICourseRepository, EfCourseRepository>();
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });

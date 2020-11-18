@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _20201110_ALS2.Controllers {
   public class EducatorController : Controller {
-    private IStudentRepository repoistory;
+    private IStudentRepository studentRepo;
+    private ICourseRepository courseRepo;
 
-    public EducatorController(IStudentRepository repoistory) {
-      this.repoistory = repoistory;
+    public EducatorController(IStudentRepository studentRepo , ICourseRepository courseRepo) {
+      this.studentRepo = studentRepo;
+      this.courseRepo = courseRepo;
     }
 
+
     public ViewResult AbsenceList() {
-      return View(repoistory.Students);
+      return View(studentRepo.Students);
     }
 
     [HttpPost]
@@ -31,18 +35,30 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult CreateCourse() {
-      ViewBag.EducatorList = new List<Educator> { new Educator { Name = "Flemming" }, new Educator { Name = "Hans" } };
-      return View("CreateCourse");
+      CreateCourseViewModel CCVM = new CreateCourseViewModel { 
+        EducatorList = new List<Educator> { new Educator {EducatorId = 1, Name = "Flemming" }, new Educator { EducatorId = 2, Name = "Hans" } } };
+      CCVM.GetEducatorsName();
+      return View("CreateCourse", CCVM);
     }
 
     [HttpPost]
-    public IActionResult CreateCourse(Course course) {
+    public IActionResult CreateCourse(CreateCourseViewModel CCVM) {
+      List<Educator> educatorList = new List<Educator> { new Educator { EducatorId = 1, Name = "Flemming" }, new Educator { EducatorId = 2, Name = "Hans" } };
       if (ModelState.IsValid) {
+        foreach (Educator e in educatorList) {
+          if (e.Name == CCVM.SelectedEducator) {
+            CCVM.Crs.Educator = e;
+            break;
+          }
+        }
+        courseRepo.SaveCourse(CCVM.Crs);
+        TempData["message"] = $"{CCVM.Crs.Name} has been saved";
         return RedirectToAction("Index", "Home");
-      } else { 
-        return View("CreateCourse", course); 
+      } else {
+        CCVM.EducatorList = educatorList;
+        CCVM.GetEducatorsName();
+        return View("CreateCourse", CCVM); 
       }
     }
-
   }
 }

@@ -9,7 +9,6 @@ namespace _20201110_ALS2.Models {
     public int CourseId { get; set; }
     [Required]
     public string Name { get; set; }
-    //[Required]
     public Educator Educator { get; set; }
 
     [Required]
