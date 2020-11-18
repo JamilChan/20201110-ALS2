@@ -25,11 +25,7 @@ namespace _20201110_ALS2 {
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
-      services.AddDbContext<AlsIdentityDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("AlsIdentityDbConnection")));
 
-      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsIdentityDbContext>()
-        .AddDefaultTokenProviders();
 
       //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
@@ -58,7 +54,7 @@ namespace _20201110_ALS2 {
 
       app.UseRouting();
 
-      app.UseAuthorization();
+      //app.UseAuthorization();
       app.UseAuthentication();
 
       app.UseEndpoints(endpoints => {
@@ -66,7 +62,6 @@ namespace _20201110_ALS2 {
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
       });
-      IdentitySeedData.EnsurePopulated(app);
     }
   }
 }
