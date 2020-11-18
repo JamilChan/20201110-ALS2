@@ -12,5 +12,12 @@ namespace _20201110_ALS2.Models {
     }
 
     public IQueryable<Absence> Absences => context.Absences;
+
+    public void CreateAbsence(List<Absence> al) {
+      foreach (Absence a in al) {
+        context.Absences.Add(a);
+      }
+      context.SaveChanges();
+    }
   }
 }

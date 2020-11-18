@@ -9,5 +9,6 @@ namespace _20201110_ALS2.Models {
     public Student Student { get; set; }
     public Course Course { get; set; }
     public DateTime Date { get; set; }
+    public String Status { get; set; }
   }
 }

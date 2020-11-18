@@ -4,7 +4,7 @@
   ViewData["Title"] = "Home Page";
 }
 
-<form asp-controller="Educator" asp-action="NewMethod">
+<form asp-controller="Educator" asp-action="Toggle">
   <div class="p-2 pt-3">
     <label class="text-white h2"> Tag Fravær </label>
     <label class="switch float-right">
@@ -18,7 +18,7 @@
 </form>
 
 <form asp-controller="Educator" asp-action="AbsenceList" method="post">
-  <table class="table-bordered table-sm table-striped bg-white">
+  <table class="table-bordered table-sm table-striped table-dark text-white">
     <thead>
       <tr>
         <th class="w-25 text-center">Navn</th>
@@ -50,8 +50,8 @@
     </tbody>
   </table>
 
-  <div>
-    <input class="btn bg-white" type="submit" value="Submit" />
+  <div class="pt-3">
+    <input class="btn btn-success" type="submit" value="Submit" />
   </div>
 </form>
 
