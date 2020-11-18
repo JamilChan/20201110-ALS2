@@ -13,15 +13,13 @@ namespace _20201110_ALS2.Models {
     public DbSet<Student> Students { get; set; }
     public DbSet<Absence> Absences { get; set; }
     public DbSet<Course> Courses { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-      modelBuilder.Seed();
-    }
     public DbSet<Educator> Educators { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
       modelBuilder.SeedEducators();
+      modelBuilder.Seed();
+      //modelBuilder.Entity<Course>().HasOne(c => c.Educator).WithOne(e => e.Name).Map(m => { m.MapLeftKey("EducatorId"); m.MapRightKey("EducatorId"); m.ToTable("Educators") });
     }
   }
 }

@@ -8,7 +8,7 @@ namespace _20201110_ALS2.Models.ViewModels {
   public class CreateCourseViewModel {
 
     public Course Crs { get; set; } = new Course();
-    public List<Educator> EducatorList { get; set; }
+    public IQueryable<Educator> EducatorList { get; set; }
     public List<string> EducatorNameList { get; set; } = new List<string>();
     [Required]
     public string SelectedEducator { get; set; }

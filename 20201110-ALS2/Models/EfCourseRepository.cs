@@ -13,6 +13,7 @@ namespace _20201110_ALS2.Models {
 
     public IQueryable<Course> Courses => context.Courses;
 
+
     public void SaveCourse(Course course) {
       if (course.CourseId == 0) {
         context.Courses.Add(course);

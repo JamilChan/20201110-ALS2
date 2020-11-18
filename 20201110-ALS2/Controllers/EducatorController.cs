@@ -10,10 +10,12 @@ namespace _20201110_ALS2.Controllers {
   public class EducatorController : Controller {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
+    private IEducatorRepository educatorRepo;
 
-    public EducatorController(IStudentRepository studentRepo , ICourseRepository courseRepo) {
+    public EducatorController(IStudentRepository studentRepo , ICourseRepository courseRepo, IEducatorRepository educatorRepo) {
       this.studentRepo = studentRepo;
       this.courseRepo = courseRepo;
+      this.educatorRepo = educatorRepo;
     }
 
 
@@ -35,17 +37,16 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult CreateCourse() {
-      CreateCourseViewModel CCVM = new CreateCourseViewModel { 
-        EducatorList = new List<Educator> { new Educator {EducatorId = 1, Name = "Flemming" }, new Educator { EducatorId = 2, Name = "Hans" } } };
+      CreateCourseViewModel CCVM = new CreateCourseViewModel();
+      CCVM.EducatorList = educatorRepo.GetAll();
       CCVM.GetEducatorsName();
       return View("CreateCourse", CCVM);
     }
 
     [HttpPost]
     public IActionResult CreateCourse(CreateCourseViewModel CCVM) {
-      List<Educator> educatorList = new List<Educator> { new Educator { EducatorId = 1, Name = "Flemming" }, new Educator { EducatorId = 2, Name = "Hans" } };
       if (ModelState.IsValid) {
-        foreach (Educator e in educatorList) {
+        foreach (Educator e in educatorRepo.GetAll()) {
           if (e.Name == CCVM.SelectedEducator) {
             CCVM.Crs.Educator = e;
             break;
@@ -55,10 +56,18 @@ namespace _20201110_ALS2.Controllers {
         TempData["message"] = $"{CCVM.Crs.Name} has been saved";
         return RedirectToAction("Index", "Home");
       } else {
-        CCVM.EducatorList = educatorList;
+        CCVM.EducatorList = educatorRepo.GetAll();
         CCVM.GetEducatorsName();
         return View("CreateCourse", CCVM); 
       }
     }
+
+    public ViewResult ViewCourse() {
+      
+      return View("ViewCourse", courseRepo.Courses);
+
+    }
+
+
   }
 }
