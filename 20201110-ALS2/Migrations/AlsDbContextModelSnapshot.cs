@@ -85,6 +85,34 @@ namespace _20201110_ALS2.Migrations
                     b.ToTable("Educator");
                 });
 
+            modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
+                {
+                    b.Property<int>("EducatorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EducatorId");
+
+                    b.ToTable("Educators");
+
+                    b.HasData(
+                        new
+                        {
+                            EducatorId = 1,
+                            Name = "God Flemse"
+                        },
+                        new
+                        {
+                            EducatorId = 2,
+                            Name = "Big Daddy D"
+                        });
+                });
+
             modelBuilder.Entity("_20201110_ALS2.Models.Student", b =>
                 {
                     b.Property<long>("StudentId")

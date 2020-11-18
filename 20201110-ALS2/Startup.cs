@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,14 +21,19 @@ namespace _20201110_ALS2 {
     public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services) {
-      services.AddControllersWithViews();
-
+      //Db Contexts
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
       services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
+
+
+      //Dependancy Injected Repositories
+      services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
+
+      services.AddControllersWithViews();
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });
@@ -51,7 +57,8 @@ namespace _20201110_ALS2 {
 
       app.UseRouting();
 
-      app.UseAuthorization();
+      //app.UseAuthorization();
+      app.UseAuthentication();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(
