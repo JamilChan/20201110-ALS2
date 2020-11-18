@@ -18,6 +18,7 @@ namespace _20201110_ALS2.Controllers {
       this.signInManager = signInManager;
     }
 
+    [HttpGet]
     [AllowAnonymous]
     public IActionResult Login(string returnUrl) {
       return View(new LoginModel { ReturnUrl = returnUrl });
@@ -31,14 +32,14 @@ namespace _20201110_ALS2.Controllers {
         if (user != null) {
           await signInManager.SignOutAsync();
           if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded) {
-            return Redirect(loginModel?.ReturnUrl ?? "/Home/Index"); //Hvor skal der sendes hen til??? - View skal vel ikke skrives når det er igennem hvor man kom fra?
+            return Redirect(loginModel?.ReturnUrl ?? "/Home/Index"); 
           }
         }
       }
       ModelState.AddModelError("", "Invalid name or password");
       return View("Login", loginModel);
     }
-
+    
     public async Task<RedirectResult> Logout(string returnUrl = "/") {
       await signInManager.SignOutAsync();
       return Redirect(returnUrl);

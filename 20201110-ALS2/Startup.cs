@@ -25,7 +25,7 @@ namespace _20201110_ALS2 {
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
-
+      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
 
       //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
@@ -54,7 +54,7 @@ namespace _20201110_ALS2 {
 
       app.UseRouting();
 
-      //app.UseAuthorization();
+      app.UseAuthorization();
       app.UseAuthentication();
 
       app.UseEndpoints(endpoints => {

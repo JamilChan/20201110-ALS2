@@ -9,7 +9,7 @@ namespace _20201110_ALS2.Models.ViewModels {
     [Required]
     public string Name { get; set; }
     [Required]
-    [UIHint("password")]
+    [DataType(DataType.Password)]
     public string Password { get; set; }
 
     public string ReturnUrl { get; set; } = "/";

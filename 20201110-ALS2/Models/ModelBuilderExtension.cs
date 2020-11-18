@@ -13,5 +13,15 @@ namespace _20201110_ALS2.Models {
       new Educator { EducatorId = 2, Name = "Big Daddy D" }
       );
     }
+    public static void SeedAdmin(this ModelBuilder modelBuilder)
+    {
+      string adminUser = "admin";
+      string adminPassword = "Secret123$";
+      
+      PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
+      modelBuilder.Entity<IdentityUser>().HasData(
+      new IdentityUser { Id = "1", UserName = adminUser, NormalizedUserName = "ADMIN", PasswordHash = hasher.HashPassword(null, adminPassword) }
+        );
+    }
   }
 }

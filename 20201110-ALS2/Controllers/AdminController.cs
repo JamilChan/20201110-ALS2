@@ -8,14 +8,14 @@ using _20201110_ALS2.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace _20201110_ALS2.Controllers {
-  //[Authorize]
+  [Authorize]
   public class AdminController : Controller {
     private IEducatorRepository repository;
 
     public AdminController(IEducatorRepository repository) {
       this.repository = repository;
     }
-
+    
     public IActionResult Index() {
       return View("Index", repository.GetAll());
     }

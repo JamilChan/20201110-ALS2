@@ -16,6 +16,7 @@ namespace _20201110_ALS2.Models {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
       modelBuilder.SeedEducators();
+      modelBuilder.SeedAdmin();
     }
   }
 }
