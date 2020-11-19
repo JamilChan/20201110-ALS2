@@ -8,21 +8,22 @@
 
     <hr class="bg-white" />
 
-    <div class="border p-3 row">
-      <div class="col-5">
+    <div class="border pt-2 pb-2 row">
+      <div class="col-1 pt-2">
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
           <input type="hidden" asp-for="@Model.Direction" value="Backward" />
           <input class="btn btn-lg btn-success" type="submit" value="<">
         </form>
       </div>
-      <div class="col-6 pt-1">
+      <div class="col-10 text-center">
+        <h3 class="text-white">@Model.Date.DayOfWeek</h3>
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Direction" value="" />
-          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()"/>
+          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()" />
         </form>
       </div>
-      <div class="col-1">
+      <div class="col-1 pt-2">
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
           <input type="hidden" asp-for="@Model.Direction" value="Forward" />
@@ -30,5 +31,19 @@
         </form>
       </div>
     </div>
+
+    <div class="pt-2 row">
+      @if (Model.Courses != null) {
+        @foreach (Course course in Model.Courses) {
+          <a class="col-6 card mt-3 mb-1 p-5 bg-dark border-white btn text-white" asp-controller="Educator" asp-action="AbsenceList">
+            <h2>@course.Name</h2>
+          </a>
+        }
+      }
+    </div>
+  </div>
+
+  <div>
+    <label class="text-white">@Model.test</label>
   </div>
 </body>

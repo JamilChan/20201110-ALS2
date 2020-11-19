@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using _20201110_ALS2.Models;
+﻿using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace _20201110_ALS2.Controllers {
   public class HomeController : Controller {
 
     [HttpGet]
     public IActionResult Index() {
-      HomeIndexViewModel hi = new HomeIndexViewModel();
+      HomeIndexViewModel hi = new HomeIndexViewModel {
+        Date = DateTime.Now,
+        Courses = new List<Course>()
+      };
 
-      hi.Date = DateTime.Now;
-      string[] date = DateTime.Now.ToString("O").Split("T", 2);
-      hi.DateAsString = date[0];
+      List<Course> identityCourses = testCourses();
+      dayOfWeekCheck(identityCourses, hi);
 
       return View("Index", hi);
     }
 
     [HttpPost]
     public IActionResult Index(HomeIndexViewModel hi) {
-
+      hi.Courses = new List<Course>();
       DateTime dateTime = hi.Date;
 
       if (hi.Direction == "Backward") {
@@ -36,10 +33,75 @@ namespace _20201110_ALS2.Controllers {
 
       hi.Date = dateTime;
 
-      string[] date = hi.Date.ToString("O").Split("T", 2);
-      hi.DateAsString = date[0];
+      List<Course> identityCourses = testCourses();
+      dayOfWeekCheck(identityCourses, hi);
 
       return View("Index", hi);
     }
+
+    private void dayOfWeekCheck(List<Course> identityCourses, HomeIndexViewModel hi) {
+
+      string[] date = hi.Date.ToString("O").Split("T", 2);
+      hi.DateAsString = date[0];
+
+      DayOfWeek dow = hi.Date.DayOfWeek;
+
+      foreach (Course c in identityCourses) {
+        if (c.StartDate < hi.Date && hi.Date < c.EndDate) {
+          if (dow == DayOfWeek.Monday && c.Week.Monday) {
+            hi.Courses.Add(c);
+          } else if (dow == DayOfWeek.Tuesday && c.Week.Tuesday) {
+            hi.Courses.Add(c);
+          } else if (dow == DayOfWeek.Wednesday && c.Week.Wednesday) {
+            hi.Courses.Add(c);
+          } else if (dow == DayOfWeek.Thursday && c.Week.Thursday) {
+            hi.Courses.Add(c);
+          } else if (dow == DayOfWeek.Friday && c.Week.Friday) {
+            hi.Courses.Add(c);
+          }
+        }
+      }
+    }
+
+    private List<Course> testCourses() {
+      //Test Course Delete Later! Something get on IdentityUser
+      Course course1 = new Course {
+        CourseId = 1,
+        Name = "SysTest",
+        Educator = null,
+        Week = new Week {
+          Monday = true,
+          Tuesday = false,
+          Wednesday = false,
+          Thursday = true,
+          Friday = true
+        },
+        StartDate = DateTime.Today.AddMonths(-1),
+        EndDate = DateTime.Today.AddMonths(1)
+      };
+
+      Course course2 = new Course {
+        CourseId = 2,
+        Name = "ProtekTest",
+        Educator = null,
+        Week = new Week {
+          Monday = false,
+          Tuesday = true,
+          Wednesday = false,
+          Thursday = true,
+          Friday = false
+        },
+        StartDate = DateTime.Today.AddMonths(-1),
+        EndDate = DateTime.Today.AddMonths(1)
+      };
+
+      List<Course> identityCourses = new List<Course>();
+      identityCourses.Add(course1);
+      identityCourses.Add(course2);
+      //Test Course Delete Later!
+
+      return identityCourses;
+    }
   }
 }
+
