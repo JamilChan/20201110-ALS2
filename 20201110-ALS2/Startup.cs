@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +32,11 @@ namespace _20201110_ALS2 {
       //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
 
-      services.AddControllersWithViews();
+      services.AddControllersWithViews(options =>
+      {
+        AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+        options.Filters.Add(new AuthorizeFilter(policy));
+      });
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });
