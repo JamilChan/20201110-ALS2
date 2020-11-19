@@ -1,0 +1,18 @@
+﻿@model Course
+@*<a class="col-6 card mt-3 mb-1 p-5 bg-dark border-white btn text-white" asp-controller="Educator" asp-action="AbsenceList" >
+    <h2>@Model.Name</h2>
+  </a>*@
+
+<form asp-controller="Educator" asp-action="Test">
+  <input type="hidden" value="@Model.CourseId" asp-for="@Model.CourseId" />
+  <input type="hidden" value="@Model.Name" asp-for="@Model.Name" />
+  <input type="hidden" value="@Model.EndDate" asp-for="@Model.EndDate" />
+  <input type="hidden" value="@Model.Week.WeekId" asp-for="@Model.Week.WeekId" />
+  <input type="hidden" value="@Model.Week.Monday" asp-for="@Model.Week.Monday" />
+  <input type="hidden" value="@Model.Week.Tuesday" asp-for="@Model.Week.Tuesday" />
+  <input type="hidden" value="@Model.Week.Wednesday" asp-for="@Model.Week.Wednesday" />
+  <input type="hidden" value="@Model.Week.Thursday" asp-for="@Model.Week.Thursday" />
+  <input type="hidden" value="@Model.Week.Friday" asp-for="@Model.Week.Friday" />
+  <input type="hidden" value="@Model.Educator" asp-for="@Model.Educator" />
+  <button class="col-6 card mt-3 mb-1 bg-dark border-white btn text-white" type="submit">@Model.Name</button>
+</form>

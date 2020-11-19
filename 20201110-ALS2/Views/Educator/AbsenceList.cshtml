@@ -18,6 +18,10 @@
 </form>
 
 <form asp-controller="Educator" asp-action="AbsenceList" method="post">
+  <input type="hidden" value="@Model.Course.CourseId" asp-for="Course.CourseId" />
+  <input type="hidden" value="@Model.Course.EndDate" asp-for="@Model.Course.EndDate" />
+  <input type="hidden" value="@Model.Course.Week" asp-for="@Model.Course.Week" />
+  <input type="hidden" value="@Model.Course.Educator" asp-for="@Model.Course.Educator" />
   <table class="table-bordered table-sm table-striped table-dark text-white">
     <thead>
       <tr>
@@ -55,4 +59,4 @@
   </div>
 </form>
 
-<div id="mainframeContens"></div>
+<div class="text-white">Course: @Model.Course.CourseId</div>

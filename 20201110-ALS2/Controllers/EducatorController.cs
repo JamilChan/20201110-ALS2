@@ -17,14 +17,15 @@ namespace _20201110_ALS2.Controllers {
       this.absenceRepository = absenceRepository;
     }
 
-    [HttpGet]
-    public ViewResult AbsenceList() {
-      ViewBag.Check = false;
-      return View(new StudentListViewModel {
-        StatusList = new string[studentRepository.Students.ToList().Count],
-        StudentsList = studentRepository.Students.ToList()
-      });
-    }
+    //[HttpGet]
+    //public ViewResult AbsenceList(Course course) {
+    //  ViewBag.Check = false;
+    //  return View(new StudentListViewModel {
+    //    StatusList = new string[studentRepository.Students.ToList().Count],
+    //    StudentsList = studentRepository.Students.ToList(),
+    //    Course = course
+    //  });
+    //}
 
     [HttpPost]
     public IActionResult AbsenceList(StudentListViewModel slvm) {
@@ -41,7 +42,7 @@ namespace _20201110_ALS2.Controllers {
               Absence absence = new Absence {
                 Student = student,
                 Date = DateTime.Now,
-                Course = null,
+                Course = slvm.Course,
                 Status = split[1]
               };
               absenceList.Add(absence);
@@ -54,7 +55,18 @@ namespace _20201110_ALS2.Controllers {
 
       ViewBag.Check = false;
 
-      return View("TestView", temp);
+      return View("TestView", slvm.StatusList);
+      //return View("TestView", slvm.Course.Name);
+    }
+
+    [HttpPost]
+    public IActionResult Test(Course course) {
+      ViewBag.Check = true;
+      return View("AbsenceList", new StudentListViewModel {
+        StatusList = new string[studentRepository.Students.ToList().Count],
+        StudentsList = studentRepository.Students.ToList(),
+        Course = course
+      });
     }
 
     [HttpPost]

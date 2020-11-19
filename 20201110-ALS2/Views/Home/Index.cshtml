@@ -32,18 +32,24 @@
       </div>
     </div>
 
-    <div class="pt-2 row">
-      @if (Model.Courses != null) {
-        @foreach (Course course in Model.Courses) {
-          <a class="col-6 card mt-3 mb-1 p-5 bg-dark border-white btn text-white" asp-controller="Educator" asp-action="AbsenceList">
-            <h2>@course.Name</h2>
-          </a>
-        }
-      }
-    </div>
-  </div>
+    @*<form asp-controller="Educator" asp-action="AbsenceList" method="post">
+        <div class="pt-2 row">
+          @if (Model.Courses != null) {
+            @foreach (Course course in Model.Courses) {
+              <a class="col-6 card mt-3 mb-1 p-5 bg-dark border-white btn text-white">
+                <h2>@course.Name</h2>
+              </a>
+            }
+          }
+        </div>
+      </form>*@
 
-  <div>
-    <label class="text-white">@Model.test</label>
+
+
+    @if (Model.Courses != null) {
+      @foreach (Course course in Model.Courses) {
+        <partial name="CourseCard" model="@course" />
+      }
+    }
   </div>
 </body>
