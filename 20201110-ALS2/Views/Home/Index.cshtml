@@ -1,8 +1,34 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model _20201110_ALS2.Models.ViewModels.HomeIndexViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body class="bg-dark">
+  <div class="pt-3">
+    <h1 class="text-white">
+      Main Menu
+    </h1>
+
+    <hr class="bg-white" />
+
+    <div class="border p-3 row">
+      <div class="col-5">
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
+          <input type="hidden" asp-for="@Model.Direction" value="Backward" />
+          <input class="btn btn-lg btn-success" type="submit" value="<">
+        </form>
+      </div>
+      <div class="col-6 pt-1">
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Direction" value="" />
+          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()"/>
+        </form>
+      </div>
+      <div class="col-1">
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
+          <input type="hidden" asp-for="@Model.Direction" value="Forward" />
+          <input class="btn btn-lg btn-success float-right" type="submit" value=">">
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
