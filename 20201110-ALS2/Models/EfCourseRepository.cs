@@ -25,6 +25,7 @@ namespace _20201110_ALS2.Models {
           dbEntry.Educator = course.Educator;
           dbEntry.StartDate = course.StartDate;
           dbEntry.EndDate = course.EndDate;
+
         }
       }
       context.SaveChanges();

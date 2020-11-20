@@ -15,19 +15,20 @@
     </tr>
 
     @foreach (Course course in Model) {
-      <tr>
-        <td>@course.Name</td>
-        <td>@course.Educator</td>
-        <td>@course.StartDate.Value.ToShortDateString()</td>
-        <td>@course.EndDate.Value.ToShortDateString()</td>
-        <td class="text-center">
-          <form asp-action="DeleteCourse" method="post">
-            <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Edit</a>
-            <input type="hidden" name="CourseId" value="@course.CourseId" />
-            <button class="btn btn-sm btn-info" type="submit">Delete</button>
-          </form>
-        </td>
-      </tr>
+  <tr>
+    <td>@course.Name</td>
+    <td>@course.Educator</td>
+    <td>@course.StartDate.Value.ToShortDateString()</td>
+    <td>@course.EndDate.Value.ToShortDateString()</td>
+    <td class="text-center">
+      <form asp-action="DeleteCourse" method="post">
+        <a class="btn btn-sm btn-primary" asp-action="ViewThisCourse" asp-route-courseId="@course.CourseId">Se mere</a>
+        <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Ændre</a>
+        <input type="hidden" name="CourseId" value="@course.CourseId" />
+        <button class="btn btn-sm btn-info" type="submit">Slet</button>
+      </form>
+    </td>
+  </tr>
     }
   </table>
 

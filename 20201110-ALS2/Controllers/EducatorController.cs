@@ -86,6 +86,14 @@ namespace _20201110_ALS2.Controllers {
       return View("ViewCourses", courseRepo.Courses);
     }
 
+    //[HttpGet]
+    //public ViewResult ViewThisCourse(int CourseId) {
+    //  CreateCourseViewModel CCVM = CreateCCVM();
+    //  CCVM.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == CourseId);
+    //  CCVM.SelectedEducator = CCVM.Crs.Educator.Name;
+    //  return View("ViewThisCourse", CCVM);
+    //}
+
     //Service metode
     public CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel CCVM = new CreateCourseViewModel();
