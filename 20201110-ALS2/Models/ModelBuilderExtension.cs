@@ -13,5 +13,8 @@ namespace _20201110_ALS2.Models {
       new Educator { EducatorId = 2, Name = "Big Daddy D" }
       );
     }
+    public static void EtEllerAndet(this ModelBuilder modelBuilder) {
+      modelBuilder.Entity<StudentCourse>().HasKey(k => new { k.CourseId, k.StudentId });
+    }
   }
 }

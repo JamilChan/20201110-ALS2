@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public class Course {
-    public int CourseId { get; set; }
+    public long CourseId { get; set; }
     [Required]
     public string Name { get; set; }
     [ForeignKey("Educator")]
-    public int EducatorId { get; set; }
-    public virtual Educator Educator { get; set; }
+    public long EducatorId { get; set; }
+    public Educator Educator { get; set; }
+    [ForeignKey("Week")]
+    public long WeekId { get; set; }
+    public Week Week { get; set; }
 
     [Required]
     [DataType(DataType.Date)]
@@ -20,6 +23,6 @@ namespace _20201110_ALS2.Models {
     [Required]
     [DataType(DataType.Date)]
     public DateTime? EndDate { get; set; }
-
+    public ICollection<StudentCourse> StudentCourses { get; set; }
   }
 }

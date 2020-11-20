@@ -10,5 +10,6 @@ namespace _20201110_ALS2.Models {
     public string Name { get; set; }
     public string Education { get; set; }
     public int Semester { get; set; }
+    public ICollection<StudentCourse> StudentCourses { get; set; }
   }
 }

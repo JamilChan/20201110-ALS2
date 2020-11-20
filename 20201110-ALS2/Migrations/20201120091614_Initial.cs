@@ -50,7 +50,7 @@ namespace _20201110_ALS2.Migrations
                 name: "Educators",
                 columns: table => new
                 {
-                    EducatorId = table.Column<int>(type: "int", nullable: false)
+                    EducatorId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -72,6 +72,23 @@ namespace _20201110_ALS2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.StudentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Weeks",
+                columns: table => new
+                {
+                    WeekId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Monday = table.Column<bool>(type: "bit", nullable: false),
+                    Tuesday = table.Column<bool>(type: "bit", nullable: false),
+                    Wednesday = table.Column<bool>(type: "bit", nullable: false),
+                    Thursday = table.Column<bool>(type: "bit", nullable: false),
+                    Friday = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Weeks", x => x.WeekId);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,10 +201,11 @@ namespace _20201110_ALS2.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    CourseId = table.Column<int>(type: "int", nullable: false)
+                    CourseId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EducatorId = table.Column<int>(type: "int", nullable: true),
+                    EducatorId = table.Column<long>(type: "bigint", nullable: false),
+                    WeekId = table.Column<long>(type: "bigint", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -199,7 +217,13 @@ namespace _20201110_ALS2.Migrations
                         column: x => x.EducatorId,
                         principalTable: "Educators",
                         principalColumn: "EducatorId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Courses_Weeks_WeekId",
+                        column: x => x.WeekId,
+                        principalTable: "Weeks",
+                        principalColumn: "WeekId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,7 +233,7 @@ namespace _20201110_ALS2.Migrations
                     AbsenceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<long>(type: "bigint", nullable: true),
-                    CourseId = table.Column<int>(type: "int", nullable: true),
+                    CourseId = table.Column<long>(type: "bigint", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -229,13 +253,37 @@ namespace _20201110_ALS2.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "StudentCourse",
+                columns: table => new
+                {
+                    CourseId = table.Column<long>(type: "bigint", nullable: false),
+                    StudentId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentCourse", x => new { x.StudentId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_StudentCourse_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentCourse_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "StudentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Educators",
                 columns: new[] { "EducatorId", "Name" },
                 values: new object[,]
                 {
-                    { 1, "God Flemse" },
-                    { 2, "Big Daddy D" }
+                    { 1L, "God Flemse" },
+                    { 2L, "Big Daddy D" }
                 });
 
             migrationBuilder.InsertData(
@@ -301,6 +349,16 @@ namespace _20201110_ALS2.Migrations
                 name: "IX_Courses_EducatorId",
                 table: "Courses",
                 column: "EducatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_WeekId",
+                table: "Courses",
+                column: "WeekId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentCourse_CourseId",
+                table: "StudentCourse",
+                column: "CourseId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -324,10 +382,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Courses");
-
-            migrationBuilder.DropTable(
-                name: "Students");
+                name: "StudentCourse");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -336,7 +391,16 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Students");
+
+            migrationBuilder.DropTable(
                 name: "Educators");
+
+            migrationBuilder.DropTable(
+                name: "Weeks");
         }
     }
 }

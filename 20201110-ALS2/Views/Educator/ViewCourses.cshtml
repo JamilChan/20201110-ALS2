@@ -17,12 +17,12 @@
     @foreach (Course course in Model) {
       <tr>
         <td>@course.Name</td>
-        <td>@course.Educator.Name</td>
-        <td>@course.StartDate</td>
-        <td>@course.EndDate</td>
+        <td>@course.Educator</td>
+        <td>@course.StartDate.Value.ToShortDateString()</td>
+        <td>@course.EndDate.Value.ToShortDateString()</td>
         <td class="text-center">
-          <form asp-action="Delete" method="post">
-            <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-educatorId="@course.CourseId">Edit</a>
+          <form asp-action="DeleteCourse" method="post">
+            <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Edit</a>
             <input type="hidden" name="CourseId" value="@course.CourseId" />
             <button class="btn btn-sm btn-info" type="submit">Delete</button>
           </form>
