@@ -1,0 +1,32 @@
+﻿@model CreateRoleViewModel
+
+@{
+  ViewBag.Title = "Opret Rolle";
+  Layout = "_AdminLayout";
+}
+
+<html>
+<head>
+  <meta name="viewport" content="width-device-width" />
+  <title>Rolle</title>
+</head>
+<style>
+  body {
+    background-color: darkgray;
+  }
+</style>
+<body>
+  <form asp-action="CreateRole" method="post">
+    <div class="form-group">
+      <label asp-for="RoleName"></label>
+      <div><span class="text-danger" asp-validation-for="RoleName"></span></div>
+      <input asp-for="RoleName" class="form-control" />
+    </div>
+    <div class="text-center">
+      <button class="btn btn-lg btn-success" type="submit">Gem</button>
+      <a class="btn btn-lg btn-light" asp-action="ListRoles">Annuller</a>
+    </div>
+  </form>
+</body>
+</html>
+

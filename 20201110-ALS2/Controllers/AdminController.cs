@@ -15,51 +15,51 @@ namespace _20201110_ALS2.Controllers {
     private readonly UserManager<IdentityUser> userManager;
     private readonly RoleManager<IdentityRole> roleManager;
 
-    public AdminController(IEducatorRepository repository, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager) {
+    public AdminController(IEducatorRepository repository, UserManager<IdentityUser> userManager,
+      RoleManager<IdentityRole> roleManager) {
       this.repository = repository;
       this.userManager = userManager;
       this.roleManager = roleManager;
     }
 
+    [HttpGet]
     public IActionResult Index() {
-      roleManager.Roles.FirstOrDefault(r => r.Id == "1");
-      return View("Index", repository.GetAll());
+      EducatorsViewModel edcModel = new EducatorsViewModel { AllEducators = repository.GetAll(), AllRoles = roleManager.Roles }; //er deer en smartere måde at sætte dette på?
+      IQueryable<Educator> educators = repository.GetAll();
+      //Find undervisers rolle
+      return View("Index", edcModel);
     }
 
     [HttpGet]
-    public ViewResult Create() {
-      return View("CreateEducator", new RegisterEducatorViewModel());
+    public ViewResult CreateEducator() {
+      RegisterEducatorViewModel model = new RegisterEducatorViewModel { AllRoles = roleManager.Roles }; //er deer en smartere måde at sætte dette på?
+
+      return View("CreateEducator", model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(RegisterEducatorViewModel registerEducatorViewModel) {
+    public async Task<IActionResult> CreateEducator(RegisterEducatorViewModel registerEducatorViewModel) {
       if (ModelState.IsValid) {
         repository.Add(registerEducatorViewModel.Educator);
         TempData["Message"] = registerEducatorViewModel.Educator.Name + " er blevet oprettet";
 
-        CreateUser(registerEducatorViewModel);
-
-        foreach (IdentityRole role in roleManager.Roles) {
-          if (role.Name == registerEducatorViewModel.RoleName) {
-            AddNewUserToRole(registerEducatorViewModel);
-          } else {
-            CreateRole(registerEducatorViewModel);
-          }
-        }
+        IdentityUser newUser = new IdentityUser { UserName = registerEducatorViewModel.LoginModel.Name };
+        await userManager.CreateAsync(newUser, registerEducatorViewModel.LoginModel.Password);
 
         return RedirectToAction("Index");
       } else {
-        return View("CreateEducator");
+        return View("CreateEducator", registerEducatorViewModel);
       }
     }
 
     [HttpGet]
-    public ViewResult Edit(int educatorId) {
+    public ViewResult EditEducator(int educatorId) {
+      //Skal der laves mulighed for at ændre roller på en specifik educator?
       return View("Edit", repository.Get(educatorId));
     }
 
     [HttpPost]
-    public IActionResult Edit(Educator educatorChanges) {
+    public IActionResult EditEducator(Educator educatorChanges) {
       if (ModelState.IsValid) {
         Educator educatorUpdated = repository.Update(educatorChanges);
         TempData["Message"] = educatorChanges.Name + " er blevet gemt";
@@ -71,27 +71,158 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult Delete(int educatorId) {
+    public IActionResult DeleteEducator(int educatorId) {
       Educator educatorDeleted = repository.Delete(educatorId);
       if (educatorDeleted != null) {
         TempData["Message"] = educatorDeleted.Name + " er blevet slettet";
       }
+      //Håndtering af fejl?
 
       return RedirectToAction("Index");
     }
 
-    private async void CreateRole(RegisterEducatorViewModel registerEducatorViewModel) {
-      IdentityRole newRole = new IdentityRole { Name = registerEducatorViewModel.RoleName };
-      await roleManager.CreateAsync(newRole);
+    [HttpGet]
+    public IActionResult ListRoles() {
+      IEnumerable<IdentityRole> roles = roleManager.Roles;
+
+      return View("ListRoles", roles);
     }
 
-    private async void CreateUser(RegisterEducatorViewModel registerEducatorViewModel) {
-      IdentityUser newUser = new IdentityUser { UserName = registerEducatorViewModel.LoginModel.Name };
-      await userManager.CreateAsync(newUser, registerEducatorViewModel.LoginModel.Password);
+    [HttpGet]
+    public ViewResult CreateRole() {
+
+      return View(new CreateRoleViewModel());
     }
-    private async void AddNewUserToRole(RegisterEducatorViewModel registerEducatorViewModel) {
-      IdentityUser newUser = new IdentityUser { UserName = registerEducatorViewModel.LoginModel.Name };
-      await userManager.AddToRoleAsync(newUser, registerEducatorViewModel.RoleName);
+
+    [HttpPost]
+    public async Task<IActionResult> CreateRole(CreateRoleViewModel createRoleViewModel) {
+      if (ModelState.IsValid) {
+        IdentityRole newRole = new IdentityRole { Name = createRoleViewModel.RoleName };
+
+        IdentityResult result = await roleManager.CreateAsync(newRole);
+
+        if (result.Succeeded) {
+          return RedirectToAction("ListRoles", "Admin");
+        }
+
+        foreach (IdentityError error in result.Errors) {
+          ModelState.AddModelError("", error.Description);
+        }
+      }
+
+      return View("CreateRole", createRoleViewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditRole(string roleId) {
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+
+      if (role == null) {
+        ViewBag.ErrorMessage = "Role with Id = " + roleId + " cannot be found";
+        return View("NotFound");
+      }
+
+      EditRoleViewModel editRoleViewModel = new EditRoleViewModel { RoleId = roleId, RoleName = role.Name };
+
+      foreach (IdentityUser user in userManager.Users) {
+        if (await userManager.IsInRoleAsync(user, role.Name)) {
+          editRoleViewModel.AllUsers.Add(user.UserName);
+        }
+      }
+      return View("EditRole", editRoleViewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditUsersInRole(string roleId) {
+      ViewBag.roleId = roleId;
+
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+
+      if (role == null) {
+        ViewBag.ErrorMessage = "Role with Id = " + roleId + " cannot be found";
+        return View("NotFound");
+      }
+
+      List<UserRoleViewModel> usrList = new List<UserRoleViewModel>();
+
+      foreach (IdentityUser user in userManager.Users) {
+        UserRoleViewModel userRoleViewModel = new UserRoleViewModel {
+          UserId = user.Id,
+          UserName = user.UserName
+        };
+
+        if (await userManager.IsInRoleAsync(user, role.Name)) {
+          userRoleViewModel.IsSelected = true;
+        } else {
+          userRoleViewModel.IsSelected = true;
+        }
+        usrList.Add(userRoleViewModel);
+      }
+
+      return View("EditUsersInRole", usrList);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> usrList, string roleId) {
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+
+      if (role == null) {
+        ViewBag.ErrorMessage = "Role with Id = " + roleId + " cannot be found";
+        return View("NotFound");
+      }
+
+      if (usrList.Count == 0) {
+        TempData["Message"] = "Ingen brugere blev tilføjet til rollen " + role.Name;
+      }
+
+      for (int i = 0; i < usrList.Count; i++) {
+        IdentityUser user = await userManager.FindByIdAsync(usrList[i].UserId);
+
+        IdentityResult result = null;
+
+        if (usrList[i].IsSelected && !(await userManager.IsInRoleAsync(user, role.Name))) {
+          result = await userManager.AddToRoleAsync(user, role.Name);
+
+        } else if (!usrList[i].IsSelected && await userManager.IsInRoleAsync(user, role.Name)) {
+          result = await userManager.RemoveFromRoleAsync(user, role.Name);
+
+        } else {
+          continue;
+        }
+
+        if (result.Succeeded) {
+          if (i < (usrList.Count - 1)) {
+            continue; ;
+
+          } else {
+            return RedirectToAction("EditRole", new { roleId = roleId });
+          }
+        }
+      }
+
+      return RedirectToAction("EditRole", new { roleId = roleId });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteRole(string roleId) {
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+
+      if (role == null) {
+        ViewBag.ErrorMessage = "Role with Id = " + roleId + " cannot be found";
+        return View("NotFound");
+
+      } else {
+        IdentityResult result = await roleManager.DeleteAsync(role);
+
+        if (result.Succeeded) {
+          return RedirectToAction("ListRoles", "Admin");
+        }
+
+        foreach (IdentityError error in result.Errors) {
+          ModelState.AddModelError("", error.Description);
+        }
+        return View("ListRoles");
+      }
     }
   }
 }

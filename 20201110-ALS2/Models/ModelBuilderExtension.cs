@@ -14,6 +14,7 @@ namespace _20201110_ALS2.Models {
       new Educator { EducatorId = 2, Name = "Big Daddy D" }
       );
     }
+
     public static void SeedAdmin(this ModelBuilder modelBuilder, AlsDbContext context) {
       PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
 
@@ -23,12 +24,13 @@ namespace _20201110_ALS2.Models {
         Id = "1", UserName = adminUser, NormalizedUserName = "ADMIN",
         PasswordHash = hasher.HashPassword(null, adminPassword)
       };
-      IdentityRole role = new IdentityRole {Id = "1", Name = "Admin", NormalizedName = "ADMIN"};
+      IdentityRole role = new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" };
 
       modelBuilder.Entity<IdentityUser>().HasData(user);
       modelBuilder.Entity<IdentityRole>().HasData(role);
-      context.UserRoles.Add(new IdentityUserRole<string> {RoleId = role.Id, UserId = user.Id});
-
+      modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+        new IdentityUserRole<string> { RoleId = role.Id, UserId = user.Id }
+      );
     }
   }
 }

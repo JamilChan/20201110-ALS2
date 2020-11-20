@@ -14,20 +14,22 @@
   <script src="/lib/jquery/dist/jquery.min.js"></script>
   <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
   <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
 </head>
 <body class="m-1 p-1">
   <div class="bg-info p-2 row">
     <div class="col"><h4>@ViewBag.Title</h4></div>
-
-    <div class="col-2">
+    <div class="col-2 row">
       @if (signInManager.IsSignedIn(User)) {
         <form method="post" asp-action="Logout" asp-controller="Account">
-          <button class="btn btn-sm btn-primary" style="width: auto" type="submit"> Log Out @User.Identity.Name </button>
+          <button class="btn btn-sm btn-primary mr-3" style="width: auto" type="submit"> Log Out @User.Identity.Name </button>
         </form>
+        @*<i class='fas fa-user-cog' style='font-size:36px'></i>*@
+        <button asp-action="EditPassword" asp-controller="Account"><i class='fas fa-user-cog' style='font-size:36px'></i></button>
       } else {
         <a class="btn btn-sm btn-primary" asp-action="Login" asp-controller="Account">Log In</a>
       }
-
     </div>
 
   </div>

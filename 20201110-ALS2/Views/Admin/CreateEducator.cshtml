@@ -1,4 +1,5 @@
 ﻿@model RegisterEducatorViewModel
+@inject RoleManager<IdentityRole> RoleManager
 
 @{
   ViewBag.Title = "Opret Underviser";
@@ -11,10 +12,12 @@
   <title>Undervisere</title>
 </head>
 <style>
-  body {background-color: darkgray;} 
+  body {
+    background-color: darkgray;
+  }
 </style>
 <body>
-  <form asp-action="Create" method="post">
+  <form asp-action="CreateEducator" method="post">
     <div class="form-group">
       <label asp-for="Educator.Name"></label>
       <div><span class="text-danger" asp-validation-for="Educator.Name"></span></div>
@@ -30,15 +33,21 @@
       <div><span class="text-danger" asp-validation-for="LoginModel.Password"></span></div>
       <input asp-for="LoginModel.Password" class="form-control" />
     </div>
+
     <div class="form-group">
       <label asp-for="RoleName">Rolle</label>
-      <div><span class="text-danger" asp-validation-for="RoleName"></span></div>
-      <input asp-for="RoleName" class="form-control" />
+      <br />
+      <select asp-for="RoleName">
+        <option value=""></option>
+        @foreach (IdentityRole role in Model.AllRoles) {
+          <option value="@role.Name">@role.Name</option>
+        }
+      </select>
     </div>
 
     <div class="text-center">
       <button class="btn btn-lg btn-success" type="submit">Gem</button>
-      <a class="btn btn-lg btn-light" asp-action="Index">Cancel</a>
+      <a class="btn btn-lg btn-light" asp-action="Index">Annuller</a>
     </div>
   </form>
 </body>

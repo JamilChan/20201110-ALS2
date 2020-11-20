@@ -44,6 +44,15 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "fb7c6440-26c2-44fc-81cf-6652ba09fdad",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -139,13 +148,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "460049b4-4ef2-4117-94ae-a514eeabed8d",
+                            ConcurrencyStamp = "60402f12-757a-4003-aedb-a6db474a0f37",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKRRQeFNLDiVnH8v8YUEupluvGvrwd7x8hxa3iM67duk4rghzkImxJuPIOW6YdQ5HA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPxJjATXSMA5vs7BpoO8HP/MjcRxqdg8qhsa5CO89qi97kDDN4z9m+qzfwaS4kK/nQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c82b5cb-039b-4ded-b24f-f825cc5cd14b",
+                            SecurityStamp = "d4c7f83c-36b4-4cf4-821f-e1370eff1259",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -210,6 +219,13 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

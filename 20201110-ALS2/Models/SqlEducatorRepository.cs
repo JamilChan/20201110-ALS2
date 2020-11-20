@@ -25,7 +25,7 @@ namespace _20201110_ALS2.Models {
     }
     public Educator Update(Educator educatorChanges) {
       if (educatorChanges.EducatorId == 0) {
-        context.Educators.Add(educatorChanges); //kan den ikke bare kalde linje 18, Add();
+        context.Educators.Add(educatorChanges);
       } else {
         Educator dbEntryEducator =
           context.Educators.FirstOrDefault(educator => educator.EducatorId == educatorChanges.EducatorId);
@@ -33,7 +33,6 @@ namespace _20201110_ALS2.Models {
           dbEntryEducator.Name = educatorChanges.Name;
         }
       }
-
       context.SaveChanges();
 
       return educatorChanges;

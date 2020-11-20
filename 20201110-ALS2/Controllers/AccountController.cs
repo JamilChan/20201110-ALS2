@@ -51,5 +51,12 @@ namespace _20201110_ALS2.Controllers {
       await signInManager.SignOutAsync();
       return Redirect(returnUrl);
     }
+
+    [HttpGet]
+    public IActionResult EditPassword()
+    {
+      return View();
+    }
+
   }
 }

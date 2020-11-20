@@ -17,8 +17,6 @@ namespace _20201110_ALS2.Models {
       base.OnModelCreating(modelBuilder);
       modelBuilder.SeedEducators();
       modelBuilder.SeedAdmin(this);
-
-
     }
   }
 }
