@@ -6,6 +6,11 @@ using System.Collections.Generic;
 
 namespace _20201110_ALS2.Controllers {
   public class HomeController : Controller {
+    private readonly ICourseRepository courseRepository;
+
+    public HomeController(ICourseRepository courseRepository) {
+      this.courseRepository = courseRepository;
+    }
 
     [HttpGet]
     public IActionResult Index() {
@@ -65,26 +70,12 @@ namespace _20201110_ALS2.Controllers {
 
     private List<Course> testCourses() {
       //Test Course Delete Later! Something get on IdentityUser
-      Course course1 = new Course {
+      Course c1 = new Course {
         CourseId = 1,
-        Name = "SysTest",
-        Educator = null,
-        Week = new Week {
-          Monday = true,
-          Tuesday = false,
-          Wednesday = false,
-          Thursday = true,
-          Friday = true
-        },
-        StartDate = DateTime.Today.AddMonths(-1),
-        EndDate = DateTime.Today.AddMonths(1)
-      };
-
-      Course course2 = new Course {
-        CourseId = 2,
         Name = "ProtekTest",
         Educator = null,
         Week = new Week {
+          WeekId = 1,
           Monday = false,
           Tuesday = true,
           Wednesday = false,
@@ -95,9 +86,25 @@ namespace _20201110_ALS2.Controllers {
         EndDate = DateTime.Today.AddMonths(1)
       };
 
+      Course c2 = new Course {
+        CourseId = 2,
+        Name = "SysTest",
+        Educator = null,
+        Week = new Week {
+          WeekId = 2,
+          Monday = true,
+          Tuesday = false,
+          Wednesday = false,
+          Thursday = true,
+          Friday = true
+        },
+        StartDate = DateTime.Today.AddMonths(-1),
+        EndDate = DateTime.Today.AddMonths(1)
+      };
+
       List<Course> identityCourses = new List<Course>();
-      identityCourses.Add(course1);
-      identityCourses.Add(course2);
+      identityCourses.Add(c1);
+      identityCourses.Add(c2);
       //Test Course Delete Later!
 
       return identityCourses;

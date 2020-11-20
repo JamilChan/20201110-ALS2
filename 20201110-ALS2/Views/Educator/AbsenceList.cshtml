@@ -5,6 +5,7 @@
 }
 
 <form asp-controller="Educator" asp-action="Toggle">
+  <input type="hidden" value="@Model.Course.CourseId" asp-for="Course.CourseId" />
   <div class="p-2 pt-3">
     <label class="text-white h2"> Tag Fravær </label>
     <label class="switch float-right">

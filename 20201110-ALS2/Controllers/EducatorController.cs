@@ -20,6 +20,7 @@ namespace _20201110_ALS2.Controllers {
     //[HttpGet]
     //public ViewResult AbsenceList(Course course) {
     //  ViewBag.Check = false;
+
     //  return View(new StudentListViewModel {
     //    StatusList = new string[studentRepository.Students.ToList().Count],
     //    StudentsList = studentRepository.Students.ToList(),
@@ -62,6 +63,9 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public IActionResult Test(Course course) {
       ViewBag.Check = true;
+
+      ApplyCourseWithId(course);
+
       return View("AbsenceList", new StudentListViewModel {
         StatusList = new string[studentRepository.Students.ToList().Count],
         StudentsList = studentRepository.Students.ToList(),
@@ -71,15 +75,70 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpPost]
     public IActionResult Toggle(StudentListViewModel studentList) {
+      studentList.StudentsList = studentRepository.Students.ToList();
+
+      ApplyCourseWithId(studentList.Course);
+
       if (studentList.IsChecked == "on") {
-        studentList.StudentsList = studentRepository.Students.ToList();
         ViewBag.Check = true;
         return View("AbsenceList", studentList);
       } else {
-        studentList.StudentsList = studentRepository.Students.ToList();
         ViewBag.Check = false;
         return View("AbsenceList", studentList);
       }
+    }
+
+    private void ApplyCourseWithId(Course course) {
+      List<Course> cl = testCourses();
+
+      foreach (Course c in cl) {
+        if (c.CourseId == course.CourseId) {
+          course = c;
+          break;
+        }
+      }
+    }
+
+    private List<Course> testCourses() {
+      //Test Course Delete Later! Something get on IdentityUser
+      Course c1 = new Course {
+        CourseId = 1,
+        Name = "ProtekTest",
+        Educator = null,
+        Week = new Week {
+          WeekId = 1,
+          Monday = false,
+          Tuesday = true,
+          Wednesday = false,
+          Thursday = true,
+          Friday = false
+        },
+        StartDate = DateTime.Today.AddMonths(-1),
+        EndDate = DateTime.Today.AddMonths(1)
+      };
+
+      Course c2 = new Course {
+        CourseId = 2,
+        Name = "SysTest",
+        Educator = null,
+        Week = new Week {
+          WeekId = 2,
+          Monday = true,
+          Tuesday = false,
+          Wednesday = false,
+          Thursday = true,
+          Friday = true
+        },
+        StartDate = DateTime.Today.AddMonths(-1),
+        EndDate = DateTime.Today.AddMonths(1)
+      };
+
+      List<Course> identityCourses = new List<Course>();
+      identityCourses.Add(c1);
+      identityCourses.Add(c2);
+      //Test Course Delete Later!
+
+      return identityCourses;
     }
   }
 }

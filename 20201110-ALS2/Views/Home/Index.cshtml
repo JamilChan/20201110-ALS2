@@ -44,8 +44,6 @@
         </div>
       </form>*@
 
-
-
     @if (Model.Courses != null) {
       @foreach (Course course in Model.Courses) {
         <partial name="CourseCard" model="@course" />

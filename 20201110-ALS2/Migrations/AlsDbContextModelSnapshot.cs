@@ -26,8 +26,8 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<long?>("CourseId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -49,9 +49,9 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>
                 {
-                    b.Property<int>("CourseId")
+                    b.Property<long>("CourseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .UseIdentityColumn();
 
                     b.Property<int?>("EducatorId")
@@ -66,11 +66,16 @@ namespace _20201110_ALS2.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("WeekId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("CourseId");
 
                     b.HasIndex("EducatorId");
 
-                    b.ToTable("Course");
+                    b.HasIndex("WeekId");
+
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
@@ -132,6 +137,33 @@ namespace _20201110_ALS2.Migrations
                         });
                 });
 
+            modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
+                {
+                    b.Property<long>("WeekId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("Friday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Monday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Thursday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Tuesday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Wednesday")
+                        .HasColumnType("bit");
+
+                    b.HasKey("WeekId");
+
+                    b.ToTable("Weeks");
+                });
+
             modelBuilder.Entity("_20201110_ALS2.Models.Absence", b =>
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
@@ -153,7 +185,13 @@ namespace _20201110_ALS2.Migrations
                         .WithMany()
                         .HasForeignKey("EducatorId");
 
+                    b.HasOne("_20201110_ALS2.Models.Week", "Week")
+                        .WithMany()
+                        .HasForeignKey("WeekId");
+
                     b.Navigation("Educator");
+
+                    b.Navigation("Week");
                 });
 #pragma warning restore 612, 618
         }
