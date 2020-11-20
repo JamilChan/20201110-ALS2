@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 namespace _20201110_ALS2.Models {
   public interface IStudentCourseRepository {
     void CreateStudentCourse(StudentCourse sc);
-    void UpdateStudentCourse(Course Course, Student Student);
+    void UpdateStudentCourse(StudentCourse sCourse);
   }
 }

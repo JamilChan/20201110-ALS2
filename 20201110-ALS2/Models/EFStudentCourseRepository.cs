@@ -11,16 +11,16 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
     public void CreateStudentCourse(StudentCourse sc) {
-      context.StudentCourse.Add(sc);
+      context.StudentCourses.Add(sc);
       context.SaveChanges();
     }
-    public void UpdateStudentCourse(Course Course, Student Student) {
-      if (Course.CourseId == 0 && Student.StudentId == 0) {
-        context.StudentCourse.Add(new StudentCourse { CourseId = Course.CourseId, StudentId = Student.StudentId });
+    public void UpdateStudentCourse(StudentCourse sCourse) {
+      if (sCourse.Course.CourseId == 0 && sCourse.Student.StudentId == 0) {
+        context.StudentCourses.Add(sCourse);
       } else {
-        StudentCourse dbEntryStudentCourse = context.StudentCourse.FirstOrDefault(sc => sc.StudentId == Student.StudentId);
+        StudentCourse dbEntryStudentCourse = context.StudentCourses.FirstOrDefault(sc => sc.StudentId == sCourse.StudentId && sc.CourseId == sCourse.CourseId);
       }
-
+      context.SaveChanges();
     }
   }
 }

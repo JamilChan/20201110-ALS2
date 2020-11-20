@@ -12,8 +12,7 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator);
-
+    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week);
 
     public void SaveCourse(Course course) {
       if (course.CourseId == 0) {
@@ -23,8 +22,10 @@ namespace _20201110_ALS2.Models {
         if (dbEntry != null) {
           dbEntry.Name = course.Name;
           dbEntry.Educator = course.Educator;
+          dbEntry.Week = course.Week;
           dbEntry.StartDate = course.StartDate;
           dbEntry.EndDate = course.EndDate;
+          dbEntry.StudentCourses = course.StudentCourses;
 
         }
       }

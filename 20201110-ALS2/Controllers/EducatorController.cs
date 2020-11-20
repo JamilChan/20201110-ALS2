@@ -91,13 +91,13 @@ namespace _20201110_ALS2.Controllers {
       return View("ViewCourses", courseRepo.Courses);
     }
 
-    //[HttpGet]
-    //public ViewResult ViewThisCourse(int CourseId) {
-    //  CreateCourseViewModel CCVM = CreateCCVM();
-    //  CCVM.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == CourseId);
-    //  CCVM.SelectedEducator = CCVM.Crs.Educator.Name;
-    //  return View("ViewThisCourse", CCVM);
-    //}
+    [HttpGet]
+    public ViewResult ViewThisCourse(int CourseId) {
+      ViewCourseViewModel VCVM = new ViewCourseViewModel();
+      VCVM.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == CourseId);
+      VCVM.StudentList = studentRepo.GetAllStudentsFromCourses(VCVM.Course);
+      return View("ViewThisCourse", VCVM);
+    }
 
     public CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel CCVM = new CreateCourseViewModel();
