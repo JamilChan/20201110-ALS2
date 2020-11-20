@@ -21,6 +21,7 @@ namespace _20201110_ALS2.Controllers {
       this.scRepo = scRepo;
     }
 
+    [HttpGet]
     public ViewResult AbsenceList() {
       return View(studentRepo.Students);
     }
@@ -39,61 +40,64 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult CreateCourse() {
-      CreateCourseViewModel CCVM = CreateCCVM();
-      return View("CreateCourse", CCVM);
+      CreateCourseViewModel ccvm = CreateCCVM();
+
+      return View("CreateCourse", ccvm);
     }
 
     [HttpPost]
-    public IActionResult CreateCourse(CreateCourseViewModel CCVM, IFormCollection form) {
+    public IActionResult CreateCourse(CreateCourseViewModel ccvm, IFormCollection form) {
       if (ModelState.IsValid) {
         foreach (Educator e in educatorRepo.GetAll()) {
-          if (e.Name == CCVM.SelectedEducator) {
-            CCVM.Crs.Educator = e;
+          if (e.Name == ccvm.SelectedEducator) {
+            ccvm.Crs.Educator = e;
             break;
           }
         }
         string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
         foreach (var sId in selectedList) {
-          StudentCourse sc = new StudentCourse { Course = CCVM.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
+          StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
           scRepo.CreateStudentCourse(sc);
         }
-        courseRepo.SaveCourse(CCVM.Crs);
-        TempData["message"] = $"{CCVM.Crs.Name} has been saved";
+        courseRepo.SaveCourse(ccvm.Crs);
+        TempData["message"] = $"{ccvm.Crs.Name} has been saved";
         return RedirectToAction("ViewCourses");
       } else {
-        CCVM.EducatorList = educatorRepo.GetAll();
-        CCVM.GetEducatorsName();
-        return View("CreateCourse", CCVM); 
+        ccvm.EducatorList = educatorRepo.GetAll();
+        ccvm.GetEducatorsName();
+        return View("CreateCourse", ccvm); 
       }
     }
 
+    [HttpGet]
     public ViewResult ViewCourses() {
       return View("ViewCourses", courseRepo.Courses);
     }
 
     [HttpGet]
-    public ViewResult EditCourse(int CourseId) {
-      CreateCourseViewModel CCVM = CreateCCVM();
-      CCVM.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == CourseId);
-      CCVM.SelectedEducator = CCVM.Crs.Educator.Name;
-      return View("CreateCourse", CCVM);
+    public ViewResult EditCourse(int courseId) {
+      CreateCourseViewModel ccvm = CreateCCVM();
+      ccvm.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
+      ccvm.SelectedEducator = ccvm.Crs.Educator.Name;
+
+      return View("CreateCourse", ccvm);
     }
 
     [HttpPost]
     public IActionResult DeleteCourse(int CourseId) {
-      Course deletedCourse = courseRepo.Delete(CourseId);
+      courseRepo.Delete(CourseId);
+
       return View("ViewCourses", courseRepo.Courses);
     }
 
-    //Service metode
-    public CreateCourseViewModel CreateCCVM() {
-      CreateCourseViewModel CCVM = new CreateCourseViewModel();
-      CCVM.EducatorList = educatorRepo.GetAll();
-      CCVM.GetEducatorsName();
-      CCVM.StudentList = studentRepo.Students;
-      return CCVM;
-    }
+    private CreateCourseViewModel CreateCCVM() {
+      CreateCourseViewModel ccvm = new CreateCourseViewModel();
+      ccvm.EducatorList = educatorRepo.GetAll();
+      ccvm.GetEducatorsName();
+      ccvm.StudentList = studentRepo.Students;
 
+      return ccvm;
+    }
   }
 }
