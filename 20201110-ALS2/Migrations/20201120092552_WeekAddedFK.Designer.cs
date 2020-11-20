@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120092552_WeekAddedFK")]
+    partial class WeekAddedFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,9 +230,6 @@ namespace _20201110_ALS2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
@@ -265,7 +264,7 @@ namespace _20201110_ALS2.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("WeekId")
+                    b.Property<long>("WeekId")
                         .HasColumnType("bigint");
 
                     b.HasKey("CourseId");
@@ -442,33 +441,6 @@ namespace _20201110_ALS2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
-                {
-                    b.Property<long>("WeekId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .UseIdentityColumn();
-
-                    b.Property<bool>("Friday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Monday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Thursday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Tuesday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Wednesday")
-                        .HasColumnType("bit");
-
-                    b.HasKey("WeekId");
-
-                    b.ToTable("Weeks");
-                });
-
             modelBuilder.Entity("_20201110_ALS2.Models.Absence", b =>
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
@@ -498,11 +470,38 @@ namespace _20201110_ALS2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("_20201110_ALS2.Models.Week", "Week")
-                        .WithMany()
-                        .HasForeignKey("WeekId");
-
                     b.Navigation("Educator");
+
+                    b.Navigation("Week");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.StudentCourse", b =>
+                {
+                    b.HasOne("_20201110_ALS2.Models.Course", "Course")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("_20201110_ALS2.Models.Student", "Student")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>
+                {
+                    b.Navigation("StudentCourses");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.Student", b =>
+                {
+                    b.Navigation("StudentCourses");
                 });
 #pragma warning restore 612, 618
         }
