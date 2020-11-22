@@ -9,6 +9,9 @@ namespace _20201110_ALS2.Models.ViewModels {
     public string[] StatusList { get; set; }
     public string IsChecked { get; set; }
     public List<Student> StudentsList { get; set; }
+    public List<Absence> AbsencesList { get; set; }
     public Course Course { get; set; }
+    public DateTime Date { get; set; }
+    public bool Edit { get; set; }
   }
 }

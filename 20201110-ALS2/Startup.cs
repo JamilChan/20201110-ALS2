@@ -29,6 +29,7 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddScoped<IStudentCourseRepository, EFStudentCourseRepository>();
+      services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
 
 
       //LIVE UPDATE STUFF STARTS HERE

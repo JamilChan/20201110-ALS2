@@ -1,9 +1,2 @@
 ﻿@model Course
-@*<a class="col-6 card mt-3 mb-1 p-5 bg-dark border-white btn text-white" asp-controller="Educator" asp-action="AbsenceList" >
-    <h2>@Model.Name</h2>
-  </a>*@
 
-<form asp-controller="Educator" asp-action="Test">
-  <input type="hidden" value="@Model.CourseId" asp-for="@Model.CourseId" />
-  <button class="col-6 card mt-3 mb-1 bg-dark border-white btn text-white" type="submit">@Model.Name</button>
-</form>

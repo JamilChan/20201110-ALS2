@@ -3,13 +3,16 @@ using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _20201110_ALS2.Controllers {
   public class HomeController : Controller {
-    private readonly ICourseRepository courseRepository;
+    private readonly ICourseRepository courseRepo;
+    private readonly IAbsenceRepository absenceRepo;
 
-    public HomeController(ICourseRepository courseRepository) {
-      this.courseRepository = courseRepository;
+    public HomeController(ICourseRepository courseRepo, IAbsenceRepository absenceRepo) {
+      this.courseRepo = courseRepo;
+      this.absenceRepo = absenceRepo;
     }
 
     [HttpGet]
@@ -19,8 +22,10 @@ namespace _20201110_ALS2.Controllers {
         Courses = new List<Course>()
       };
 
-      List<Course> identityCourses = testCourses();
+      List<Course> identityCourses = courseRepo.Courses.ToList();
       dayOfWeekCheck(identityCourses, hi);
+
+      hi.CheckedCourse = absenceRepo.IsChecked(hi.Courses, hi.Date);
 
       return View("Index", hi);
     }
@@ -38,8 +43,10 @@ namespace _20201110_ALS2.Controllers {
 
       hi.Date = dateTime;
 
-      List<Course> identityCourses = testCourses();
+      List<Course> identityCourses = courseRepo.Courses.ToList();
       dayOfWeekCheck(identityCourses, hi);
+
+      hi.CheckedCourse = absenceRepo.IsChecked(hi.Courses, hi.Date);
 
       return View("Index", hi);
     }
@@ -66,48 +73,6 @@ namespace _20201110_ALS2.Controllers {
           }
         }
       }
-    }
-
-    private List<Course> testCourses() {
-      //Test Course Delete Later! Something get on IdentityUser
-      Course c1 = new Course {
-        CourseId = 1,
-        Name = "ProtekTest",
-        Educator = null,
-        Week = new Week {
-          WeekId = 1,
-          Monday = false,
-          Tuesday = true,
-          Wednesday = false,
-          Thursday = true,
-          Friday = false
-        },
-        StartDate = DateTime.Today.AddMonths(-1),
-        EndDate = DateTime.Today.AddMonths(1)
-      };
-
-      Course c2 = new Course {
-        CourseId = 2,
-        Name = "SysTest",
-        Educator = null,
-        Week = new Week {
-          WeekId = 2,
-          Monday = true,
-          Tuesday = false,
-          Wednesday = false,
-          Thursday = true,
-          Friday = true
-        },
-        StartDate = DateTime.Today.AddMonths(-1),
-        EndDate = DateTime.Today.AddMonths(1)
-      };
-
-      List<Course> identityCourses = new List<Course>();
-      identityCourses.Add(c1);
-      identityCourses.Add(c2);
-      //Test Course Delete Later!
-
-      return identityCourses;
     }
   }
 }

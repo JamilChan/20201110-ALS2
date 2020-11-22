@@ -6,8 +6,6 @@ using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using _20201110_ALS2.Models.ViewModels;
 
 namespace _20201110_ALS2.Controllers {
   public class EducatorController : Controller {
@@ -15,41 +13,60 @@ namespace _20201110_ALS2.Controllers {
     private ICourseRepository courseRepo;
     private IEducatorRepository educatorRepo;
     private IStudentCourseRepository scRepo;
+    private readonly IAbsenceRepository absenceRepo;
 
-    public EducatorController(IStudentRepository studentRepo , ICourseRepository courseRepo, IEducatorRepository educatorRepo, IStudentCourseRepository scRepo) {
+    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IStudentCourseRepository scRepo, IAbsenceRepository absenceRepo) {
       this.studentRepo = studentRepo;
       this.courseRepo = courseRepo;
       this.educatorRepo = educatorRepo;
       this.scRepo = scRepo;
+      this.absenceRepo = absenceRepo;
     }
 
-    //[HttpGet]
-    //public ViewResult AbsenceList(Course course) {
-    //  ViewBag.Check = false;
+    [HttpGet]
+    public ViewResult AbsenceList(long courseId, string dateString, bool edit) {
+      ViewBag.Check = true;
 
-    //  return View(new StudentListViewModel {
-    //    StatusList = new string[studentRepository.Students.ToList().Count],
-    //    StudentsList = studentRepository.Students.ToList(),
-    //    Course = course
-    //  });
-    //}
+      string[] dateSplit = dateString.Split("-", 3);
+
+      DateTime date = new DateTime(Int32.Parse(dateSplit[2].Split(" ", 2)[0]), Int32.Parse(dateSplit[1]), int.Parse(dateSplit[0]));
+
+      Course course = ApplyCourseWithId(courseId);
+
+      return View("AbsenceList", new StudentListViewModel {
+        StatusList = new string[studentRepo.Students.ToList().Count],
+        StudentsList = studentRepo.GetAllStudentsFromCourses(course),
+        AbsencesList = AbsenceForStudentList(courseId, date),
+        Course = course,
+        Date = date,
+        Edit = edit
+      });
+    }
 
     [HttpPost]
     public IActionResult AbsenceList(StudentListViewModel slvm) {
       List<string> temp = slvm.StatusList.ToList();
 
-      if (ModelState.IsValid) {
-        List<Absence> absenceList = new List<Absence>();
+      List<Absence> absenceList = new List<Absence>();
 
+      if (!slvm.Edit) {
         foreach (string s in temp) {
           string[] split = s.Split(":", 2);
 
-          foreach (Student student in studentRepository.Students) {
+          foreach (Student student in studentRepo.Students) {
             if (student.StudentId.ToString() == split[0]) {
+
+              Course selectedCourse = new Course();
+              foreach (Course course in courseRepo.Courses) {
+                if (course.CourseId == slvm.Course.CourseId) {
+                  selectedCourse = course;
+                }
+              }
+
               Absence absence = new Absence {
                 Student = student,
-                Date = DateTime.Now,
-                Course = slvm.Course,
+                Date = slvm.Date,
+                Course = selectedCourse,
                 Status = split[1]
               };
               absenceList.Add(absence);
@@ -57,33 +74,25 @@ namespace _20201110_ALS2.Controllers {
             }
           }
         }
-        absenceRepository.CreateAbsence(absenceList);
+
+        absenceRepo.CreateAbsence(absenceList);
+      } else {
+        List<Absence> a = absenceRepo.AbsencesForDateCourse(slvm.Course, slvm.Date).ToList();
+
+        absenceRepo.UpdateAbsence(a, temp);
       }
 
       ViewBag.Check = false;
 
       return View("TestView", slvm.StatusList);
-      //return View("TestView", slvm.Course.Name);
-    }
-
-    [HttpPost]
-    public IActionResult Test(Course course) {
-      ViewBag.Check = true;
-
-      ApplyCourseWithId(course);
-
-      return View("AbsenceList", new StudentListViewModel {
-        StatusList = new string[studentRepository.Students.ToList().Count],
-        StudentsList = studentRepository.Students.ToList(),
-        Course = course
-      });
     }
 
     [HttpPost]
     public IActionResult Toggle(StudentListViewModel studentList) {
-      studentList.StudentsList = studentRepository.Students.ToList();
+      Course course = ApplyCourseWithId(studentList.Course.CourseId);
+      studentList.Course = course;
 
-      ApplyCourseWithId(studentList.Course);
+      studentList.StudentsList = studentRepo.GetAllStudentsFromCourses(course);
 
       if (studentList.IsChecked == "on") {
         ViewBag.Check = true;
@@ -92,59 +101,6 @@ namespace _20201110_ALS2.Controllers {
         ViewBag.Check = false;
         return View("AbsenceList", studentList);
       }
-    }
-
-    private void ApplyCourseWithId(Course course) {
-      List<Course> cl = testCourses();
-
-      foreach (Course c in cl) {
-        if (c.CourseId == course.CourseId) {
-          course = c;
-          break;
-        }
-      }
-    }
-
-    private List<Course> testCourses() {
-      //Test Course Delete Later! Something get on IdentityUser
-      Course c1 = new Course {
-        CourseId = 1,
-        Name = "ProtekTest",
-        Educator = null,
-        Week = new Week {
-          WeekId = 1,
-          Monday = false,
-          Tuesday = true,
-          Wednesday = false,
-          Thursday = true,
-          Friday = false
-        },
-        StartDate = DateTime.Today.AddMonths(-1),
-        EndDate = DateTime.Today.AddMonths(1)
-      };
-
-      Course c2 = new Course {
-        CourseId = 2,
-        Name = "SysTest",
-        Educator = null,
-        Week = new Week {
-          WeekId = 2,
-          Monday = true,
-          Tuesday = false,
-          Wednesday = false,
-          Thursday = true,
-          Friday = true
-        },
-        StartDate = DateTime.Today.AddMonths(-1),
-        EndDate = DateTime.Today.AddMonths(1)
-      };
-
-      List<Course> identityCourses = new List<Course>();
-      identityCourses.Add(c1);
-      identityCourses.Add(c2);
-      //Test Course Delete Later!
-
-      return identityCourses;
     }
 
     [HttpGet]
@@ -157,7 +113,7 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public IActionResult CreateCourse(CreateCourseViewModel ccvm, IFormCollection form) {
       if (ModelState.IsValid) {
-        foreach (Educator e in educatorRepo.GetAll()) {
+        foreach (Educator e in educatorRepo.Educators()) {
           if (e.Name == ccvm.SelectedEducator) {
             ccvm.Crs.Educator = e;
             break;
@@ -166,16 +122,16 @@ namespace _20201110_ALS2.Controllers {
         string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
         foreach (var sId in selectedList) {
-          StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
+          StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == int.Parse(sId)) };
           scRepo.CreateStudentCourse(sc);
         }
         courseRepo.SaveCourse(ccvm.Crs);
         TempData["message"] = $"{ccvm.Crs.Name} has been saved";
         return RedirectToAction("ViewCourses");
       } else {
-        ccvm.EducatorList = educatorRepo.GetAll();
+        ccvm.EducatorList = educatorRepo.Educators();
         ccvm.GetEducatorsName();
-        return View("CreateCourse", ccvm); 
+        return View("CreateCourse", ccvm);
       }
     }
 
@@ -194,19 +150,43 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult DeleteCourse(int CourseId) {
-      courseRepo.Delete(CourseId);
+    public IActionResult DeleteCourse(int courseId) {
+      courseRepo.Delete(courseId);
 
       return View("ViewCourses", courseRepo.Courses);
     }
 
     private CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel ccvm = new CreateCourseViewModel();
-      ccvm.EducatorList = educatorRepo.GetAll();
+      ccvm.EducatorList = educatorRepo.Educators();
       ccvm.GetEducatorsName();
       ccvm.StudentList = studentRepo.Students;
 
       return ccvm;
+    }
+
+    private Course ApplyCourseWithId(long courseId) {
+      List<Course> cl = courseRepo.Courses.ToList();
+
+      foreach (Course c in cl) {
+        if (c.CourseId == courseId) {
+          return c;
+        }
+      }
+
+      return null;
+    }
+
+    private List<Absence> AbsenceForStudentList(long courseId, DateTime date) {
+      List<Absence> absences = new List<Absence>();
+
+      foreach (Absence absence in absenceRepo.Absences) {
+        if (absence.Course.CourseId == courseId && absence.Date.Date == date.Date) {
+          absences.Add(absence);
+        }
+      }
+
+      return absences;
     }
   }
 }
