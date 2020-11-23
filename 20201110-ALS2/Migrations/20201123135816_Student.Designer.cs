@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201123135816_Student")]
+    partial class Student
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -443,13 +445,11 @@ namespace _20201110_ALS2.Migrations
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("_20201110_ALS2.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Course");
 

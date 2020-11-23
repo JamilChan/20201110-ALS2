@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Student>
+
+<div>
+  <table class="bg-white">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Navn</th>
+        <th>Uddannelse</th>
+        <th>Semester</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @foreach (Student s in Model) {
+        <tr>
+          <td>@s.StudentId</td>
+          <td>@s.Name</td>
+          <td>@s.Education</td>
+          <td>@s.Semester</td>
+          <td>
+            <form asp-controller="Student" asp-action="DeleteStudent">
+              <input type="hidden" name="studentId" value="@s.StudentId" />
+              <a class="btn btn-warning" asp-controller="Student" asp-action="Crud" asp-route-crud="edit" asp-route-id="@s.StudentId">Edit</a>
+              <input class="btn btn-danger" type="submit" value="Delete" />
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <a class="btn btn-success" asp-controller="Student" asp-action="Crud" asp-route-crud="create">Create</a>
+</div>

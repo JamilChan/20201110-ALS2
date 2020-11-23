@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201123144223_Cascade")]
+    partial class Cascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,6 +242,44 @@ namespace _20201110_ALS2.Migrations
                     b.ToTable("Absences");
                 });
 
+            modelBuilder.Entity("_20201110_ALS2.Models.AlsDbContext+Blog", b =>
+                {
+                    b.Property<int>("BlogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BlogId");
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.AlsDbContext+Post", b =>
+                {
+                    b.Property<int>("PostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PostId");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>
                 {
                     b.Property<long>("CourseId")
@@ -443,17 +483,24 @@ namespace _20201110_ALS2.Migrations
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CourseId");
 
                     b.HasOne("_20201110_ALS2.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.AlsDbContext+Post", b =>
+                {
+                    b.HasOne("_20201110_ALS2.Models.AlsDbContext+Blog", "Blog")
+                        .WithMany("Posts")
+                        .HasForeignKey("BlogId");
+
+                    b.Navigation("Blog");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>
@@ -492,6 +539,11 @@ namespace _20201110_ALS2.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("_20201110_ALS2.Models.AlsDbContext+Blog", b =>
+                {
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>

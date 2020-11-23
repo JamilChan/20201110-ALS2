@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
   public class AlsDbContext : IdentityDbContext {
-    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) {
-    }
+    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) { }
 
     public DbSet<Student> Students { get; set; }
     public DbSet<Absence> Absences { get; set; }
@@ -31,6 +30,11 @@ namespace _20201110_ALS2.Models {
           .HasOne(sc => sc.Course)
           .WithMany(c => c.StudentCourses)
           .HasForeignKey(sc => sc.CourseId);
+
+
+      foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) {
+        foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
+      }
     }
   }
 }
