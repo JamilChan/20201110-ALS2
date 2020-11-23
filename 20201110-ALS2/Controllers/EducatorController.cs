@@ -56,16 +56,26 @@ namespace _20201110_ALS2.Controllers {
         }
         string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
-        foreach (var sId in selectedList) {
-          StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
-          scRepo.CreateStudentCourse(sc);
+        List<StudentCourse> scList = new List<StudentCourse>();
+        if (selectedList[0] != "") {
+          foreach (var sId in selectedList) {
+            StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
+            scList.Add(sc);
+          }
+          if (ccvm.Edit) {
+            scRepo.UpdateStudentCourse(scList);
+          }
+          else {
+            scRepo.CreateStudentCourse(scList);
+          }
         }
+        
         courseRepo.SaveCourse(ccvm.Crs);
         TempData["message"] = $"{ccvm.Crs.Name} has been saved";
         return RedirectToAction("ViewCourses");
       } else {
-        ccvm.EducatorList = educatorRepo.GetAll();
-        ccvm.GetEducatorsName();
+        ccvm = CreateCCVM();
+
         return View("CreateCourse", ccvm); 
       }
     }
@@ -80,7 +90,8 @@ namespace _20201110_ALS2.Controllers {
       CreateCourseViewModel ccvm = CreateCCVM();
       ccvm.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
       ccvm.SelectedEducator = ccvm.Crs.Educator.Name;
-
+      ccvm.CheckedStudents = courseRepo.SelectedStudents(courseId);
+      ccvm.Edit = true;
       return View("CreateCourse", ccvm);
     }
 

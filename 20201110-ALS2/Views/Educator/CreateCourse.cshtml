@@ -2,6 +2,7 @@
 
 <form asp-action="CreateCourse" method="post">
   <input type="hidden" asp-for="Crs.CourseId" />
+  <input type="hidden" asp-for="Edit" />
   <div asp-validation-summary="All"></div>
 
     <label asp-for="Crs.Name">Course Name:</label>
@@ -40,8 +41,6 @@
     <label asp-for="Crs.EndDate">End Date:</label>
     <input asp-for="Crs.EndDate" /> <br /><br />
 
-  <button type="submit">Submit course</button>
-
   <table class="table table-striped table-bordered table-sm">
     <thead>
       <tr>
@@ -57,11 +56,31 @@
         <td>@student.Name</td>
         <td>@student.Education</td>
         <td>@student.Semester</td>
-        <td>
-          <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
-        </td>
+        @if (Model.Edit) {
+          ViewBag.Checked = false;
+          foreach (Student s in Model.CheckedStudents) {
+            if (student.StudentId == s.StudentId) {
+              ViewBag.Checked = true;
+              <td>
+                <input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
+              </td>
+            }
+          }
+          if (!ViewBag.Checked) {
+            <td>
+              <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
+            </td>
+          }
+        }
+        else {
+          <td>
+            <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
+          </td>
+        }
       </tr>
       }
     </tbody>
   </table>
+
+  <button type="submit">Submit course</button>
 </form>

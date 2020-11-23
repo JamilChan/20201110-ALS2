@@ -10,5 +10,7 @@ namespace _20201110_ALS2.Models {
 
     void SaveCourse(Course course);
     Course Delete(int CourseId);
+
+    List<Student> SelectedStudents(long courseId);
   }
 }

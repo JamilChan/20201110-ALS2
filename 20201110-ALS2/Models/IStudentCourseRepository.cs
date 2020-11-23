@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public interface IStudentCourseRepository {
-    void CreateStudentCourse(StudentCourse sc);
-    void UpdateStudentCourse(StudentCourse sCourse);
+    IQueryable<StudentCourse> StudentCourses { get; }
+    void CreateStudentCourse(List<StudentCourse> sCourse);
+    void UpdateStudentCourse(List<StudentCourse> sCourse);
   }
 }

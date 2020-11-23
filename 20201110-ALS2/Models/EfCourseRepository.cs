@@ -26,7 +26,7 @@ namespace _20201110_ALS2.Models {
           dbEntry.StartDate = course.StartDate;
           dbEntry.EndDate = course.EndDate;
           dbEntry.StudentCourses = course.StudentCourses;
-
+          context.Courses.Update(dbEntry);
         }
       }
       context.SaveChanges();
@@ -39,6 +39,15 @@ namespace _20201110_ALS2.Models {
         context.SaveChanges();
       }
       return dbEntry;
+    }
+
+    public List<Student> SelectedStudents(long courseId) {
+      IQueryable<StudentCourse> ss = context.StudentCourses.Include(sc => sc.Course).Include(sc => sc.Student).Where(sc => sc.CourseId == courseId);
+      List<Student> sStudents = new List<Student>();
+      foreach (StudentCourse sc in ss) {
+        sStudents.Add(sc.Student);
+      }
+      return sStudents;
     }
   }
 }

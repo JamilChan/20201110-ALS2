@@ -12,7 +12,9 @@ namespace _20201110_ALS2.Models.ViewModels {
     public List<string> EducatorNameList { get; set; } = new List<string>();
     [Required]
     public string SelectedEducator { get; set; }
-    public IQueryable<Student> StudentList { get; set; }
+    public IQueryable<Student> StudentList { get; set; } = Enumerable.Empty<Student>().AsQueryable();
+    public List<Student> CheckedStudents { get; set; }
+    public bool Edit { get; set; }
 
     public void GetEducatorsName() {
       foreach (Educator e in EducatorList) {
