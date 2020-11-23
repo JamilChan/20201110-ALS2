@@ -1,4 +1,4 @@
-﻿@model EducatorsViewModel
+﻿@model IEnumerable<Educator>
 @inject RoleManager<IdentityRole> RoleManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -7,16 +7,6 @@
   Layout = "_AdminLayout";
 }
 
-<html>
-<head>
-  <meta name="viewport" content="width-device-width" />
-  <title>Undervisere</title>
-</head>
-<style>
-  body {
-    background-color: darkgray;
-  }
-</style>
 <body>
   <table class="table table-striped table-bordered table-sm">
     <tr>
@@ -25,7 +15,7 @@
       <th class="text-center">Handlinger</th>
     </tr>
 
-    @foreach (Educator educator in Model.AllEducators) {
+    @foreach (Educator educator in Model) {
       <tr>
         <td class="text-right">@educator.EducatorId</td>
         <td>@educator.Name</td>
@@ -33,7 +23,6 @@
           <form asp-action="DeleteEducator" method="post">
             <a class="btn btn-sm btn-primary" asp-action="EditEducator" asp-route-educatorId="@educator.EducatorId">Rediger</a>
             <input type="hidden" name="EducatorId" value="@educator.EducatorId"/>
-            @*<input type="hidden" name="userId" value="@Model.AllUserIds"/>*@
             <button class="btn btn-sm btn-info" type="submit">Slet</button>
           </form>
         </td>
@@ -45,5 +34,5 @@
     <a class="btn btn-lg btn-success" asp-action="CreateEducator">Tilføj Underviser</a>
   </div>
 </body>
-</html>
+
 

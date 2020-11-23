@@ -9,11 +9,17 @@ namespace _20201110_ALS2.Models.ViewModels {
   public class RegisterEducatorViewModel {
     public Educator Educator { get; set; }
 
-    public LoginModel LoginModel { get; set; }
+    [Required(ErrorMessage = "Angiv et brugernavn")]
+    public string Name { get; set; }
 
-    public string RoleName { get; set; }
+    [Required(ErrorMessage = "Indtast et kodeord")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Kodeord")]
+    public string Password { get; set; }
 
-    public IEnumerable<IdentityRole> AllRoles { get; set; }
-
+    [DataType(DataType.Password)]
+    [Display(Name = "Bekræft kodeord")]
+    [Compare("Password", ErrorMessage = "Kodeordet matcher ikke bekræftelsen deraf")]
+    public string ConfirmPassword { get; set; }
   }
 }

@@ -29,9 +29,10 @@ namespace _20201110_ALS2.Controllers {
     public async Task<IActionResult> Login(LoginModel loginModel, string returnUrl) {
       if (ModelState.IsValid) {
         IdentityUser user = await userManager.FindByNameAsync(loginModel.Name);
-        if (user != null)
-        {
+
+        if (user != null) {
           SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.RememberMe, false);
+
           if (result.Succeeded) {
             if (!string.IsNullOrEmpty(returnUrl)) {
               return Redirect(returnUrl);
@@ -46,27 +47,23 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    [AllowAnonymous]
     public async Task<RedirectResult> Logout(string returnUrl = "/") {
       await signInManager.SignOutAsync();
+
       return Redirect(returnUrl);
     }
 
     [HttpGet]
-    public IActionResult EditPassword()
-    {
+    public IActionResult EditPassword() {
       return View("ChangePassword", new ChangePasswordViewModel());
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditPassword(ChangePasswordViewModel changePasswordViewModel)
-    {
-      if (ModelState.IsValid)
-      {
-        IdentityUser user = await userManager.GetUserAsync(User); //Henter brugeren som er logget ind - brugeren der requester denne http request
+    public async Task<IActionResult> EditPassword(ChangePasswordViewModel changePasswordViewModel) {
+      if (ModelState.IsValid) {
+        IdentityUser user = await userManager.GetUserAsync(User);
 
-        if (user == null)
-        {
+        if (user == null) {
           return RedirectToAction("Login");
         }
 

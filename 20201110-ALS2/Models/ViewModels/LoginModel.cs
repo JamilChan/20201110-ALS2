@@ -11,13 +11,7 @@ namespace _20201110_ALS2.Models.ViewModels {
 
     [Required]
     [DataType(DataType.Password)]
-    [Display(Name = "Kodeord")]
     public string Password { get; set; }
-
-    //[DataType(DataType.Password)]
-    //[Display(Name = "Bekræft kodeord")]
-    //[Compare("Password", ErrorMessage = "Kodeordet matcher ikke bekræftelsen deraf")]
-    //public string ConfirmPassword { get; set; }
 
     [Display(Name = "Remember me?")]
     public bool RememberMe { get; set; }

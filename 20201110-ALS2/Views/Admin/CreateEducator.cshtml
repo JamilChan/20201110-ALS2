@@ -6,16 +6,6 @@
   Layout = "_AdminLayout";
 }
 
-<html>
-<head>
-  <meta name="viewport" content="width-device-width" />
-  <title>Undervisere</title>
-</head>
-<style>
-  body {
-    background-color: darkgray;
-  }
-</style>
 <body>
   <form asp-action="CreateEducator" method="post">
     <div class="form-group">
@@ -24,30 +14,19 @@
       <input class="form-control" asp-for="Educator.Name" />
     </div>
     <div class="form-group">
-      <label asp-for="LoginModel.Name">Username</label>
-      <div><span class="text-danger" asp-validation-for="LoginModel.Name"></span></div>
-      <input class="form-control" asp-for="LoginModel.Name" />
+      <label asp-for="Name">Username</label>
+      <div><span class="text-danger" asp-validation-for="Name"></span></div>
+      <input class="form-control" asp-for="Name" />
     </div>
     <div class="form-group">
-      <label asp-for="LoginModel.Password"></label>
-      <div><span class="text-danger" asp-validation-for="LoginModel.Password"></span></div>
-      <input class="form-control" asp-for="LoginModel.Password" />
+      <label asp-for="Password"></label>
+      <div><span class="text-danger" asp-validation-for="Password"></span></div>
+      <input class="form-control" asp-for="Password" />
     </div>
-    @*<div class="form-group">
-      <label asp-for="LoginModel.ConfirmPassword"></label>
-      <div><span class="text-danger" asp-validation-for="LoginModel.ConfirmPassword"></span></div>
-      <input class="form-control" asp-for="LoginModel.ConfirmPassword" />
-    </div>*@
-
     <div class="form-group">
-      <label asp-for="RoleName">Rolle</label>
-      <br />
-      <select asp-for="RoleName">
-        <option value=""></option>
-        @foreach (IdentityRole role in Model.AllRoles) {
-          <option value="@role.Id">@role.Name</option>
-        }
-      </select>
+      <label asp-for="ConfirmPassword"></label>
+      <div><span class="text-danger" asp-validation-for="ConfirmPassword"></span></div>
+      <input class="form-control" asp-for="ConfirmPassword" />
     </div>
 
     <div class="text-center">
@@ -56,4 +35,3 @@
     </div>
   </form>
 </body>
-</html>
