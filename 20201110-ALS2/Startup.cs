@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Omu.AwesomeMvc;
 using Westwind.AspNetCore.LiveReload;
 
 namespace _20201110_ALS2 {
@@ -31,6 +32,12 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentCourseRepository, EFStudentCourseRepository>();
       services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
 
+      var provider = new AweMetaProvider();
+
+      services.AddMvc(o =>
+      {
+        o.ModelMetadataDetailsProviders.Add(provider);
+      });
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });

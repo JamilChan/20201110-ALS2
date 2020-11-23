@@ -1,0 +1,87 @@
+﻿<br />
+<div id="board0">
+  <div class="dropZone">
+    <p class="text-white">Row 3</p>
+    <a class="btn mcard dragItem bg-dark" asp-controller="Home" asp-action="Index">Martin</a>
+    <div class="mcard dragItem">Yasin</div>
+    <div class="mcard dragItem">Mads</div>
+    <div class="mcard dragItem">Casper</div>
+    <div class="mcard dragItem">Bjarke</div>
+    <div class="mcard dragItem">Jack</div>
+    <div class="mcard dragItem">Victor</div>
+    <div class="mcard dragItem">Claus</div>
+  </div>
+
+  <hr class="bg-white">
+
+  <div class="dropZone">
+    <p class="text-white">Row 2</p>
+    <a class="btn mcard dragItem bg-success" asp-controller="Home" asp-action="Index">Dean</a>
+    <div class="mcard dragItem">Emil</div>
+    <div class="mcard dragItem">Mathias</div>
+    <div class="mcard dragItem">Simon</div>
+    <div class="mcard dragItem">Mark</div>
+    <div class="mcard dragItem">Jacob</div>
+    <div class="mcard dragItem">Sabine</div>
+  </div>
+
+  <hr class="bg-white">
+
+  <div class="dropZone">
+    <p class="text-white">Row 1</p>
+    <div class="mcard dragItem">Søren</div>
+    <div class="mcard dragItem">Daniel</div>
+    <div class="mcard dragItem">Mark</div>
+    <div class="mcard dragItem">Christian</div>
+    <div class="mcard dragItem">Pia</div>
+    <div class="mcard dragItem">Viktor</div>
+  </div>
+</div>
+
+<style>
+  .dropZone {
+    border: 1px solid white;
+    border-radius: 2px;
+    height: 180px;
+    padding: 5px;
+  }
+
+    .dropZone.awe-highlight {
+      background-color: #ffdfb3 !important;
+    }
+
+  .dragItem {
+    display: inline-block;
+    background: darkcyan;
+    color: white;
+    padding: 2.5em 2.5em;
+    border-radius: 2px;
+    cursor: grab;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+
+  #board0 {
+    max-width: 206em;
+  }
+
+  .mcard.o-plh {
+    background: #f8da4e !important;
+    color: #915608 !important;
+  }
+</style>
+
+<script>
+  $(function () {
+    awem.dragReor({
+      from: $('#board0'),
+      to: 'body', // execute drop/hover over body
+      sel: '.mcard',
+      splh: 1, // sticky placeholder
+      gcon: function (cx) {
+        // get drop/hov container ( default was 'body' (to) )
+        return $('#board0');
+      }
+    });
+  });
+</script>
