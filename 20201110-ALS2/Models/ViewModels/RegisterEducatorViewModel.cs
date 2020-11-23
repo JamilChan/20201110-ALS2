@@ -10,7 +10,7 @@ namespace _20201110_ALS2.Models.ViewModels {
     public Educator Educator { get; set; }
 
     [Required(ErrorMessage = "Angiv et brugernavn")]
-    public string Name { get; set; }
+    public string UserName { get; set; }
 
     [Required(ErrorMessage = "Indtast et kodeord")]
     [DataType(DataType.Password)]

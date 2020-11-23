@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models.ViewModels {
   public class ChangePasswordViewModel {
-    [Required]
+    [Required(ErrorMessage = "Dit nuværende kodeord var ikke korrekt")]
     [DataType(DataType.Password)]
     [Display(Name = "Nuværende kodeord")]
     public string CurrentPassword { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Et nyt kodeord er påkrævet")]
     [DataType(DataType.Password)]
     [Display(Name = "Nyt kodeord")]
     public string NewPassword { get; set; }

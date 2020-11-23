@@ -21,17 +21,17 @@ namespace _20201110_ALS2.Controllers {
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Login(string returnUrl) {
-      return View(new LoginModel { ReturnUrl = returnUrl });
+      return View("Login", new LoginModel { ReturnUrl = returnUrl });
     }
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(LoginModel loginModel, string returnUrl) {
+    public async Task<IActionResult> Login(LoginModel model, string returnUrl) {
       if (ModelState.IsValid) {
-        IdentityUser user = await userManager.FindByNameAsync(loginModel.Name);
+        IdentityUser user = await userManager.FindByNameAsync(model.Name);
 
         if (user != null) {
-          SignInResult result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.RememberMe, false);
+          SignInResult result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 
           if (result.Succeeded) {
             if (!string.IsNullOrEmpty(returnUrl)) {
@@ -43,7 +43,7 @@ namespace _20201110_ALS2.Controllers {
         }
       }
       ModelState.AddModelError("", "Invalid name or password");
-      return View("Login", loginModel);
+      return View("Login", model);
     }
 
     [HttpPost]
@@ -59,7 +59,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditPassword(ChangePasswordViewModel changePasswordViewModel) {
+    public async Task<IActionResult> EditPassword(ChangePasswordViewModel model) {
       if (ModelState.IsValid) {
         IdentityUser user = await userManager.GetUserAsync(User);
 
@@ -67,7 +67,7 @@ namespace _20201110_ALS2.Controllers {
           return RedirectToAction("Login");
         }
 
-        IdentityResult result = await userManager.ChangePasswordAsync(user, changePasswordViewModel.CurrentPassword, changePasswordViewModel.NewPassword);
+        IdentityResult result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
 
         if (!result.Succeeded) {
           foreach (IdentityError error in result.Errors) {
@@ -81,7 +81,7 @@ namespace _20201110_ALS2.Controllers {
         return View("ChangedPasswordConfirmation");
       }
 
-      return View("ChangePassword", changePasswordViewModel);
+      return View("ChangePassword", model);
     }
   }
 }

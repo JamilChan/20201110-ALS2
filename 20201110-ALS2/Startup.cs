@@ -30,8 +30,9 @@ namespace _20201110_ALS2 {
       services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
 
       //Dependancy Injected Repositories
-      services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
+      services.AddScoped<IEducatorRepository, EfEducatorRepository>();
 
+      //Login Policy
       services.AddControllersWithViews(options =>
       {
         AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
