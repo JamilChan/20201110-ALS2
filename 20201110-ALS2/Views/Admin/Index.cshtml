@@ -32,7 +32,8 @@
         <td class="text-center">
           <form asp-action="DeleteEducator" method="post">
             <a class="btn btn-sm btn-primary" asp-action="EditEducator" asp-route-educatorId="@educator.EducatorId">Rediger</a>
-            <input type="hidden" name="EducatorId" value="@educator.EducatorId" />
+            <input type="hidden" name="EducatorId" value="@educator.EducatorId"/>
+            @*<input type="hidden" name="userId" value="@Model.AllUserIds"/>*@
             <button class="btn btn-sm btn-info" type="submit">Slet</button>
           </form>
         </td>

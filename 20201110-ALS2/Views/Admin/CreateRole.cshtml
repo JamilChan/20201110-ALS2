@@ -18,10 +18,12 @@
 <body>
   <form asp-action="CreateRole" method="post">
     <div class="form-group">
-      <label asp-for="RoleName"></label>
+      <label asp-for="RoleName">Rolle navn</label>
       <div><span class="text-danger" asp-validation-for="RoleName"></span></div>
       <input asp-for="RoleName" class="form-control" />
     </div>
+    <div class="text-danger" asp-validation-summary="All"></div>
+
     <div class="text-center">
       <button class="btn btn-lg btn-success" type="submit">Gem</button>
       <a class="btn btn-lg btn-light" asp-action="ListRoles">Annuller</a>

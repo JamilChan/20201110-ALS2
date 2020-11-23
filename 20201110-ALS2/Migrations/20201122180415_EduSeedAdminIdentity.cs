@@ -3,10 +3,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace _20201110_ALS2.Migrations
 {
-    public partial class AddingIdentity : Migration
+    public partial class EduSeedAdminIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "Education",
+                table: "Students",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Semester",
+                table: "Students",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -44,6 +57,19 @@ namespace _20201110_ALS2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Educators",
+                columns: table => new
+                {
+                    EducatorId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Educators", x => x.EducatorId);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +178,30 @@ namespace _20201110_ALS2.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "1", "eb597e22-f0b3-4e7a-b2b6-bdfa263ded6c", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1", 0, "3d8b23d7-4d83-4b40-bcd1-3ad1396645d8", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEB3DN+X/RDv2i77VvS1UClt5QaxwLkMJUuiY4DoIut81VVmSKVV0xSOpxBxvVlZS3Q==", null, false, "a04800ce-803a-4cfb-b01c-3af1e69b1b17", false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Educators",
+                columns: new[] { "EducatorId", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "God Flemse" },
+                    { 2L, "Big Daddy D" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "1", "1" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -210,10 +260,21 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Educators");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Education",
+                table: "Students");
+
+            migrationBuilder.DropColumn(
+                name: "Semester",
+                table: "Students");
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 namespace _20201110_ALS2.Models.ViewModels {
   public class RegisterEducatorViewModel {
     public Educator Educator { get; set; }
+
     public LoginModel LoginModel { get; set; }
 
     public string RoleName { get; set; }

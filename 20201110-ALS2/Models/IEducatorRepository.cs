@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 namespace _20201110_ALS2.Models {
   public interface IEducatorRepository
   {
-    Educator Get(int educatorId);
+    Educator Get(long educatorId);
     IQueryable<Educator> GetAll();
     void Add(Educator educator);
     Educator Update(Educator educatorChanges);
-    Educator Delete(int educatorId);
+    Educator Delete(long educatorId);
   }
 }

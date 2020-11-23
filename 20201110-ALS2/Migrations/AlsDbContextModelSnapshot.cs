@@ -49,7 +49,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "fb7c6440-26c2-44fc-81cf-6652ba09fdad",
+                            ConcurrencyStamp = "eb597e22-f0b3-4e7a-b2b6-bdfa263ded6c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -148,13 +148,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60402f12-757a-4003-aedb-a6db474a0f37",
+                            ConcurrencyStamp = "3d8b23d7-4d83-4b40-bcd1-3ad1396645d8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPxJjATXSMA5vs7BpoO8HP/MjcRxqdg8qhsa5CO89qi97kDDN4z9m+qzfwaS4kK/nQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB3DN+X/RDv2i77VvS1UClt5QaxwLkMJUuiY4DoIut81VVmSKVV0xSOpxBxvVlZS3Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d4c7f83c-36b4-4cf4-821f-e1370eff1259",
+                            SecurityStamp = "a04800ce-803a-4cfb-b01c-3af1e69b1b17",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -249,9 +249,9 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
                 {
-                    b.Property<int>("EducatorId")
+                    b.Property<long>("EducatorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .UseIdentityColumn();
 
                     b.Property<string>("Name")
@@ -265,12 +265,12 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            EducatorId = 1,
+                            EducatorId = 1L,
                             Name = "God Flemse"
                         },
                         new
                         {
-                            EducatorId = 2,
+                            EducatorId = 2L,
                             Name = "Big Daddy D"
                         });
                 });

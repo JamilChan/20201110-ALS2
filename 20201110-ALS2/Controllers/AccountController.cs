@@ -55,8 +55,36 @@ namespace _20201110_ALS2.Controllers {
     [HttpGet]
     public IActionResult EditPassword()
     {
-      return View();
+      return View("ChangePassword", new ChangePasswordViewModel());
     }
 
+    [HttpPost]
+    public async Task<IActionResult> EditPassword(ChangePasswordViewModel changePasswordViewModel)
+    {
+      if (ModelState.IsValid)
+      {
+        IdentityUser user = await userManager.GetUserAsync(User); //Henter brugeren som er logget ind - brugeren der requester denne http request
+
+        if (user == null)
+        {
+          return RedirectToAction("Login");
+        }
+
+        IdentityResult result = await userManager.ChangePasswordAsync(user, changePasswordViewModel.CurrentPassword, changePasswordViewModel.NewPassword);
+
+        if (!result.Succeeded) {
+          foreach (IdentityError error in result.Errors) {
+            ModelState.AddModelError("", error.Description);
+          }
+
+          return View("ChangePassword");
+        }
+
+        await signInManager.RefreshSignInAsync(user);
+        return View("ChangedPasswordConfirmation");
+      }
+
+      return View("ChangePassword", changePasswordViewModel);
+    }
   }
 }

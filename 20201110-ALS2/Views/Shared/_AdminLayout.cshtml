@@ -26,7 +26,8 @@
           <button class="btn btn-sm btn-primary mr-3" style="width: auto" type="submit"> Log Out @User.Identity.Name </button>
         </form>
         @*<i class='fas fa-user-cog' style='font-size:36px'></i>*@
-        <button asp-action="EditPassword" asp-controller="Account"><i class='fas fa-user-cog' style='font-size:36px'></i></button>
+        @*<button asp-action="EditPassword" asp-controller="Account"></button>*@
+        <a asp-action="EditPassword" asp-controller="Account"><i class='fas fa-user-cog' style='font-size:36px'></i></a>
       } else {
         <a class="btn btn-sm btn-primary" asp-action="Login" asp-controller="Account">Log In</a>
       }
@@ -36,7 +37,13 @@
   @if (TempData["message"] != null) {
     <div class="alert alert-success">@TempData["message"]</div>
   }
-  @RenderBody()
+
+  <div>
+    @RenderBody()
+  </div>
+  @if (IsSectionDefined("Scripts")) {
+    @await RenderSectionAsync("Scripts", required: true)
+  }
 </body>
 </html>
 

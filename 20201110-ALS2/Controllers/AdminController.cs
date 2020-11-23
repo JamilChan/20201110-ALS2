@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -26,7 +27,13 @@ namespace _20201110_ALS2.Controllers {
     public IActionResult Index() {
       EducatorsViewModel edcModel = new EducatorsViewModel { AllEducators = repository.GetAll(), AllRoles = roleManager.Roles }; //er deer en smartere måde at sætte dette på?
       IQueryable<Educator> educators = repository.GetAll();
-      //Find undervisers rolle
+
+      //List<string> userIdList = new List<string>(); // det at slette , skal det ske igennem et andet view?
+
+      //foreach (IdentityUser user in userManager.Users) {
+      //  userIdList.Add(user.Id);
+      //}
+
       return View("Index", edcModel);
     }
 
@@ -38,13 +45,15 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEducator(RegisterEducatorViewModel registerEducatorViewModel) {
+    public async Task<IActionResult> CreateEducator(RegisterEducatorViewModel registerEducatorViewModel, string roleId) {
       if (ModelState.IsValid) {
         repository.Add(registerEducatorViewModel.Educator);
         TempData["Message"] = registerEducatorViewModel.Educator.Name + " er blevet oprettet";
 
         IdentityUser newUser = new IdentityUser { UserName = registerEducatorViewModel.LoginModel.Name };
         await userManager.CreateAsync(newUser, registerEducatorViewModel.LoginModel.Password);
+
+        //Mangler funktionalitet for at kunne tilføje en underviser til en rolle ved oprettelse - er det nødvendigt? Det er vel flemming??
 
         return RedirectToAction("Index");
       } else {
@@ -54,7 +63,7 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult EditEducator(int educatorId) {
-      //Skal der laves mulighed for at ændre roller på en specifik educator?
+
       return View("Edit", repository.Get(educatorId));
     }
 
@@ -76,7 +85,6 @@ namespace _20201110_ALS2.Controllers {
       if (educatorDeleted != null) {
         TempData["Message"] = educatorDeleted.Name + " er blevet slettet";
       }
-      //Håndtering af fejl?
 
       return RedirectToAction("Index");
     }
@@ -102,7 +110,7 @@ namespace _20201110_ALS2.Controllers {
         IdentityResult result = await roleManager.CreateAsync(newRole);
 
         if (result.Succeeded) {
-          return RedirectToAction("ListRoles", "Admin");
+          return RedirectToAction("ListRoles", "Admin"); //Bør vi også skrive controlleren? I dette tilfælde er det den samme
         }
 
         foreach (IdentityError error in result.Errors) {
@@ -130,6 +138,31 @@ namespace _20201110_ALS2.Controllers {
         }
       }
       return View("EditRole", editRoleViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditRole(EditRoleViewModel editRoleViewModel) {
+      IdentityRole role = await roleManager.FindByIdAsync(editRoleViewModel.RoleId);
+
+      if (role == null) {
+        ViewBag.ErrorMessage = "Rolle med id = " + editRoleViewModel.RoleId + " kunne ikke findes";
+
+        return View("NotFound");
+      } else {
+        role.Name = editRoleViewModel.RoleName;
+
+        IdentityResult result = await roleManager.UpdateAsync(role);
+
+        if (result.Succeeded) {
+          return RedirectToAction("ListRoles");
+        }
+
+        foreach (IdentityError error in result.Errors) {
+          ModelState.AddModelError("", error.Description);
+        }
+
+        return View("EditRole", editRoleViewModel);
+      }
     }
 
     [HttpGet]

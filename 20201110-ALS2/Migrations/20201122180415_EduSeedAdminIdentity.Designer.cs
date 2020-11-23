@@ -10,8 +10,8 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201118091043_AddingIdentity")]
-    partial class AddingIdentity
+    [Migration("20201122180415_EduSeedAdminIdentity")]
+    partial class EduSeedAdminIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,15 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "eb597e22-f0b3-4e7a-b2b6-bdfa263ded6c",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -135,6 +144,22 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3d8b23d7-4d83-4b40-bcd1-3ad1396645d8",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB3DN+X/RDv2i77VvS1UClt5QaxwLkMJUuiY4DoIut81VVmSKVV0xSOpxBxvVlZS3Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a04800ce-803a-4cfb-b01c-3af1e69b1b17",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -196,6 +221,13 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -219,9 +251,9 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
                 {
-                    b.Property<int>("EducatorId")
+                    b.Property<long>("EducatorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .UseIdentityColumn();
 
                     b.Property<string>("Name")
@@ -235,12 +267,12 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            EducatorId = 1,
+                            EducatorId = 1L,
                             Name = "God Flemse"
                         },
                         new
                         {
-                            EducatorId = 2,
+                            EducatorId = 2L,
                             Name = "Big Daddy D"
                         });
                 });

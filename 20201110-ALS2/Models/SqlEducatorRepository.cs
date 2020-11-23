@@ -11,7 +11,7 @@ namespace _20201110_ALS2.Models {
     public SqlEducatorRepository(AlsDbContext context) {
       this.context = context;
     }
-    public Educator Get(int educatorId) {
+    public Educator Get(long educatorId) {
       return context.Educators.Find(educatorId);
     }
 
@@ -37,7 +37,7 @@ namespace _20201110_ALS2.Models {
 
       return educatorChanges;
     }
-    public Educator Delete(int educatorId) {
+    public Educator Delete(long educatorId) {
       Educator educator = context.Educators.Find(educatorId);
       if (educator != null) {
         context.Educators.Remove((educator));
