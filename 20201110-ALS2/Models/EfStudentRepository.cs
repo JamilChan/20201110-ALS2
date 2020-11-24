@@ -26,6 +26,11 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
+    public void Update(Student student) {
+      context.Students.Update(student);
+      context.SaveChanges();
+    }
+
     public List<Student> GetAllStudentsFromCourses(Course course) {
       IQueryable<StudentCourse> studentCourse = context.StudentCourses.Include(sc => sc.Course).Where(sc => sc.CourseId == course.CourseId).Include(sc => sc.Student);
       List<Student> students = new List<Student>();

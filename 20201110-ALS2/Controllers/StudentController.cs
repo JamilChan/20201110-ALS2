@@ -12,7 +12,33 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public IActionResult Overview() {
+      
+      return View("Overview", studentRepo.Students);
+    }
 
+    [HttpGet]
+    public IActionResult Crud(string crud, long studentId) {
+      ViewBag.crud = crud;
+      Student student = new Student();
+
+      if (crud == "edit") {
+        foreach (Student s in studentRepo.Students) {
+          if (studentId == s.StudentId) {
+            student = s;
+          }
+        }
+      }
+
+      return View("Crud", student);
+    }
+
+    [HttpPost]
+    public IActionResult Create(Student student) {
+      if (!ModelState.IsValid) {
+        return View("Crud", student);
+      }
+
+      studentRepo.Create(student);
 
       return View("Overview", studentRepo.Students);
     }
@@ -25,12 +51,15 @@ namespace _20201110_ALS2.Controllers {
       return View("Overview", studentRepo.Students);
     }
 
+    [HttpPost]
+    public IActionResult Update(Student student) {
+      if (!ModelState.IsValid) {
+        return View("Crud", student);
+      }
 
-    [HttpGet]
-    public IActionResult Crud(string crud) {
+      studentRepo.Update(student);
 
-
-      return View("Crud");
+      return View("Overview", studentRepo.Students);
     }
   }
 }
