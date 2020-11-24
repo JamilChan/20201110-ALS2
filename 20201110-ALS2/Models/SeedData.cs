@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using _20201110_ALS2.Models;
@@ -10,6 +11,7 @@ namespace _20201110_ALS2.Models {
   public static class SeedData {
 
     public static void Seed(this ModelBuilder modelBuilder) {
+
       modelBuilder.Entity<Student>().HasData(
             new Student { StudentId = 1, Name = "Mathias", Education = "Computer Science", Semester = 3 },
             new Student { StudentId = 2, Name = "Hans", Education = "Computer Science", Semester = 3 },

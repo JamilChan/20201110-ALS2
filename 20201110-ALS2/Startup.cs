@@ -29,12 +29,8 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddScoped<IStudentCourseRepository, EFStudentCourseRepository>();
-
-
-      //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
 
-      services.AddControllersWithViews();
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });
@@ -58,8 +54,7 @@ namespace _20201110_ALS2 {
 
       app.UseRouting();
 
-      //app.UseAuthorization();
-      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(

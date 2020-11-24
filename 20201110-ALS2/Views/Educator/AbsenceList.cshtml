@@ -1,41 +1,86 @@
-﻿@model IQueryable<Student>
+﻿@model _20201110_ALS2.Models.ViewModels.StudentListViewModel
 
 @{
   ViewData["Title"] = "Home Page";
 }
 
+<form asp-controller="Educator" asp-action="Toggle">
+  <input type="hidden" asp-for="Course.CourseId" />
+  <input type="hidden" asp-for="Date" />
+  <div class="p-2 pt-3">
+    <label class="text-white h2"> Tag Fravær </label>
+    @if (!Model.Edit) {
+      <label class="switch float-right">
+        <input type="checkbox" name="IsChecked" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "") @(Model.Edit ? "disabled" : "")>
+        <span class="slider round"></span>
+      </label>
 
-<form asp-action="AbsenceList" method="post">
-  <table class="table-bordered bg-white">
+      <label class="text-white h6 float-right pt-2 pr-3 @(ViewBag.Check ? "text-success" : "text-danger")"> @(ViewBag.Check ? "Fremmødt" : "Fraværende") </label>
+      <label class="text-white h6 float-right pt-2 pr-1"> Automatisk vælg: </label>
+    }
+  </div>
+</form>
+
+<form asp-controller="Educator" asp-action="AbsenceList" method="post">
+  <input type="hidden" asp-for="Course.CourseId" />
+  <input type="hidden" asp-for="Date" />
+  <input type="hidden" asp-for="Edit" />
+  <table class="table-bordered table-sm table-striped table-dark text-white">
     <thead>
       <tr>
-        <th>Navn</th>
-        <th>Fremmødt</th>
-        <th>Fraværende</th>
-        <th>Virtuelt Tilstede</th>
+        <th class="w-25 text-center">Navn</th>
+        <th class="w-25 text-center">Fremmødt</th>
+        <th class="w-25 text-center">Fraværende</th>
+        <th class="w-25 text-center">Virtuelt Tilstede</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
-      @foreach (Student s in Model) {
-        <tr>
-          <td>
-            @s.Name
-          </td>
-          <td class="text-center">
-            <input type="checkbox" name="attended" value="@s.StudentId" />
-          </td>
-          <td class="text-center">
-            <input type="checkbox" name="absence" value="@s.StudentId" />
-          </td>
-          <td class="text-center">
-            <input type="checkbox" name="virtual" value="@s.StudentId" />
-          </td>
-        </tr>
+      @if (Model.Edit) {
+        for (int i = 0; i < Model.StudentsList.Count; i++) {
+          foreach (Absence a in Model.AbsencesList) {
+            if (Model.StudentsList[i].StudentId == a.Student.StudentId) {
+              <tr>
+                <td>
+                  @Model.StudentsList[i].Name
+                </td>
+                <td class="text-center">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(a.Status == "attended")">
+                </td>
+                <td class="text-center">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(a.Status == "absent")">
+                </td>
+                <td class="text-center">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]" checked="@(a.Status == "virtual")">
+                </td>
+              </tr>
+            }
+          }
+        }
+      } else {
+        for (int i = 0; i < Model.StudentsList.Count; i++) {
+          <tr>
+            <td>
+              @Model.StudentsList[i].Name
+            </td>
+            <td class="text-center">
+              <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == true)">
+            </td>
+            <td class="text-center">
+              <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == false)">
+            </td>
+            <td class="text-center">
+              <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]">
+            </td>
+          </tr>
+        }
       }
     </tbody>
   </table>
 
-  <div>
-    <input class="btn bg-white" type="submit" value="Submit" />
+  <div class="pt-3">
+    <input class="btn btn-success" type="submit" value="Submit" />
   </div>
 </form>
+
+<div class="text-white">Course: @Model.Course.CourseId</div>

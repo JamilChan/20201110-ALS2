@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
   public class EFStudentCourseRepository : IStudentCourseRepository {
@@ -10,17 +11,20 @@ namespace _20201110_ALS2.Models {
     public EFStudentCourseRepository(AlsDbContext context) {
       this.context = context;
     }
+
+    public IQueryable<StudentCourse> StudentCourses => context.StudentCourses.Include(sc => sc.Course).Include(sc => sc.Student);
+
     public void CreateStudentCourse(StudentCourse sc) {
-      context.StudentCourse.Add(sc);
+      context.StudentCourses.Add(sc);
       context.SaveChanges();
     }
-    public void UpdateStudentCourse(Course Course, Student Student) {
-      if (Course.CourseId == 0 && Student.StudentId == 0) {
-        context.StudentCourse.Add(new StudentCourse { CourseId = Course.CourseId, StudentId = Student.StudentId });
-      } else {
-        StudentCourse dbEntryStudentCourse = context.StudentCourse.FirstOrDefault(sc => sc.StudentId == Student.StudentId);
-      }
 
+    public void UpdateStudentCourse(Course course, Student student) {
+      if (course.CourseId == 0 && student.StudentId == 0) {
+        context.StudentCourses.Add(new StudentCourse { CourseId = course.CourseId, StudentId = student.StudentId });
+      } else {
+        StudentCourse dbEntryStudentCourse = context.StudentCourses.FirstOrDefault(sc => sc.StudentId == student.StudentId);
+      }
     }
   }
 }

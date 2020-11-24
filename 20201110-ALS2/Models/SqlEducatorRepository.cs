@@ -11,11 +11,11 @@ namespace _20201110_ALS2.Models {
     public SqlEducatorRepository(AlsDbContext context) {
       this.context = context;
     }
-    public Educator Get(int educatorId) {
+    public Educator Get(long educatorId) {
       return context.Educators.Find(educatorId);
     }
 
-    public IQueryable<Educator> GetAll() {
+    public IQueryable<Educator> Educators() {
       return context.Educators;
     }
 
