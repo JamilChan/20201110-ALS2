@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120092334_WeekAdded")]
+    partial class WeekAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,7 +264,7 @@ namespace _20201110_ALS2.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("WeekId")
+                    b.Property<long?>("WeekId")
                         .HasColumnType("bigint");
 
                     b.HasKey("CourseId");
@@ -309,8 +311,14 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Education")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
 
                     b.HasKey("StudentId");
 
@@ -458,9 +466,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasOne("_20201110_ALS2.Models.Week", "Week")
                         .WithMany()
-                        .HasForeignKey("WeekId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WeekId");
 
                     b.Navigation("Educator");
 

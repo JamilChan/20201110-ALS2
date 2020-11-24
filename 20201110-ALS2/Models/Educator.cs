@@ -10,5 +10,9 @@ namespace _20201110_ALS2.Models {
 
     [Required(ErrorMessage = "Indtast venligst navn på underviser")]
     public string Name { get; set; }
+
+    public override string ToString() {
+      return Name;
+    }
   }
 }
