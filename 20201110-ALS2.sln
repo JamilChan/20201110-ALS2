@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "20201110-ALS2", "20201110-ALS2\20201110-ALS2.csproj", "{EF608807-AC88-4DAE-B33E-40F0E8754CC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ALS2xUnitTest", "ALS2xUnitTest\ALS2xUnitTest.csproj", "{B323DD43-A147-4F76-821C-A3EA2CE73057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALS2xUnitTest", "ALS2xUnitTest\ALS2xUnitTest.csproj", "{B323DD43-A147-4F76-821C-A3EA2CE73057}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
