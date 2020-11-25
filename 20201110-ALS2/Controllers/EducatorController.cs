@@ -54,21 +54,18 @@ namespace _20201110_ALS2.Controllers {
             break;
           }
         }
+
         string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
         List<StudentCourse> scList = new List<StudentCourse>();
+
         if (selectedList[0] != "") {
           foreach (var sId in selectedList) {
             StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int32.Parse(sId)) };
             scList.Add(sc);
           }
-          if (ccvm.Edit) {
-            scRepo.DeleteStudentCourse(ccvm.Crs.CourseId);
-            scRepo.CreateStudentCourse(scList);
-          }
-          else {
-            scRepo.CreateStudentCourse(scList);
-          }
+
+          ccvm.Crs.StudentCourses = scList;
         }
         
         courseRepo.SaveCourse(ccvm.Crs);

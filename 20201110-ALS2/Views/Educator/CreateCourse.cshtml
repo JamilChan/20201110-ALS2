@@ -2,44 +2,45 @@
 
 <form asp-action="CreateCourse" method="post">
   <input type="hidden" asp-for="Crs.CourseId" />
+  <input type="hidden" asp-for="Crs.Week.WeekId" />
   <input type="hidden" asp-for="Edit" />
   <div asp-validation-summary="All"></div>
 
-    <label asp-for="Crs.Name">Course Name:</label>
-  <input asp-for="Crs.Name" /> 
+  <label asp-for="Crs.Name">Course Name:</label>
+  <input asp-for="Crs.Name" />
   <br /><br />
 
-    <label asp-for="SelectedEducator">Educator:</label>
-    @Html.DropDownListFor(m => m.SelectedEducator, new SelectList(Model.EducatorNameList), "Select Educator")
-    <br /><br />
+  <label asp-for="SelectedEducator">Educator:</label>
+  @Html.DropDownListFor(m => m.SelectedEducator, new SelectList(Model.EducatorNameList), "Select Educator")
+  <br /><br />
 
-    <table class="table table-striped table-bordered table-sm">
-      <thead>
-        <tr>
-          <th>Mandag</th>
-          <th>Tirsdag</th>
-          <th>Onsdag</th>
-          <th>Torsdag</th>
-          <th>Fridag</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>@Html.CheckBoxFor(m => m.Crs.Week.Monday, true)</td>
-          <td>@Html.CheckBoxFor(m => m.Crs.Week.Tuesday, true)</td>
-          <td>@Html.CheckBoxFor(m => m.Crs.Week.Wednesday, true)</td>
-          <td>@Html.CheckBoxFor(m => m.Crs.Week.Thursday, true)</td>
-          <td>@Html.CheckBoxFor(m => m.Crs.Week.Friday, true)</td>
-        </tr>
-      </tbody>
-    </table>
+  <table class="table table-striped table-bordered table-sm">
+    <thead>
+      <tr>
+        <th>Mandag</th>
+        <th>Tirsdag</th>
+        <th>Onsdag</th>
+        <th>Torsdag</th>
+        <th>Fridag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>@Html.CheckBoxFor(m => m.Crs.Week.Monday, true)</td>
+        <td>@Html.CheckBoxFor(m => m.Crs.Week.Tuesday, true)</td>
+        <td>@Html.CheckBoxFor(m => m.Crs.Week.Wednesday, true)</td>
+        <td>@Html.CheckBoxFor(m => m.Crs.Week.Thursday, true)</td>
+        <td>@Html.CheckBoxFor(m => m.Crs.Week.Friday, true)</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <br />
-    <label asp-for="Crs.StartDate">Start Date:</label>
-    <input asp-for="Crs.StartDate" /> <br /><br />
+  <br />
+  <label asp-for="Crs.StartDate">Start Date:</label>
+  <input asp-for="Crs.StartDate" /> <br /><br />
 
-    <label asp-for="Crs.EndDate">End Date:</label>
-    <input asp-for="Crs.EndDate" /> <br /><br />
+  <label asp-for="Crs.EndDate">End Date:</label>
+  <input asp-for="Crs.EndDate" /> <br /><br />
 
   <table class="table table-striped table-bordered table-sm">
     <thead>
@@ -52,32 +53,31 @@
     </thead>
     <tbody>
       @foreach (Student student in Model.StudentList) {
-      <tr>
-        <td>@student.Name</td>
-        <td>@student.Education</td>
-        <td>@student.Semester</td>
-        @if (Model.Edit) {
-          ViewBag.Checked = false;
-          foreach (Student s in Model.CheckedStudents) {
-            if (student.StudentId == s.StudentId) {
-              ViewBag.Checked = true;
+        <tr>
+          <td>@student.Name</td>
+          <td>@student.Education</td>
+          <td>@student.Semester</td>
+          @if (Model.Edit) {
+            ViewBag.Checked = false;
+            foreach (Student s in Model.CheckedStudents) {
+              if (student.StudentId == s.StudentId) {
+                ViewBag.Checked = true;
+                <td>
+                  <input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
+                </td>
+              }
+            }
+            if (!ViewBag.Checked) {
               <td>
-                <input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
+                <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
               </td>
             }
-          }
-          if (!ViewBag.Checked) {
+          } else {
             <td>
               <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
             </td>
           }
-        }
-        else {
-          <td>
-            <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
-          </td>
-        }
-      </tr>
+        </tr>
       }
     </tbody>
   </table>

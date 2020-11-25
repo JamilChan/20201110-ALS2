@@ -18,7 +18,7 @@ namespace _20201110_ALS2.Models {
       if (course.CourseId == 0) {
         context.Courses.Add(course);
       } else {
-        Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == course.CourseId);
+        Course dbEntry = context.Courses.Include(c => c.StudentCourses).FirstOrDefault(c => c.CourseId == course.CourseId);
         if (dbEntry != null) {
           dbEntry.Name = course.Name;
           dbEntry.Educator = course.Educator;
@@ -26,7 +26,6 @@ namespace _20201110_ALS2.Models {
           dbEntry.StartDate = course.StartDate;
           dbEntry.EndDate = course.EndDate;
           dbEntry.StudentCourses = course.StudentCourses;
-          context.Courses.Update(dbEntry);
         }
       }
       context.SaveChanges();
