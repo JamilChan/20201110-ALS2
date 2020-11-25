@@ -65,8 +65,8 @@ namespace _20201110_ALS2.Migrations
                 {
                     StudentId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Education = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Education = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Semester = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -198,7 +198,7 @@ namespace _20201110_ALS2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseList",
+                name: "Courses",
                 columns: table => new
                 {
                     CourseId = table.Column<long>(type: "bigint", nullable: false)
@@ -243,19 +243,19 @@ namespace _20201110_ALS2.Migrations
                     table.ForeignKey(
                         name: "FK_Absences_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "CourseList",
+                        principalTable: "Courses",
                         principalColumn: "CourseId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Absences_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentCourse",
+                name: "StudentCourses",
                 columns: table => new
                 {
                     CourseId = table.Column<long>(type: "bigint", nullable: false),
@@ -263,20 +263,30 @@ namespace _20201110_ALS2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentCourse", x => new { x.StudentId, x.CourseId });
+                    table.PrimaryKey("PK_StudentCourses", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Courses_CourseId",
+                        name: "FK_StudentCourses_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "CourseList",
+                        principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Students_StudentId",
+                        name: "FK_StudentCourses_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "1", "77b226c9-6e27-4a82-8767-c5e2731091a0", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1", 0, "603d0366-e5aa-488b-9180-de687016d6ae", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEOyAlFKpYx4d9GOhxLf/hJtw/w/kJMGZxpy7dTnPInktc0rN2sFDBC23UlPIMyOgdA==", null, false, "3e7b728f-6939-454a-b562-ef6a59ac4f46", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Educators",
@@ -296,6 +306,11 @@ namespace _20201110_ALS2.Migrations
                     { 2L, "Computer Science", "Hans", 3 },
                     { 3L, "Computer Science", "Claus", 3 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "1", "1" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Absences_CourseId",
@@ -348,17 +363,17 @@ namespace _20201110_ALS2.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_EducatorId",
-                table: "CourseList",
+                table: "Courses",
                 column: "EducatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_WeekId",
-                table: "CourseList",
+                table: "Courses",
                 column: "WeekId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentCourse_CourseId",
-                table: "StudentCourse",
+                name: "IX_StudentCourses_CourseId",
+                table: "StudentCourses",
                 column: "CourseId");
         }
 
@@ -383,7 +398,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "StudentCourse");
+                name: "StudentCourses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -392,7 +407,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "CourseList");
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "Students");

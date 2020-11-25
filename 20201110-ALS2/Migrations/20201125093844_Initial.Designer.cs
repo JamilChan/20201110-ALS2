@@ -10,7 +10,7 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201120110243_Initial")]
+    [Migration("20201125093844_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,15 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "77b226c9-6e27-4a82-8767-c5e2731091a0",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -135,6 +144,22 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "603d0366-e5aa-488b-9180-de687016d6ae",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOyAlFKpYx4d9GOhxLf/hJtw/w/kJMGZxpy7dTnPInktc0rN2sFDBC23UlPIMyOgdA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "3e7b728f-6939-454a-b562-ef6a59ac4f46",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -196,6 +221,13 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -276,7 +308,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("CourseList");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
@@ -315,9 +347,11 @@ namespace _20201110_ALS2.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("Education")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Semester")
@@ -363,7 +397,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudentCourse");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
@@ -448,11 +482,13 @@ namespace _20201110_ALS2.Migrations
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("_20201110_ALS2.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 
