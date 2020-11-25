@@ -24,7 +24,7 @@
       <form asp-action="DeleteCourse" method="post">
         <a class="btn btn-sm btn-primary" asp-action="ViewThisCourse" asp-route-courseId="@course.CourseId">Se mere</a>
         <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Ændre</a>
-        <input type="hidden" name="CourseId" value="@course.CourseId" />
+        <input type="hidden" name="courseId" value="@course.CourseId" />
         <button class="btn btn-sm btn-info" type="submit">Slet</button>
       </form>
     </td>

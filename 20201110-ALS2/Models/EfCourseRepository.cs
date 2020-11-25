@@ -31,12 +31,13 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
-    public Course Delete(int CourseId) {
-      Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == CourseId);
+    public Course Delete(int courseId) {
+      Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
       if (dbEntry != null) {
         context.Courses.Remove(dbEntry);
         context.SaveChanges();
       }
+
       return dbEntry;
     }
 
@@ -46,6 +47,7 @@ namespace _20201110_ALS2.Models {
       foreach (StudentCourse sc in ss) {
         sStudents.Add(sc.Student);
       }
+
       return sStudents;
     }
   }
