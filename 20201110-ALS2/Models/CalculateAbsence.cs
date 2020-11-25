@@ -5,35 +5,41 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public class CalculateAbsence {
-    public double CalcAllStudentsAbsenceByCourse(List<Absence> absenceList) {
-      double absenceInPercent = 0.0;
+    public string StudentName { get; set; }
+    public double AbsenceInPercent { get; set; }
 
+    public List<CalculateAbsence> CalcAllAbsences(Course course, List<Absence> absenceByCourseList,
+      List<Student> studentList) {
+      List<CalculateAbsence> studentAbsenceList = new List<CalculateAbsence>();
 
+      foreach (Student student in studentList) {
+        studentAbsenceList.Add(AbsenceForStudent(course, absenceByCourseList, student));
+      }
 
-      return absenceInPercent;
+      return studentAbsenceList;
     }
 
+    private CalculateAbsence AbsenceForStudent(Course course, List<Absence> absenceByCourseList, Student student) {
+      List<Absence> studentAbsenceList = absenceByCourseList.FindAll(a => a.Student.StudentId == student.StudentId);
 
+      double daysOfAbsence = studentAbsenceList.Count;
+      double totalCourseDays = TotalDays(course);
 
-    public double CalcStudentAbsence(List<Absence> absencesList, Student student, Course course) {
-      
+      double result = (daysOfAbsence / totalCourseDays) * 100;
 
+      CalculateAbsence studentAbsence = new CalculateAbsence { StudentName = student.Name, AbsenceInPercent = result };
 
-      return 0.0;
+      return studentAbsence;
     }
 
-
-
-
-
-    private double AllDays(Course course) {
+    private double TotalDays(Course course) {
       double allSchoolDays = 0;
-      DateTime currentDate = course.StartDate;
+      DateTime days = course.StartDate;
 
       double startEndDiff = (course.EndDate - course.StartDate).TotalDays;
 
       for (double i = 0; i < startEndDiff; i++) {
-        switch (currentDate.DayOfWeek.ToString()) {
+        switch (days.DayOfWeek.ToString()) {
           case "Monday":
             if (course.Week.Monday) {
               allSchoolDays++;
@@ -63,14 +69,11 @@ namespace _20201110_ALS2.Models {
             break;
         }
 
-        currentDate = currentDate.AddDays(1);
+        days = days.AddDays(1);
       }
 
       return allSchoolDays;
     }
-
-
-
 
   }
 }
