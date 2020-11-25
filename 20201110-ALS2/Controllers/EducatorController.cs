@@ -63,7 +63,8 @@ namespace _20201110_ALS2.Controllers {
             scList.Add(sc);
           }
           if (ccvm.Edit) {
-            scRepo.UpdateStudentCourse(scList);
+            scRepo.DeleteStudentCourse(ccvm.Crs.CourseId);
+            scRepo.CreateStudentCourse(scList);
           }
           else {
             scRepo.CreateStudentCourse(scList);

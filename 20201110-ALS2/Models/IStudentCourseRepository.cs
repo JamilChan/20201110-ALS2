@@ -7,6 +7,7 @@ namespace _20201110_ALS2.Models {
   public interface IStudentCourseRepository {
     IQueryable<StudentCourse> StudentCourses { get; }
     void CreateStudentCourse(List<StudentCourse> sCourse);
+    void DeleteStudentCourse(long courseId);
     void UpdateStudentCourse(List<StudentCourse> sCourse);
   }
 }

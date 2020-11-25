@@ -254,7 +254,7 @@ namespace _20201110_ALS2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentCourse",
+                name: "StudentCourses",
                 columns: table => new
                 {
                     CourseId = table.Column<long>(type: "bigint", nullable: false),
@@ -262,15 +262,15 @@ namespace _20201110_ALS2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentCourse", x => new { x.StudentId, x.CourseId });
+                    table.PrimaryKey("PK_StudentCourses", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Courses_CourseId",
+                        name: "FK_StudentCourses_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Students_StudentId",
+                        name: "FK_StudentCourses_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
@@ -356,8 +356,8 @@ namespace _20201110_ALS2.Migrations
                 column: "WeekId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentCourse_CourseId",
-                table: "StudentCourse",
+                name: "IX_StudentCourses_CourseId",
+                table: "StudentCourses",
                 column: "CourseId");
         }
 
@@ -382,7 +382,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "StudentCourse");
+                name: "StudentCourses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

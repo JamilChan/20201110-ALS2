@@ -10,7 +10,7 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201120091614_Initial")]
+    [Migration("20201124144925_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -360,7 +360,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudentCourse");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
