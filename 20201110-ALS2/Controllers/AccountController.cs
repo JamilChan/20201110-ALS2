@@ -62,8 +62,8 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public async Task<IActionResult> EditPassword(ChangePasswordViewModel model) {
       if (ModelState.IsValid) {
-        IdentityUser user = await userManager.GetUserAsync(User);
-        
+        Educator user = (Educator)await userManager.GetUserAsync(User);
+
         if (user == null) {
           return RedirectToAction("Login");
         }
