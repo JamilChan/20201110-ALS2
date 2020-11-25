@@ -198,7 +198,7 @@ namespace _20201110_ALS2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Courses",
+                name: "CourseList",
                 columns: table => new
                 {
                     CourseId = table.Column<long>(type: "bigint", nullable: false)
@@ -243,7 +243,7 @@ namespace _20201110_ALS2.Migrations
                     table.ForeignKey(
                         name: "FK_Absences_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Courses",
+                        principalTable: "CourseList",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -267,7 +267,7 @@ namespace _20201110_ALS2.Migrations
                     table.ForeignKey(
                         name: "FK_StudentCourse_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Courses",
+                        principalTable: "CourseList",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -348,12 +348,12 @@ namespace _20201110_ALS2.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_EducatorId",
-                table: "Courses",
+                table: "CourseList",
                 column: "EducatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_WeekId",
-                table: "Courses",
+                table: "CourseList",
                 column: "WeekId");
 
             migrationBuilder.CreateIndex(
@@ -392,7 +392,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "CourseList");
 
             migrationBuilder.DropTable(
                 name: "Students");

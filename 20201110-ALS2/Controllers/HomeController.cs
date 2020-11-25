@@ -17,59 +17,59 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public IActionResult Index() {
-      HomeIndexViewModel hi = new HomeIndexViewModel {
+      HomeIndexViewModel model = new HomeIndexViewModel {
         Date = DateTime.Now,
-        Courses = new List<Course>()
+        CourseList = new List<Course>()
       };
 
       List<Course> identityCourses = courseRepo.Courses.ToList();
-      dayOfWeekCheck(identityCourses, hi);
+      DayOfWeekCheck(identityCourses, model);
 
-      hi.CheckedCourse = absenceRepo.IsChecked(hi.Courses, hi.Date);
+      model.CheckedCourse = absenceRepo.CourseHasAbsence(model.CourseList, model.Date);
 
-      return View("Index", hi);
+      return View("Index", model);
     }
 
     [HttpPost]
-    public IActionResult Index(HomeIndexViewModel hi) {
-      hi.Courses = new List<Course>();
-      DateTime dateTime = hi.Date;
+    public IActionResult Index(HomeIndexViewModel model) {
+      model.CourseList = new List<Course>();
+      DateTime dateTime = model.Date;
 
-      if (hi.Direction == "Backward") {
-        dateTime = hi.Date.AddDays(-1);
-      } else if (hi.Direction == "Forward") {
-        dateTime = hi.Date.AddDays(1);
+      if (model.Direction == "Backward") {
+        dateTime = model.Date.AddDays(-1);
+      } else if (model.Direction == "Forward") {
+        dateTime = model.Date.AddDays(1);
       }
 
-      hi.Date = dateTime;
+      model.Date = dateTime;
 
       List<Course> identityCourses = courseRepo.Courses.ToList();
-      dayOfWeekCheck(identityCourses, hi);
+      DayOfWeekCheck(identityCourses, model);
 
-      hi.CheckedCourse = absenceRepo.IsChecked(hi.Courses, hi.Date);
+      model.CheckedCourse = absenceRepo.CourseHasAbsence(model.CourseList, model.Date);
 
-      return View("Index", hi);
+      return View("Index", model);
     }
 
-    private void dayOfWeekCheck(List<Course> identityCourses, HomeIndexViewModel hi) {
+    private void DayOfWeekCheck(List<Course> identityCourses, HomeIndexViewModel model) {
 
-      string[] date = hi.Date.ToString("O").Split("T", 2);
-      hi.DateAsString = date[0];
+      string[] date = model.Date.ToString("O").Split("T", 2);
+      model.DateAsString = date[0];
 
-      DayOfWeek dow = hi.Date.DayOfWeek;
+      DayOfWeek dayOfWeek = model.Date.DayOfWeek;
 
-      foreach (Course c in identityCourses) {
-        if (c.StartDate < hi.Date && hi.Date < c.EndDate) {
-          if (dow == DayOfWeek.Monday && c.Week.Monday) {
-            hi.Courses.Add(c);
-          } else if (dow == DayOfWeek.Tuesday && c.Week.Tuesday) {
-            hi.Courses.Add(c);
-          } else if (dow == DayOfWeek.Wednesday && c.Week.Wednesday) {
-            hi.Courses.Add(c);
-          } else if (dow == DayOfWeek.Thursday && c.Week.Thursday) {
-            hi.Courses.Add(c);
-          } else if (dow == DayOfWeek.Friday && c.Week.Friday) {
-            hi.Courses.Add(c);
+      foreach (Course course in identityCourses) {
+        if (course.StartDate < model.Date && model.Date < course.EndDate) {
+          if (dayOfWeek == DayOfWeek.Monday && course.Week.Monday) {
+            model.CourseList.Add(course);
+          } else if (dayOfWeek == DayOfWeek.Tuesday && course.Week.Tuesday) {
+            model.CourseList.Add(course);
+          } else if (dayOfWeek == DayOfWeek.Wednesday && course.Week.Wednesday) {
+            model.CourseList.Add(course);
+          } else if (dayOfWeek == DayOfWeek.Thursday && course.Week.Thursday) {
+            model.CourseList.Add(course);
+          } else if (dayOfWeek == DayOfWeek.Friday && course.Week.Friday) {
+            model.CourseList.Add(course);
           }
         }
       }

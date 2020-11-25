@@ -33,24 +33,26 @@ namespace _20201110_ALS2.Controllers {
 
       Course course = ApplyCourseWithId(courseId);
 
-      return View("AbsenceList", new StudentListViewModel {
+      StudentListViewModel model = new StudentListViewModel {
         StatusList = new string[studentRepo.Students.ToList().Count],
         StudentsList = studentRepo.GetAllStudentsFromCourses(course),
         AbsencesList = AbsenceForStudentList(courseId, date),
         Course = course,
         Date = date,
         Edit = edit
-      });
+      };
+
+      return View("AbsenceList", model);
     }
 
     [HttpPost]
-    public IActionResult AbsenceList(StudentListViewModel slvm) {
-      List<string> temp = slvm.StatusList.ToList();
+    public IActionResult AbsenceList(StudentListViewModel model) {
+      List<string> statusList = model.StatusList.ToList();
 
       List<Absence> absenceList = new List<Absence>();
 
-      if (!slvm.Edit) {
-        foreach (string s in temp) {
+      if (!model.Edit) {
+        foreach (string s in statusList) {
           string[] split = s.Split(":", 2);
 
           foreach (Student student in studentRepo.Students) {
@@ -58,14 +60,14 @@ namespace _20201110_ALS2.Controllers {
 
               Course selectedCourse = new Course();
               foreach (Course course in courseRepo.Courses) {
-                if (course.CourseId == slvm.Course.CourseId) {
+                if (course.CourseId == model.Course.CourseId) {
                   selectedCourse = course;
                 }
               }
 
               Absence absence = new Absence {
                 Student = student,
-                Date = slvm.Date,
+                Date = model.Date,
                 Course = selectedCourse,
                 Status = split[1]
               };
@@ -77,14 +79,14 @@ namespace _20201110_ALS2.Controllers {
 
         absenceRepo.CreateAbsence(absenceList);
       } else {
-        List<Absence> a = absenceRepo.AbsencesForDateCourse(slvm.Course, slvm.Date).ToList();
+        absenceList = absenceRepo.AbsencesForDateCourse(model.Course, model.Date).ToList();
 
-        absenceRepo.UpdateAbsence(a, temp);
+        absenceRepo.UpdateAbsence(absenceList, statusList);
       }
 
       ViewBag.Check = false;
 
-      return View("TestView", slvm.StatusList);
+      return RedirectToAction("Index", "Home");
     }
 
     [HttpPost]
@@ -105,9 +107,9 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult CreateCourse() {
-      CreateCourseViewModel ccvm = CreateCCVM();
+      CreateCourseViewModel model = CreateCCVM();
 
-      return View("CreateCourse", ccvm);
+      return View("CreateCourse", model);
     }
 
     [HttpPost]
@@ -166,11 +168,11 @@ namespace _20201110_ALS2.Controllers {
     }
 
     private Course ApplyCourseWithId(long courseId) {
-      List<Course> cl = courseRepo.Courses.ToList();
+      List<Course> courseList = courseRepo.Courses.ToList();
 
-      foreach (Course c in cl) {
-        if (c.CourseId == courseId) {
-          return c;
+      foreach (Course course in courseList) {
+        if (course.CourseId == courseId) {
+          return course;
         }
       }
 
@@ -178,15 +180,15 @@ namespace _20201110_ALS2.Controllers {
     }
 
     private List<Absence> AbsenceForStudentList(long courseId, DateTime date) {
-      List<Absence> absences = new List<Absence>();
+      List<Absence> absenceList = new List<Absence>();
 
       foreach (Absence absence in absenceRepo.Absences) {
         if (absence.Course.CourseId == courseId && absence.Date.Date == date.Date) {
-          absences.Add(absence);
+          absenceList.Add(absence);
         }
       }
 
-      return absences;
+      return absenceList;
     }
   }
 }

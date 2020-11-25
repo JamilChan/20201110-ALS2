@@ -274,7 +274,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("CourseList");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
@@ -312,14 +312,8 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Education")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Semester")
-                        .HasColumnType("int");
 
                     b.HasKey("StudentId");
 

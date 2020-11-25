@@ -7,9 +7,11 @@ namespace _20201110_ALS2.Models {
   public interface IEducatorRepository
   {
     Educator Get(long educatorId);
-    IQueryable<Educator> Educators();
-    void Add(Educator educator);
-    Educator Update(Educator educatorChanges);
-    Educator Delete(int educatorId);
+
+    IQueryable<Educator> Educators { get; }
+
+    void SaveEducator(Educator educator);
+
+    Educator Delete(long educatorId);
   }
 }

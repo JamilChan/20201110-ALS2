@@ -19,7 +19,7 @@ namespace _20201110_ALS2.Models {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
       modelBuilder.SeedEducators();
-      modelBuilder.Seed();
+      modelBuilder.SeedStudents();
       modelBuilder.Entity<StudentCourse>()
           .HasKey(sc => new { sc.StudentId, sc.CourseId });
       modelBuilder.Entity<StudentCourse>()
@@ -35,6 +35,7 @@ namespace _20201110_ALS2.Models {
       foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) {
         foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
       }
+      modelBuilder.SeedAdmin(this);
     }
   }
 }

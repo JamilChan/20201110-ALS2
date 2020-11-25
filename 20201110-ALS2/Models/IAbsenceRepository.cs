@@ -8,10 +8,10 @@ namespace _20201110_ALS2.Models {
 
     IQueryable<Absence> Absences { get; }
 
-    void CreateAbsence(List<Absence> a);
-    void UpdateAbsence(List<Absence> absence, List<string> status);
+    void CreateAbsence(List<Absence> absenceList);
+    void UpdateAbsence(List<Absence> absenceList, List<string> statusList);
 
-    Dictionary<Course, bool> IsChecked(List<Course> courses, DateTime date);
+    Dictionary<Course, bool> CourseHasAbsence(List<Course> courseList, DateTime date);
     IQueryable<Absence> AbsencesForDateCourse(Course course, DateTime date);
 
   }

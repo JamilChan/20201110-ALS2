@@ -14,43 +14,43 @@ namespace _20201110_ALS2.Models {
 
     public IQueryable<Absence> Absences => context.Absences.Include(a => a.Student).Include(a => a.Course);
 
-    public void CreateAbsence(List<Absence> al) {
-      foreach (Absence a in al) {
+    public void CreateAbsence(List<Absence> absenceList) {
+      foreach (Absence a in absenceList) {
         context.Absences.Add(a);
       }
       context.SaveChanges();
     }
 
-    public void UpdateAbsence(List<Absence> absence, List<string> status) {
+    public void UpdateAbsence(List<Absence> absenceList, List<string> statusList) {
 
-      for (int i = 0; i < absence.Count; i++) {
-        absence[i].Status = status[i].Split(":", 2)[1];
+      for (int i = 0; i < absenceList.Count; i++) {
+        absenceList[i].Status = statusList[i].Split(":", 2)[1];
 
-        context.Absences.Update(absence[i]);
+        context.Absences.Update(absenceList[i]);
       }
       context.SaveChanges();
     }
 
-    public Dictionary<Course, bool> IsChecked(List<Course> courses, DateTime date) {
-      Dictionary<Course, bool> d = new Dictionary<Course, bool>();
+    public Dictionary<Course, bool> CourseHasAbsence(List<Course> courseList, DateTime date) {
+      Dictionary<Course, bool> courseHasAbsence = new Dictionary<Course, bool>();
 
-      foreach (Course course in courses) {
+      foreach (Course course in courseList) {
         Absence a = context.Absences.Where(a => a.Date.Date == date.Date).FirstOrDefault(a => a.Course.CourseId == course.CourseId);
 
         if (a != null) {
-          d.Add(course, true);
+          courseHasAbsence.Add(course, true);
         } else {
-          d.Add(course, false);
+          courseHasAbsence.Add(course, false);
         }
       }
 
-      return d;
+      return courseHasAbsence;
     }
 
     public IQueryable<Absence> AbsencesForDateCourse(Course course, DateTime date) {
-      IQueryable<Absence> a = context.Absences.Include(a => a.Student).Include(a => a.Course).Where(a => a.Date.Date == date.Date && a.Course == course);
+      IQueryable<Absence> absences = context.Absences.Include(a => a.Student).Include(a => a.Course).Where(a => a.Date.Date == date.Date && a.Course == course);
 
-      return a;
+      return absences;
     }
   }
 }

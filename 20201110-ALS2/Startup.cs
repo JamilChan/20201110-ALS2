@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +31,17 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddScoped<IStudentCourseRepository, EFStudentCourseRepository>();
-      services.AddScoped<IEducatorRepository, SqlEducatorRepository>();
+      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
 
+      //Dependancy Injected Repositories
+      services.AddScoped<IEducatorRepository, EfEducatorRepository>();
+
+      //Login Policy
+      services.AddControllersWithViews(options =>
+      {
+        AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+        options.Filters.Add(new AuthorizeFilter(policy));
+      });
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });
@@ -55,6 +66,7 @@ namespace _20201110_ALS2 {
       app.UseRouting();
 
       app.UseAuthorization();
+      app.UseAuthentication();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(
