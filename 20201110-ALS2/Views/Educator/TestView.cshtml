@@ -1,7 +1,13 @@
-﻿@model IEnumerable<int>
+﻿@model IEnumerable<string>
 
 <div class="text-white">
-  @foreach (int i in Model) {
+  @foreach (string i in Model) {
     <label>@i</label>
   }
 </div>
+
+@*@model string
+
+<div class="text-white">
+    <label>@Model</label>
+</div>*@

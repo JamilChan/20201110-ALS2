@@ -10,8 +10,8 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201120092334_WeekAdded")]
-    partial class WeekAdded
+    [Migration("20201122145624_UpdateAbsenceV2")]
+    partial class UpdateAbsenceV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -230,6 +230,9 @@ namespace _20201110_ALS2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
@@ -264,7 +267,7 @@ namespace _20201110_ALS2.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("WeekId")
+                    b.Property<long>("WeekId")
                         .HasColumnType("bigint");
 
                     b.HasKey("CourseId");
@@ -273,7 +276,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("CourseList");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>
@@ -360,7 +363,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudentCourse");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
@@ -466,7 +469,9 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasOne("_20201110_ALS2.Models.Week", "Week")
                         .WithMany()
-                        .HasForeignKey("WeekId");
+                        .HasForeignKey("WeekId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Educator");
 

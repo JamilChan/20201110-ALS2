@@ -10,7 +10,7 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201120091614_Initial")]
+    [Migration("20201120110243_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,6 +230,9 @@ namespace _20201110_ALS2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
@@ -273,7 +276,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("CourseList");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>

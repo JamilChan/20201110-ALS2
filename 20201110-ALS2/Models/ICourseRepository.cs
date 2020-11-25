@@ -9,6 +9,6 @@ namespace _20201110_ALS2.Models {
     IQueryable<Course> Courses { get; }
 
     void SaveCourse(Course course);
-    Course Delete(int CourseId);
+    Course Delete(int courseId);
   }
 }

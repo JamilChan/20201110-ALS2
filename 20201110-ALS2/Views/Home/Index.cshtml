@@ -1,11 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model _20201110_ALS2.Models.ViewModels.HomeIndexViewModel
 
-<div class="text-center">
-  <h1 class="display-4">Welcome</h1>
-  <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-  <input type="button" value="Opret Undervisere" onclick="location.href='@Url.Action("Index", "Admin")'">
-  <input type="button" value="Liste af roller" onclick="location.href='@Url.Action("ListRoles", "Admin")'">
-  <a class="btn btn-sm btn-primary" asp-action="Login" asp-controller="Account">Log In</a>
-</div>
+<body class="bg-dark">
+  <div class="pt-3">
+    <h1 class="text-white">
+      Main Menu
+    </h1>
+
+    <hr class="bg-white" />
+
+    <div class="border pt-2 pb-2 row">
+      <div class="col-1 pt-2">
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
+          <input type="hidden" asp-for="@Model.Direction" value="Backward" />
+          <input class="btn btn-lg btn-success" type="submit" value="<">
+        </form>
+      </div>
+      <div class="col-10 text-center">
+        <h3 class="text-white">@Model.Date.DayOfWeek</h3>
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Direction" value="" />
+          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()" />
+        </form>
+      </div>
+      <div class="col-1 pt-2">
+        <form asp-controller="Home" asp-action="Index" method="post">
+          <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
+          <input type="hidden" asp-for="@Model.Direction" value="Forward" />
+          <input class="btn btn-lg btn-success float-right" type="submit" value=">">
+        </form>
+      </div>
+    </div>
+
+    @if (Model.CourseList != null) {
+      @foreach (Course course in Model.CourseList) {
+        <a class="col-6 card mt-3 mb-1 p-5 bg-dark btn text-white @(Model.CheckedCourse[course] ? "border-success" :  "border-white")" asp-controller="Educator" asp-action="AbsenceList" asp-route-courseId="@course.CourseId" asp-route-dateString="@Model.Date.Date" asp-route-edit="@Model.CheckedCourse[course]">
+          <h2>@course.Name</h2>
+        </a>
+      }
+    }
+  </div>
+</body>

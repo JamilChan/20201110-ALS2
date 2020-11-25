@@ -12,7 +12,7 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator);
+    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week).Include(c => c.StudentCourses);
 
 
     public void SaveCourse(Course course) {
@@ -30,8 +30,8 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
-    public Course Delete(int CourseId) {
-      Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == CourseId);
+    public Course Delete(int courseId) {
+      Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
       if (dbEntry != null) {
         context.Courses.Remove(dbEntry);
         context.SaveChanges();
