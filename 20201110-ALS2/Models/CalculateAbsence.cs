@@ -5,34 +5,28 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public class CalculateAbsence {
-    public string StudentName { get; set; }
-    public double AbsenceInPercent { get; set; }
+    public double CalcAllStudentsAbsenceByCourse(List<Absence> absenceList) {
+      double absenceInPercent = 0.0;
 
-    public List<CalculateAbsence> CalcAllAbsences(Course course, List<Absence> absenceByCourseList,
-      List<Student> studentList) {
-      List<CalculateAbsence> studentAbsenceList = new List<CalculateAbsence>();
 
-      foreach (Student student in studentList) {
-        studentAbsenceList.Add(AbsenceForStudent(course, absenceByCourseList, student));
-      }
 
-      return studentAbsenceList;
+      return absenceInPercent;
     }
 
-    private CalculateAbsence AbsenceForStudent(Course course, List<Absence> absenceByCourseList, Student student) {
-      List<Absence> studentAbsenceList = absenceByCourseList.FindAll(a => a.Student.StudentId == student.StudentId);
 
-      double daysOfAbsence = studentAbsenceList.Count;
-      double totalCourseDays = TotalDays(course);
 
-      double result = (daysOfAbsence / totalCourseDays) * 100;
+    public double CalcStudentAbsence(List<Absence> absencesList, Student student, Course course) {
+      
 
-      CalculateAbsence studentAbsence = new CalculateAbsence { StudentName = student.Name, AbsenceInPercent = result };
 
-      return studentAbsence;
+      return 0.0;
     }
 
-    private double TotalDays(Course course) {
+
+
+
+
+    private double AllDays(Course course) {
       double allSchoolDays = 0;
       DateTime currentDate = course.StartDate;
 
@@ -74,5 +68,9 @@ namespace _20201110_ALS2.Models {
 
       return allSchoolDays;
     }
+
+
+
+
   }
 }
