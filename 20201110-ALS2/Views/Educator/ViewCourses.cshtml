@@ -18,8 +18,8 @@
       <tr>
         <td>@course.Name</td>
         <td>@course.Educator</td>
-        <td>@course.StartDate.Value.ToShortDateString()</td>
-        <td>@course.EndDate.Value.ToShortDateString()</td>
+        <td>@course.StartDate.ToShortDateString()</td>
+        <td>@course.EndDate.ToShortDateString()</td>
         <td class="text-center">
           <form asp-action="DeleteCourse" method="post">
             <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Edit</a>

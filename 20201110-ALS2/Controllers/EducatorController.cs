@@ -48,7 +48,7 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public IActionResult CreateCourse(CreateCourseViewModel ccvm, IFormCollection form) {
       if (ModelState.IsValid) {
-        foreach (Educator e in educatorRepo.GetAll()) {
+        foreach (Educator e in educatorRepo.Educators) {
           if (e.Name == ccvm.SelectedEducator) {
             ccvm.Crs.Educator = e;
             break;
@@ -64,7 +64,7 @@ namespace _20201110_ALS2.Controllers {
         TempData["message"] = $"{ccvm.Crs.Name} has been saved";
         return RedirectToAction("ViewCourses");
       } else {
-        ccvm.EducatorList = educatorRepo.GetAll();
+        ccvm.EducatorList = educatorRepo.Educators;
         ccvm.GetEducatorsName();
         return View("CreateCourse", ccvm); 
       }
@@ -93,7 +93,7 @@ namespace _20201110_ALS2.Controllers {
 
     private CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel ccvm = new CreateCourseViewModel();
-      ccvm.EducatorList = educatorRepo.GetAll();
+      ccvm.EducatorList = educatorRepo.Educators;
       ccvm.GetEducatorsName();
       ccvm.StudentList = studentRepo.Students;
 

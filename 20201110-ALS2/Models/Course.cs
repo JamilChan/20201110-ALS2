@@ -19,10 +19,10 @@ namespace _20201110_ALS2.Models {
 
     [Required]
     [DataType(DataType.Date)]
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
     [Required]
     [DataType(DataType.Date)]
-    public DateTime? EndDate { get; set; }
+    public DateTime EndDate { get; set; }
     public ICollection<StudentCourse> StudentCourses { get; set; }
   }
 }
