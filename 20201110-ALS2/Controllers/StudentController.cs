@@ -9,7 +9,7 @@ namespace _20201110_ALS2.Controllers {
     public StudentController(IStudentRepository studentRepo) {
       this.studentRepo = studentRepo;
     }
-
+    
     [HttpGet]
     public IActionResult Overview() {
       
