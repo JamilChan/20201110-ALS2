@@ -36,7 +36,7 @@ namespace _20201110_ALS2.Migrations
                 name: "FK_StudentCourses_Courses_CourseId",
                 table: "StudentCourses",
                 column: "CourseId",
-                principalTable: "Courses",
+                principalTable: "CourseList",
                 principalColumn: "CourseId",
                 onDelete: ReferentialAction.Cascade);
 
@@ -81,7 +81,7 @@ namespace _20201110_ALS2.Migrations
                 name: "FK_StudentCourse_Courses_CourseId",
                 table: "StudentCourse",
                 column: "CourseId",
-                principalTable: "Courses",
+                principalTable: "CourseList",
                 principalColumn: "CourseId",
                 onDelete: ReferentialAction.Cascade);
 

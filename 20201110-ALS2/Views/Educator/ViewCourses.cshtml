@@ -23,7 +23,7 @@
         <td class="text-center">
           <form asp-action="DeleteCourse" method="post">
             <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Edit</a>
-            <input type="hidden" name="CourseId" value="@course.CourseId" />
+            <input type="hidden" name="courseId" value="@course.CourseId" />
             <button class="btn btn-sm btn-info" type="submit">Delete</button>
           </form>
         </td>

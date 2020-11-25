@@ -274,7 +274,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("CourseList");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Educator", b =>

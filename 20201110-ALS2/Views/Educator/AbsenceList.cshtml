@@ -11,7 +11,7 @@
     <label class="text-white h2"> Tag Fravær </label>
     @if (!Model.Edit) {
       <label class="switch float-right">
-        <input type="checkbox" name="IsChecked" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "") @(Model.Edit ? "disabled" : "")>
+        <input type="checkbox" name="CourseHasAbsence" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "") @(Model.Edit ? "disabled" : "")>
         <span class="slider round"></span>
       </label>
 
@@ -82,5 +82,3 @@
     <input class="btn btn-success" type="submit" value="Submit" />
   </div>
 </form>
-
-<div class="text-white">Course: @Model.Course.CourseId</div>
