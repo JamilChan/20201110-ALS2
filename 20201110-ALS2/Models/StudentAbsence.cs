@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
-  public class Chart {
-    public object[] cols { get; set; }
-    public object[] rows { get; set; }
+  public class StudentAbsence {
+    public string StudentName { get; set; }
+    public double AbsencePercent { get; set; }
   }
 }

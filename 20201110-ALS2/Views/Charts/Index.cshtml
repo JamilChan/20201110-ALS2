@@ -1,57 +1,61 @@
 ﻿<title>@ViewData["Title"] - Bar Chart</title>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<div id="chart_div"></div>
-<script type="text/javascript">
+  <div id="chart_div" style="height: 800px"></div>
 
-  google.charts.load('current', {
-    packages: ['corechart', 'bar']
-  });
-  google.charts.setOnLoadCallback(LoadData);
 
-  function LoadData() {
-    $.ajax({
 
-      url: 'Charts/PopulationChart',
-      dataType: "json",
-      type: "GET",
-      error: function (xhr, status, error) {
-        var err = eval("(" + xhr.responseText + ")");
-        toastr.error(err.message);
-      },
-      success: function (data) {
-        PopulationChart(data);
-        return false;
-      }
+
+  <script type="text/javascript">
+
+    google.charts.load('current', {
+      packages: ['corechart', 'bar']
     });
-    return false;
-  }
+    google.charts.setOnLoadCallback(LoadData);
 
-  function PopulationChart(data) {
-    var dataArray = [
-      ['City', '2020 Population', '2010 Population', '2000 Population', '1990 Population']
-    ];
-    $.each(data, function (i, item) {
-      dataArray.push([item.cityName, item.populationYear2020, item.populationYear2010, item.populationYear2000, item.populationYear1990]);
-    });
-    var data = google.visualization.arrayToDataTable(dataArray);
-    var options = {
-      title: 'Population of Largest Cities of Odisha ',
-      chartArea: {
-        width: '50%'
-      },
-      colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
-      hAxis: {
-        title: 'City',
-        minValue: 0
-      },
-      vAxis: {
-        title: 'Total Population'
-      }
-    };
-    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+    function LoadData() {
+      $.ajax({
 
-    chart.draw(data, options);
-    return false;
-  }
-</script> 
+        url: 'Charts/PopulationChart',
+        dataType: "json",
+        type: "GET",
+        error: function (xhr, status, error) {
+          var err = eval("(" + xhr.responseText + ")");
+          toastr.error(err.message);
+        },
+        success: function (data) {
+          PopulationChart(data);
+          return false;
+        }
+      });
+      return false;
+    }
+
+    function PopulationChart(data) {
+      var dataArray = [
+        ['AbsencePercent', 'StudentName']
+      ];
+      $.each(data, function (i, item) {
+        dataArray.push([item.studentName, item.absencePercent]);
+      });
+      var data = google.visualization.arrayToDataTable(dataArray);
+      var options = {
+        title: 'Population of Largest Cities of Odisha ',
+        chartArea: {
+          width: '50%'
+        },
+        colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
+        hAxis: {
+          title: 'StudentName',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'Total Population'
+        }
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+      return false;
+    }
+  </script>
