@@ -177,7 +177,7 @@ namespace _20201110_ALS2.Controllers {
 
     public CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel model = new CreateCourseViewModel();
-      model.Educators = educatorRepo.GetAll();
+      model.Educators = educatorRepo.Educators;
       model.GetEducatorsName();
       model.Students = studentRepo.Students;
       model.Course.Week = new Week();

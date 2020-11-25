@@ -281,12 +281,12 @@ namespace _20201110_ALS2.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "1", "77b226c9-6e27-4a82-8767-c5e2731091a0", "Admin", "ADMIN" });
+                values: new object[] { "1", "618707b1-5b97-4d8f-870a-7891a66b6049", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1", 0, "603d0366-e5aa-488b-9180-de687016d6ae", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEOyAlFKpYx4d9GOhxLf/hJtw/w/kJMGZxpy7dTnPInktc0rN2sFDBC23UlPIMyOgdA==", null, false, "3e7b728f-6939-454a-b562-ef6a59ac4f46", false, "admin" });
+                values: new object[] { "1", 0, "1b1eea94-b75b-4a8b-a850-9df5a98fd03b", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAENpYDf64J9sxyPkZMTqxAxV3zoGdEn37DK2mkwxqcpFbb7tr3v0FzMaBpk9Or3yJ1Q==", null, false, "a9652804-642d-4aa1-b620-d49911b567d0", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Educators",
