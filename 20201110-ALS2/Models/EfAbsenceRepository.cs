@@ -53,5 +53,11 @@ namespace _20201110_ALS2.Models {
 
       return absences;
     }
+
+    public List<Absence> AbsenceByCourse(Course course) {
+      List<Absence> absenceByCourseList = context.Absences.Include(a => a.Course).ToList();
+
+      return absenceByCourseList;
+    }
   }
 }
