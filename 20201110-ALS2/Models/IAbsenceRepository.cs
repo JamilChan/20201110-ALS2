@@ -14,7 +14,5 @@ namespace _20201110_ALS2.Models {
     Dictionary<Course, bool> CourseHasAbsence(List<Course> courseList, DateTime date);
     IQueryable<Absence> AbsencesForDateCourse(Course course, DateTime date);
 
-    List<Absence> AbsenceByCourse(Course course);
-
   }
 }
