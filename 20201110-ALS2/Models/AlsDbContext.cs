@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
-  public class AlsDbContext : IdentityDbContext {
+  public class AlsDbContext : IdentityDbContext<Educator> {
     public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) {
     }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -62,7 +63,7 @@ namespace _20201110_ALS2.Controllers {
     public async Task<IActionResult> EditPassword(ChangePasswordViewModel model) {
       if (ModelState.IsValid) {
         IdentityUser user = await userManager.GetUserAsync(User);
-
+        
         if (user == null) {
           return RedirectToAction("Login");
         }
