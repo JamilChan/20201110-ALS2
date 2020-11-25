@@ -12,14 +12,12 @@ namespace _20201110_ALS2.Controllers {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
     private IEducatorRepository educatorRepo;
-    private IStudentCourseRepository scRepo;
     private readonly IAbsenceRepository absenceRepo;
 
-    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IStudentCourseRepository scRepo, IAbsenceRepository absenceRepo) {
+    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo) {
       this.studentRepo = studentRepo;
       this.courseRepo = courseRepo;
       this.educatorRepo = educatorRepo;
-      this.scRepo = scRepo;
       this.absenceRepo = absenceRepo;
     }
 
@@ -113,27 +111,35 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult CreateCourse(CreateCourseViewModel ccvm, IFormCollection form) {
+    public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form) {
       if (ModelState.IsValid) {
-        foreach (Educator e in educatorRepo.Educators) {
-          if (e.Name == ccvm.SelectedEducator) {
-            ccvm.Crs.Educator = e;
+        foreach (Educator educator in educatorRepo.Educators) {
+          if (educator.Name == model.SelectedEducator) {
+            model.Course.Educator = educator;
             break;
           }
         }
+
         string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
-        foreach (var sId in selectedList) {
-          StudentCourse sc = new StudentCourse { Course = ccvm.Crs, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == int.Parse(sId)) };
-          scRepo.CreateStudentCourse(sc);
+        List<StudentCourse> studentCourseList = new List<StudentCourse>();
+
+        if (selectedList[0] != "") {
+          foreach (string studentId in selectedList) {
+            StudentCourse studentCourse = new StudentCourse { Course = model.Course, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int64.Parse(studentId)) };
+            studentCourseList.Add(studentCourse);
+          }
+
+          model.Course.StudentCourses = studentCourseList;
         }
-        courseRepo.SaveCourse(ccvm.Crs);
-        TempData["message"] = $"{ccvm.Crs.Name} has been saved";
+        
+        courseRepo.SaveCourse(model.Course);
+        TempData["message"] = $"{model.Course.Name} has been saved";
         return RedirectToAction("ViewCourses");
       } else {
-        ccvm.EducatorList = educatorRepo.Educators;
-        ccvm.GetEducatorsName();
-        return View("CreateCourse", ccvm);
+        model = CreateCCVM();
+
+        return View("CreateCourse", model); 
       }
     }
 
@@ -144,11 +150,13 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult EditCourse(int courseId) {
-      CreateCourseViewModel ccvm = CreateCCVM();
-      ccvm.Crs = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      ccvm.SelectedEducator = ccvm.Crs.Educator.Name;
+      CreateCourseViewModel model = CreateCCVM();
+      model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
+      model.SelectedEducator = model.Course.Educator.Name;
+      model.CheckedStudentList = courseRepo.SelectedStudents(courseId);
+      model.Edit = true;
 
-      return View("CreateCourse", ccvm);
+      return View("CreateCourse", model);
     }
 
     [HttpPost]
@@ -158,13 +166,24 @@ namespace _20201110_ALS2.Controllers {
       return View("ViewCourses", courseRepo.Courses);
     }
 
-    private CreateCourseViewModel CreateCCVM() {
-      CreateCourseViewModel ccvm = new CreateCourseViewModel();
-      ccvm.EducatorList = educatorRepo.Educators;
-      ccvm.GetEducatorsName();
-      ccvm.StudentList = studentRepo.Students;
+    [HttpGet]
+    public ViewResult ViewThisCourse(int courseId) {
+      ViewCourseViewModel model = new ViewCourseViewModel();
+      model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
+      model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
 
-      return ccvm;
+      return View("ViewThisCourse", model);
+    }
+
+    public CreateCourseViewModel CreateCCVM() {
+      CreateCourseViewModel model = new CreateCourseViewModel();
+      model.Educators = educatorRepo.GetAll();
+      model.GetEducatorsName();
+      model.Students = studentRepo.Students;
+      model.Course.Week = new Week();
+      model.Course.Week.WeekId = 0;
+
+      return model;
     }
 
     private Course ApplyCourseWithId(long courseId) {

@@ -15,6 +15,7 @@ namespace _20201110_ALS2.Models {
     public Educator Educator { get; set; }
     [ForeignKey("Week")]
     public long WeekId { get; set; }
+    [Required]
     public Week Week { get; set; }
 
     [Required]
