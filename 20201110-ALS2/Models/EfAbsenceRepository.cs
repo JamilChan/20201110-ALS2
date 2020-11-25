@@ -52,12 +52,5 @@ namespace _20201110_ALS2.Models {
 
       return absences;
     }
-
-    public List<Absence> AbsenceByCourse(Course course)
-    {
-      IQueryable<Absence> absenceByCourseList = context.Absences.Include(a => a.Course);
-
-      return new List<Absence>();
-    }
   }
 }
