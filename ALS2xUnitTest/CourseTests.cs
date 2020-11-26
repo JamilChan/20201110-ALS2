@@ -20,14 +20,14 @@ namespace ALS2xUnitTest {
     //    new Student { Name = "Jakob", Education = "Datamatiker", Semester = 1 }
     //  };
 
-    //  Course c = new Course { Name = "ProTek 3", Educator = e, StudentList = sl };
+    //  Course c = new Course { Name = "ProTek 3", Educator = e, Students = sl };
 
     //  // Act
-    //  c.StudentList.Add(new Student { Name = "Hans", Education = "Datamatiker", Semester = 3 });
-    //  c.StudentList.Add(new Student { Name = "Julie", Education = "Datamatiker", Semester = 1 });
+    //  c.Students.Add(new Student { Name = "Hans", Education = "Datamatiker", Semester = 3 });
+    //  c.Students.Add(new Student { Name = "Julie", Education = "Datamatiker", Semester = 1 });
 
     //  // Assert
-    //  Assert.Equal(7, c.StudentList.Count);
+    //  Assert.Equal(7, c.Students.Count);
 
     //}
 

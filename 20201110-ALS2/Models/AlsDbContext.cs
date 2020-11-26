@@ -7,20 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
   public class AlsDbContext : IdentityDbContext {
-    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) {
-    }
+    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) { }
 
     public DbSet<Student> Students { get; set; }
     public DbSet<Absence> Absences { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Educator> Educators { get; set; }
-    public DbSet<StudentCourse> StudentCourse { get; set; }
+    public DbSet<StudentCourse> StudentCourses { get; set; }
     public DbSet<Week> Weeks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
       modelBuilder.SeedEducators();
-      modelBuilder.Seed();
+      modelBuilder.SeedStudents();
       modelBuilder.Entity<StudentCourse>()
           .HasKey(sc => new { sc.StudentId, sc.CourseId });
       modelBuilder.Entity<StudentCourse>()
@@ -31,6 +30,12 @@ namespace _20201110_ALS2.Models {
           .HasOne(sc => sc.Course)
           .WithMany(c => c.StudentCourses)
           .HasForeignKey(sc => sc.CourseId);
+
+
+      foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) {
+        foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
+      }
+      modelBuilder.SeedAdmin(this);
     }
   }
 }

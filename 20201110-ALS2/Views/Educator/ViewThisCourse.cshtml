@@ -1,0 +1,57 @@
+﻿@model _20201110_ALS2.Models.ViewModels.ViewCourseViewModel
+
+<body>
+  <table class="table table-striped table-bordered table-sm bg-light">
+    <tr>
+      <th>Fag</th>
+      <th>Underviser</th>
+      <th>Starttid</th>
+      <th>Sluttid</th>
+    </tr>
+    <tr>
+      <td>@Model.Course.Name</td>
+      <td>@Model.Course.Educator</td>
+      <td>@Model.Course.StartDate.ToShortDateString()</td>
+      <td>@Model.Course.EndDate.ToShortDateString()</td>
+    </tr>
+  </table>
+
+  <table class="table table-striped table-bordered table-sm bg-light">
+    <thead>
+      <tr>
+        <th colspan="5" class="text-center">Ugedage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="@(Model.Course.Week.Monday ? "text-dark bg-success font-weight-bold" : "")"> Mandag</td>
+        <td class="@(Model.Course.Week.Tuesday ? "text-dark bg-success font-weight-bold" : "")">Tirsdag</td>
+        <td class="@(Model.Course.Week.Wednesday ? "text-dark bg-success font-weight-bold" : "")">Onsdag</td>
+        <td class="@(Model.Course.Week.Thursday ? "text-dark bg-success font-weight-bold" : "")">Torsdag</td>
+        <td class="@(Model.Course.Week.Friday ? "text-dark bg-success font-weight-bold" : "")">Fredag</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-striped table-bordered table-sm bg-light">
+    <thead>
+      <tr>
+        <th colspan="3" class="text-center">Studerende</th>
+      </tr>
+      <tr>
+        <th>Navn</th>
+        <th>Uddanelse</th>
+        <th>Semester</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (Student s in Model.StudentList) {
+        <tr>
+          <td>@s.Name</td>
+          <td>@s.Education</td>
+          <td>@s.Semester</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</body>

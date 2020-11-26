@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "20201110-ALS2", "20201110-ALS2\20201110-ALS2.csproj", "{EF608807-AC88-4DAE-B33E-40F0E8754CC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcAbsenceTest", "CalcAbsenceTest\CalcAbsenceTest.csproj", "{05A31F77-0816-41A4-AF72-4E4556267352}"
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALS2xUnitTest", "ALS2xUnitTest\ALS2xUnitTest.csproj", "{B323DD43-A147-4F76-821C-A3EA2CE73057}"
 EndProject
 Global
@@ -17,10 +18,10 @@ Global
 		{EF608807-AC88-4DAE-B33E-40F0E8754CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF608807-AC88-4DAE-B33E-40F0E8754CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF608807-AC88-4DAE-B33E-40F0E8754CC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B323DD43-A147-4F76-821C-A3EA2CE73057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B323DD43-A147-4F76-821C-A3EA2CE73057}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B323DD43-A147-4F76-821C-A3EA2CE73057}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B323DD43-A147-4F76-821C-A3EA2CE73057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05A31F77-0816-41A4-AF72-4E4556267352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05A31F77-0816-41A4-AF72-4E4556267352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05A31F77-0816-41A4-AF72-4E4556267352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05A31F77-0816-41A4-AF72-4E4556267352}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

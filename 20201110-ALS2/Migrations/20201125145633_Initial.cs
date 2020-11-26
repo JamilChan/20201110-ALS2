@@ -65,8 +65,8 @@ namespace _20201110_ALS2.Migrations
                 {
                     StudentId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Education = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Education = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Semester = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -234,7 +234,8 @@ namespace _20201110_ALS2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<long>(type: "bigint", nullable: true),
                     CourseId = table.Column<long>(type: "bigint", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -244,17 +245,17 @@ namespace _20201110_ALS2.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "CourseId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Absences_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentCourse",
+                name: "StudentCourses",
                 columns: table => new
                 {
                     CourseId = table.Column<long>(type: "bigint", nullable: false),
@@ -262,20 +263,30 @@ namespace _20201110_ALS2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentCourse", x => new { x.StudentId, x.CourseId });
+                    table.PrimaryKey("PK_StudentCourses", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Courses_CourseId",
+                        name: "FK_StudentCourses_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentCourse_Students_StudentId",
+                        name: "FK_StudentCourses_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "StudentId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "1", "618707b1-5b97-4d8f-870a-7891a66b6049", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1", 0, "1b1eea94-b75b-4a8b-a850-9df5a98fd03b", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAENpYDf64J9sxyPkZMTqxAxV3zoGdEn37DK2mkwxqcpFbb7tr3v0FzMaBpk9Or3yJ1Q==", null, false, "a9652804-642d-4aa1-b620-d49911b567d0", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Educators",
@@ -295,6 +306,11 @@ namespace _20201110_ALS2.Migrations
                     { 2L, "Computer Science", "Hans", 3 },
                     { 3L, "Computer Science", "Claus", 3 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "1", "1" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Absences_CourseId",
@@ -356,8 +372,8 @@ namespace _20201110_ALS2.Migrations
                 column: "WeekId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentCourse_CourseId",
-                table: "StudentCourse",
+                name: "IX_StudentCourses_CourseId",
+                table: "StudentCourses",
                 column: "CourseId");
         }
 
@@ -382,7 +398,7 @@ namespace _20201110_ALS2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "StudentCourse");
+                name: "StudentCourses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

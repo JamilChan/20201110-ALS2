@@ -1,0 +1,77 @@
+﻿@model Student
+
+  <style>
+    .input-validation-error {
+      border-color: red;
+      background-color: #fee;
+    }
+  </style>
+
+
+
+  <div class="mt-3">
+
+    <h2 class="text-white text-center h1"><u>@(ViewBag.crud == "create" ? "Opret en studerende" : "Ret en studerende")</u></h2>
+
+    <form asp-controller="Student" asp-action="@(ViewBag.crud == "create" ? "Create" : "Update")">
+      @if (ViewBag.crud == "edit") {
+        <input type="hidden" asp-for="StudentId" />
+      }
+      <div class="row mt-5 justify-content-center">
+        <table class="col-12">
+          <tbody>
+            <tr>
+              <td>
+                <label class="h3 text-white">Name:</label>
+                <br />
+              </td>
+              <td class="text-center">
+                <input class="w-75 h2" type="text" asp-for="Name" />
+              </td>
+              <td>
+                <span class="text-danger h5" asp-validation-for="Name"></span>
+                <br />
+                <label class="invisible">.................................................</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="h3 text-white">Uddannelse:</label>
+                <br />
+              </td>
+              <td class="text-center">
+                <input class="w-75 h2" type="text" asp-for="Education" />
+              </td>
+              <td>
+                <span class="text-danger h5" asp-validation-for="Education"></span>
+                <br />
+                <label class="invisible">.................................................</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="h3 text-white">Semester:</label>
+                <br />
+              </td>
+              <td class="text-center">
+                <select class=" w-75 form-control font-weight-bold" style="margin-left: 78px; border-radius: 0px; font-size: 25px; color: black" asp-for="Semester">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </td>
+              <td>
+                <span class="text-danger h5" asp-validation-for="Semester"></span>
+                <br />
+                <label class="invisible">..................................................</label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <input class="btn btn-lg bg-success font-weight-bold text-white mt-5 w-25 mr-4" style="height: 75px" type="submit" value="@(ViewBag.crud == "create" ? "Opret" : "Ret")" />
+        <input class="btn btn-lg bg-danger font-weight-bold text-white mt-5 w-25" style="height: 75px" type="button" onclick="location.href = '@Url.Action("Overview", "Student")'" value="Annuller" />
+      </div>
+    </form>
+  </div>

@@ -44,6 +44,15 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "618707b1-5b97-4d8f-870a-7891a66b6049",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -133,6 +142,22 @@ namespace _20201110_ALS2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1b1eea94-b75b-4a8b-a850-9df5a98fd03b",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAENpYDf64J9sxyPkZMTqxAxV3zoGdEn37DK2mkwxqcpFbb7tr3v0FzMaBpk9Or3yJ1Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a9652804-642d-4aa1-b620-d49911b567d0",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -194,6 +219,13 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -228,6 +260,9 @@ namespace _20201110_ALS2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
@@ -250,16 +285,14 @@ namespace _20201110_ALS2.Migrations
                     b.Property<long>("EducatorId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("EndDate")
-                        .IsRequired()
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StartDate")
-                        .IsRequired()
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("WeekId")
@@ -310,9 +343,11 @@ namespace _20201110_ALS2.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("Education")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Semester")
@@ -358,7 +393,7 @@ namespace _20201110_ALS2.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("StudentCourse");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.Week", b =>
@@ -443,11 +478,13 @@ namespace _20201110_ALS2.Migrations
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("_20201110_ALS2.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 

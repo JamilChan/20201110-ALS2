@@ -1,0 +1,54 @@
+﻿@model IEnumerable<IdentityRole>
+
+@{
+  ViewBag.Title = "Liste af roller";
+  Layout = "_AdminLayout";
+}
+
+
+<body>
+  <h1>Alle roller</h1>
+  @if (Model.Any()) {
+    <a class="btn btn-success" style="width: auto" asp-controller="Admin" asp-action="CreateRole"> Opret rolle</a>
+    foreach (IdentityRole role in Model) {
+      <div class="card mb-3">
+        <div class="card-header">
+          Rolle Id : @role.Id
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">@role.Name</h5>
+        </div>
+        <div class="card-footer">
+          <form asp-action="DeleteRole" asp-route-roleId="@role.Id" method="post">
+            <a class="btn btn-primary" asp-action="EditRole" asp-controller="Admin" asp-route-roleId="@role.Id">Rediger</a>
+
+            <span id="confirmDeleteSpan_@role.Id" style="display: none">
+              <span> Er du sikker på at du vil slette rollen?</span>
+              <button class="btn btn-danger" type="submit">Ja</button>
+              <a class="btn btn-secondary" href="#" onclick="confirmDelete('@role.Id', false)">Nej</a>
+            </span>
+
+            <span id="deleteSpan_@role.Id">
+              <a class="btn btn-danger" onclick="confirmDelete('@role.Id', true)">Slet</a>
+            </span>
+          </form>
+        </div>
+      </div>
+    }
+  } else {
+    <div class="card">
+      <div class="card-header">
+        Ingen roller lavet endnu
+      </div>
+      <div class="card-footer">
+        <h5 class="card-title">Opret roller med knappen nedenunder</h5>
+        <a class="btn btn-success" style="width: auto" asp-controller="Admin" asp-action="CreateRole"> Opret rolle</a>
+
+      </div>
+    </div>
+  }
+</body>
+
+@section Scripts{
+  <script src="~/js/CustomConfirmDeleteSpanScript.js"></script>
+}

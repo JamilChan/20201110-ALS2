@@ -13,16 +13,18 @@ namespace _20201110_ALS2.Models {
     [ForeignKey("Educator")]
     public long EducatorId { get; set; }
     public Educator Educator { get; set; }
+    public Education Education { get; set; }
     [ForeignKey("Week")]
     public long WeekId { get; set; }
+    [Required]
     public Week Week { get; set; }
 
     [Required]
     [DataType(DataType.Date)]
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
     [Required]
     [DataType(DataType.Date)]
-    public DateTime? EndDate { get; set; }
+    public DateTime EndDate { get; set; }
     public ICollection<StudentCourse> StudentCourses { get; set; }
   }
 }
