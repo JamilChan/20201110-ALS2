@@ -10,7 +10,7 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201125093844_Initial")]
+    [Migration("20201125145633_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "77b226c9-6e27-4a82-8767-c5e2731091a0",
+                            ConcurrencyStamp = "618707b1-5b97-4d8f-870a-7891a66b6049",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -150,13 +150,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "603d0366-e5aa-488b-9180-de687016d6ae",
+                            ConcurrencyStamp = "1b1eea94-b75b-4a8b-a850-9df5a98fd03b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOyAlFKpYx4d9GOhxLf/hJtw/w/kJMGZxpy7dTnPInktc0rN2sFDBC23UlPIMyOgdA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENpYDf64J9sxyPkZMTqxAxV3zoGdEn37DK2mkwxqcpFbb7tr3v0FzMaBpk9Or3yJ1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e7b728f-6939-454a-b562-ef6a59ac4f46",
+                            SecurityStamp = "a9652804-642d-4aa1-b620-d49911b567d0",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -287,16 +287,14 @@ namespace _20201110_ALS2.Migrations
                     b.Property<long>("EducatorId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("EndDate")
-                        .IsRequired()
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("StartDate")
-                        .IsRequired()
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("WeekId")
