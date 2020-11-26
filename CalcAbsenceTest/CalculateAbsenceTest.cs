@@ -34,15 +34,6 @@ namespace CalcAbsenceTest {
       //Arrange
       Assert.Equal(0.20, absenceInPercent);
     }
-    [Fact]
-    public void FindAbsenceList() {
-      //Act
-
-      //Assert
-
-      //Arrange
-    
-    }
 
     private double AllDays(Course course) {
       double allSchoolDays = 0;
