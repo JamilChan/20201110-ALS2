@@ -25,7 +25,6 @@ namespace _20201110_ALS2.Models {
           .HasForeignKey(p => p.EducationId)
           .OnDelete(DeleteBehavior.NoAction);
 
-      //modelBuilder.SeedStudents();
       modelBuilder.Entity<StudentCourse>()
           .HasKey(sc => new { sc.StudentId, sc.CourseId });
       modelBuilder.Entity<StudentCourse>()
@@ -36,7 +35,6 @@ namespace _20201110_ALS2.Models {
           .HasOne(sc => sc.Course)
           .WithMany(c => c.StudentCourses)
           .HasForeignKey(sc => sc.CourseId);
-
 
       //foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) {
       //  foreignKey.DeleteBehavior = DeleteBehavior.Cascade;

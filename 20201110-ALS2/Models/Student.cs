@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public class Student {
+
     public long StudentId { get; set; }
     [Required(ErrorMessage = "Udfyld navn")]
     public string Name { get; set; }

@@ -27,13 +27,12 @@ namespace _20201110_ALS2 {
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
+      //Dependancy Injected Repositories
       services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddScoped<IEducationRepository, EfEducationRepository>();
       services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
-
-      //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, EfEducatorRepository>();
 
       //Login Policy

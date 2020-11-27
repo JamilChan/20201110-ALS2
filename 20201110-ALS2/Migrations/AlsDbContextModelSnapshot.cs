@@ -49,7 +49,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "f610851f-2ad1-4ac9-891e-c3384404d6b3",
+                            ConcurrencyStamp = "0d187f9a-e919-4261-8228-4105bc6cc17c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -148,13 +148,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "57c8d2c6-bc77-458e-ab43-cd9a37f03ed6",
+                            ConcurrencyStamp = "81222e57-d1f6-4101-af8e-d3f8acfe0f02",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGtVz7Iu+Y5/oAWmzyAvKYLYfFmIen9y1iXFwY6db1lYpUbAr4nJ2eF1pn5AyZoOnw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHyHF09bvtTuxMScIIJaxCLhbvHkh+NoH+0hwuMJabgTYpsQCgQBTNF3KoTcHXDMLg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fb808bfd-dfdd-4637-8aad-39ac0d671229",
+                            SecurityStamp = "ced2a1ca-3085-4663-bd3a-937857369a64",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });

@@ -51,7 +51,7 @@ namespace _20201110_ALS2.Controllers {
 
       model.Student.Education = educationRepo.Educations.FirstOrDefault(e => e.Name == model.Student.Education.Name);
       studentRepo.Create(model.Student);
-      SaveSession(model.Student.Education.Name, model.Student.Semester);
+      SaveSession(model?.Student?.Education?.Name, model.Student.Semester);
 
       return View("Overview", studentRepo.Students);
     }

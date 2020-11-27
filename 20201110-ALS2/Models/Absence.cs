@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models {
   public class Absence {
+
     public int AbsenceId { get; set; }
     [ForeignKey("Student")]
     public long? StudentId { get; set; }
