@@ -54,7 +54,7 @@
       @foreach (Student student in Model.Students) {
         <tr>
           <td>@student.Name</td>
-          <td>@student.Education</td>
+          <td>@student.Education.Name</td>
           <td>@student.Semester</td>
           @if (Model.Edit) {
             ViewBag.Checked = false;

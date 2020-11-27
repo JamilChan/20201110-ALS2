@@ -13,7 +13,7 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public IQueryable<Student> Students => context.Students;
+    public IQueryable<Student> Students => context.Students.Include(s => s.Education);
 
     public void Create(Student student) {
       context.Students.Add(student);

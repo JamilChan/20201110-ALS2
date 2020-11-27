@@ -16,7 +16,7 @@ namespace CalcAbsenceTest {
 
       Course courseTest = new Course { CourseId = 1, Name = "Test Fag", Educator = educatorTest, Week = weekTest, StartDate = startDateTest, EndDate = endDateTest };
 
-      Student studentTest = new Student { StudentId = 1, Name = "Carlos", Education = "Big Dick Power Energy User", Semester = 3 };
+      Student studentTest = new Student { StudentId = 1, Name = "Carlos", Semester = 3 };
       List<Absence> absenceTestList = new List<Absence>();
 
       //Assert

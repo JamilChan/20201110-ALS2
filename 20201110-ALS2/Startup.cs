@@ -30,6 +30,7 @@ namespace _20201110_ALS2 {
       services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
+      services.AddScoped<IEducationRepository, EfEducationRepository>();
       services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
 
       //Dependancy Injected Repositories
@@ -46,6 +47,8 @@ namespace _20201110_ALS2 {
       services.AddLiveReload(config => { });
       services.AddRazorPages().AddRazorRuntimeCompilation();
       services.AddMvc().AddRazorRuntimeCompilation();
+      services.AddMemoryCache();
+      services.AddSession();
       //ENDS HERE
     }
 
@@ -55,6 +58,8 @@ namespace _20201110_ALS2 {
       app.UseLiveReload();
       app.UseStaticFiles();
       //ENDS HERE
+      app.UseSession();
+
 
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
