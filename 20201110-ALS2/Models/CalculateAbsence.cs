@@ -7,7 +7,6 @@ namespace _20201110_ALS2.Models {
   public class CalculateAbsence {
     public string StudentName { get; set; }
     public double AbsenceInPercent { get; set; }
-    public Student NotoriousStudent { get; set; }
     public List<DateTime> DaysOfAbsence { get; set; } = new List<DateTime>();
 
     public List<CalculateAbsence> AbsenceForStudentsInCourse(List<Absence> absenceByCourseList) {
@@ -37,16 +36,14 @@ namespace _20201110_ALS2.Models {
       List<Course> courseByEducationList = new List<Course>();
 
       List<Absence> absenceByEducationList =
-        absenceList.FindAll(a => a.Course.Education.EducationId == education.EducationId);
+        absenceList.FindAll(a => (a.Course.Education.EducationId == education.EducationId) && (a.Student.Semester == semesterNo));
 
       foreach (Absence absence in absenceByEducationList) {
-        if (absence.Student.Semester == semesterNo) {
-          if (!studentList.Contains(absence.Student)) {
-            studentList.Add(absence.Student);
-          }
-          if (!courseByEducationList.Contains(absence.Course)) {
-            courseByEducationList.Add(absence.Course);
-          }
+        if (!studentList.Contains(absence.Student)) {
+          studentList.Add(absence.Student);
+        }
+        if (!courseByEducationList.Contains(absence.Course)) {
+          courseByEducationList.Add(absence.Course);
         }
       }
 
@@ -64,26 +61,21 @@ namespace _20201110_ALS2.Models {
       DateTime todaysDate = DateTime.Today;
       DateTime checkDate = FindTimeSpan(timeSpan, todaysDate);
 
+      List<Student> studentList = new List<Student>();
       List<Absence> absenceInTimeSpanList = new List<Absence>();
-      //Find fravær de seneste 14 dage
       foreach (Absence absence in absenceByCourseList) {
         if (checkDate <= absence.Date && absence.Date <= todaysDate) {
           absenceInTimeSpanList.Add(absence);
-        }
-      }
 
-      //Find studerende
-      List<Student> studentList = new List<Student>();
-      foreach (Absence absence in absenceInTimeSpanList) {
-        if (!studentList.Contains(absence.Student)) {
-          studentList.Add(absence.Student);
+          if (!studentList.Contains(absence.Student)) {
+            studentList.Add(absence.Student);
+          }
         }
       }
 
       List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
       foreach (Student student in studentList) {
         CalculateAbsence entry = new CalculateAbsence();
-        entry.NotoriousStudent = student;
         entry.StudentName = student.Name;
 
         foreach (Absence absence in absenceInTimeSpanList) {
@@ -92,15 +84,14 @@ namespace _20201110_ALS2.Models {
           }
         }
 
-        //Tilføj fraværsprocent i perioden? eller på fag? eller uddannelse?
         notoriousStudentList.Add(entry);
       }
 
       return notoriousStudentList;
     }
 
-    private CalculateAbsence AbsenceBuilder(List<Course> courseList, List<Absence> absenceByCourseOrEducationList, Student student) {
-      List<Absence> absenceForStudentList = absenceByCourseOrEducationList.FindAll(a => a.Student.StudentId == student.StudentId);
+    private CalculateAbsence AbsenceBuilder(List<Course> courseList, List<Absence> absenceList, Student student) {
+      List<Absence> absenceForStudentList = absenceList.FindAll(a => a.Student.StudentId == student.StudentId);
 
       double daysOfAbsence = absenceForStudentList.Count;
       double totalCourseDays = FindSchoolDays(courseList);

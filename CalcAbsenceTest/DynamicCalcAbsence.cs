@@ -186,7 +186,6 @@ namespace CalcAbsenceTest {
       Assert.Equal(10, calcAbsList4[1].DaysOfAbsence.Count);
       Assert.Equal("Juan", calcAbsList4[2].StudentName);
       Assert.Single(calcAbsList4[2].DaysOfAbsence);
-      Assert.False(calcAbsList4.Exists(ca => ca.NotoriousStudent.StudentId == studentTest3.StudentId));
 
       Assert.Empty(calcAbsList11);
       Assert.Empty(calcAbsList22);
@@ -200,8 +199,6 @@ namespace CalcAbsenceTest {
       Assert.Equal(10, calcAbsList44[0].DaysOfAbsence.Count);
       Assert.Equal("Juan", calcAbsList44[1].StudentName);
       Assert.Single(calcAbsList44[1].DaysOfAbsence);
-      Assert.False(calcAbsList44.Exists(ca => ca.NotoriousStudent.StudentId == studentTest3.StudentId));
-      Assert.False(calcAbsList44.Exists(ca => ca.NotoriousStudent.StudentId == studentTest1.StudentId));
     }
 
     public List<CalculateAbsence> NotoriousStudents(List<Absence> absenceByCourseList, _20201110_ALS2.Models.TimeSpan timeSpan) {
@@ -227,7 +224,6 @@ namespace CalcAbsenceTest {
       List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
       foreach (Student student in studentList) {
         CalculateAbsence entry = new CalculateAbsence();
-        entry.NotoriousStudent = student;
         entry.StudentName = student.Name;
 
         foreach (Absence absence in absenceInTimeSpanList) {
