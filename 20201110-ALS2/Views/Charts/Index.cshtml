@@ -1,61 +1,8 @@
-﻿<title>@ViewData["Title"] - Bar Chart</title>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+﻿
+<div class=" p-3">
+  <a class="btn btn-lg btn-info" asp-controller="Charts" asp-action="CourseStudents">Se fravær for en klasse</a>
+</div>
+<div class=" p-3">
+  <a class="btn btn-lg btn-info" asp-controller="Charts" asp-action="CourseStudentsDays">Se fravær for Billys klasse</a>
+</div>
 
-  <div id="chart_div" style="height: 800px"></div>
-
-
-
-
-  <script type="text/javascript">
-
-    google.charts.load('current', {
-      packages: ['corechart', 'bar']
-    });
-    google.charts.setOnLoadCallback(LoadData);
-
-    function LoadData() {
-      $.ajax({
-
-        url: 'Charts/PopulationChart',
-        dataType: "json",
-        type: "GET",
-        error: function (xhr, status, error) {
-          var err = eval("(" + xhr.responseText + ")");
-          toastr.error(err.message);
-        },
-        success: function (data) {
-          PopulationChart(data);
-          return false;
-        }
-      });
-      return false;
-    }
-
-    function PopulationChart(data) {
-      var dataArray = [
-        ['AbsencePercent', 'StudentName']
-      ];
-      $.each(data, function (i, item) {
-        dataArray.push([item.studentName, item.absencePercent]);
-      });
-      var data = google.visualization.arrayToDataTable(dataArray);
-      var options = {
-        title: 'Population of Largest Cities of Odisha ',
-        chartArea: {
-          width: '50%'
-        },
-        colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
-        hAxis: {
-          title: 'StudentName',
-          minValue: 0
-        },
-        vAxis: {
-          title: 'Total Population'
-        }
-      };
-      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-
-      chart.draw(data, options);
-      return false;
-    }
-  </script>

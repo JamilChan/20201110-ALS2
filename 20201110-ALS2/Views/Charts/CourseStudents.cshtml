@@ -1,0 +1,72 @@
+﻿@model IEnumerable<StudentAbsenceViewModel>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<div class="pt-3">
+  <div class="bg-dark container p-2">
+    <div id="chart_div" style="height: 600px"></div>
+  </div>
+</div>
+
+<br />
+
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#tableCollapse" aria-expanded="false">
+  List med data
+</button>
+
+<div class="collapse pt-4" id="tableCollapse">
+  <table class="table table-striped bg-dark text-white ">
+    <thead>
+      <tr>
+        <th>Navn</th>
+        <th>Fravær</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (StudentAbsenceViewModel studentAbsence in Model) {
+        <tr>
+          <td>@studentAbsence.StudentName</td>
+          <td>@studentAbsence.AbsencePercent</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+  google.charts.load('current', {
+    packages: ['corechart', 'bar']
+  });
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+  var model = @Html.Raw(Json.Serialize(Model));
+  var allData = [['AbsencePercent', 'Fravær']];
+
+    $.each(model, function (i, item) {
+      allData.push([item.studentName, item.absencePercent]);
+    });
+
+    var data = google.visualization.arrayToDataTable(allData);
+
+    var options = {
+      title: '% fravær for studerende i en klasse',
+      chartArea: {
+        width: '70%'
+      },
+      colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
+      hAxis: {
+        title: 'Studerende',
+        minValue: 0,
+      },
+      vAxis: {
+        title: '% fravær',
+        maxValue: 100
+      }
+    };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+  }
+</script>

@@ -1,0 +1,49 @@
+﻿@model StudentsDays
+
+<div class="pt-3" style="overflow: auto">
+  <table class="table table-striped bg-dark text-white">
+    <thead>
+    <tr>
+      <th class="sticky-col first-col bg-dark" style="width: 170px">Studerende</th>
+      @foreach (string date in Model.Dates) {
+        <th class="text-center" style="width: 120px">@date</th>
+      }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (string student in Model.StudentList) {
+      <tr>
+        <td class="sticky-col first-col bg-dark">@student</td>
+        @foreach (string date in Model.Dates) {
+          var dico = @Model.StudentStatuses[student];
+          var status = dico[date];
+
+          <td class="text-center @(status == "absent" ? "bg-danger" : (status == "attended" ? "bg-success" : "bg-info"))">@status</td>
+        }
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+
+<style type="text/css">
+  td {
+    height: 70px
+  }
+
+  table {
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+
+  .sticky-col {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  .first-col {
+    min-width: 100px;
+    max-width: 100px;
+    left: 0px;
+  }
+</style>
