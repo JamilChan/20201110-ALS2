@@ -27,7 +27,7 @@ namespace _20201110_ALS2.Controllers {
 
       CalculateAbsence calculateAbsence = new CalculateAbsence();
 
-      List<Absence> absenceList = calculateAbsence.
+      List<CalculateAbsence> absenceList = calculateAbsence.AbsenceForStudentsInCourse(tempAbsences);
 
       return View("CourseStudents", absenceList);
     }

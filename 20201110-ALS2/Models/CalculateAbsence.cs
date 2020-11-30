@@ -7,21 +7,21 @@ namespace _20201110_ALS2.Models {
   public class CalculateAbsence {
     public string StudentName { get; set; }
     public double AbsenceInPercent { get; set; }
-    public List<DateTime> DaysOfAbsence { get; set; } = new List<DateTime>();
+    public List<Student> StudentList { get; set; } = new List<Student>();
+    public List<string> DaysOfAbsence { get; set; } = new List<string>();
 
     public List<CalculateAbsence> AbsenceForStudentsInCourse(List<Absence> absenceByCourseList) {
-      List<Student> studentList = new List<Student>();
       List<Course> courseList = new List<Course> { absenceByCourseList[0].Course };
 
       if (absenceByCourseList.TrueForAll(a => a.Course.CourseId == courseList[0].CourseId)) {
         foreach (Absence absence in absenceByCourseList) {
-          if (!studentList.Contains(absence.Student)) {
-            studentList.Add(absence.Student);
+          if (!StudentList.Contains(absence.Student)) {
+            StudentList.Add(absence.Student);
           }
         }
 
         List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
-        foreach (Student student in studentList) {
+        foreach (Student student in StudentList) {
           studentsAbsenceList.Add(AbsenceBuilder(courseList, absenceByCourseList, student));
         }
 
@@ -32,15 +32,14 @@ namespace _20201110_ALS2.Models {
     }
 
     public List<CalculateAbsence> AbsenceByEducationAndSemester(List<Absence> absenceList, Education education, int semesterNo) {
-      List<Student> studentList = new List<Student>();
       List<Course> courseByEducationList = new List<Course>();
 
       List<Absence> absenceByEducationList =
         absenceList.FindAll(a => (a.Course.Education.EducationId == education.EducationId) && (a.Student.Semester == semesterNo));
 
       foreach (Absence absence in absenceByEducationList) {
-        if (!studentList.Contains(absence.Student)) {
-          studentList.Add(absence.Student);
+        if (!StudentList.Contains(absence.Student)) {
+          StudentList.Add(absence.Student);
         }
         if (!courseByEducationList.Contains(absence.Course)) {
           courseByEducationList.Add(absence.Course);
@@ -48,8 +47,8 @@ namespace _20201110_ALS2.Models {
       }
 
       List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
-      if (studentList.TrueForAll(s => s.Education.EducationId == education.EducationId)) {
-        foreach (Student student in studentList) {
+      if (StudentList.TrueForAll(s => s.Education.EducationId == education.EducationId)) {
+        foreach (Student student in StudentList) {
           studentsAbsenceList.Add(AbsenceBuilder(courseByEducationList, absenceByEducationList, student));
         }
       }
@@ -61,26 +60,25 @@ namespace _20201110_ALS2.Models {
       DateTime todaysDate = DateTime.Today;
       DateTime checkDate = FindTimeSpan(timeSpan, todaysDate);
 
-      List<Student> studentList = new List<Student>();
       List<Absence> absenceInTimeSpanList = new List<Absence>();
       foreach (Absence absence in absenceByCourseList) {
         if (checkDate <= absence.Date && absence.Date <= todaysDate) {
           absenceInTimeSpanList.Add(absence);
 
-          if (!studentList.Contains(absence.Student)) {
-            studentList.Add(absence.Student);
+          if (!StudentList.Contains(absence.Student)) {
+            StudentList.Add(absence.Student);
           }
         }
       }
 
       List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
-      foreach (Student student in studentList) {
+      foreach (Student student in StudentList) {
         CalculateAbsence entry = new CalculateAbsence();
         entry.StudentName = student.Name;
 
         foreach (Absence absence in absenceInTimeSpanList) {
           if (absence.Student.StudentId == student.StudentId) {
-            entry.DaysOfAbsence.Add(absence.Date);
+            entry.DaysOfAbsence.Add(absence.Date.ToString());
           }
         }
 

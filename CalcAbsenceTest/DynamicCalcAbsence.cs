@@ -228,7 +228,7 @@ namespace CalcAbsenceTest {
 
         foreach (Absence absence in absenceInTimeSpanList) {
           if (absence.Student.StudentId == student.StudentId) {
-            entry.DaysOfAbsence.Add(absence.Date);
+            entry.DaysOfAbsence.Add(absence.Date.ToString());
           }
         }
 

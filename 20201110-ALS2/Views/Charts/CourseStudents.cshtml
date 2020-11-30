@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StudentAbsenceViewModel>
+﻿@model IEnumerable<CalculateAbsence>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -23,10 +23,10 @@
       </tr>
     </thead>
     <tbody>
-      @foreach (StudentAbsenceViewModel studentAbsence in Model) {
+      @foreach (CalculateAbsence studentAbsence in Model) {
         <tr>
           <td>@studentAbsence.StudentName</td>
-          <td>@studentAbsence.AbsencePercent</td>
+          <td>@studentAbsence.AbsenceInPercent</td>
         </tr>
       }
     </tbody>
