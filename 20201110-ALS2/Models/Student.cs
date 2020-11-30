@@ -10,7 +10,7 @@ namespace _20201110_ALS2.Models {
     [Required(ErrorMessage = "Udfyld navn")]
     public string Name { get; set; }
     [Required(ErrorMessage = "Udfyld Uddannelse")]
-    public string Education { get; set; }
+    public Education Education { get; set; }
     [Required(ErrorMessage = "Hvorfor ødelægger du systemet??!!??")]
     public int Semester { get; set; }
     public ICollection<StudentCourse> StudentCourses { get; set; }
