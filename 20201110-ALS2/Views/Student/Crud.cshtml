@@ -1,4 +1,4 @@
-﻿@model Student
+﻿@model StudentCRUDViewModel
 
   <style>
     .input-validation-error {
@@ -15,23 +15,23 @@
 
     <form asp-controller="Student" asp-action="@(ViewBag.crud == "create" ? "Create" : "Update")">
       @if (ViewBag.crud == "edit") {
-        <input type="hidden" asp-for="StudentId" />
+        <input type="hidden" asp-for="Student.StudentId" />
       }
       <div class="row mt-5 justify-content-center">
         <table class="col-12">
           <tbody>
             <tr>
               <td>
-                <label class="h3 text-white">Name:</label>
+                <label class="h3 text-white">Navn:</label>
                 <br />
-              </td>
-              <td class="text-center">
-                <input class="w-75 h2" type="text" asp-for="Name" />
               </td>
               <td>
-                <span class="text-danger h5" asp-validation-for="Name"></span>
+                <input class="w-75 font-weight-bold pl-3 mb-2" style="margin-left: 78px; font-size: 25px; color: black" type="text" asp-for="Student.Name" />
+              </td>
+              <td>
+                <span class="text-danger h5" asp-validation-for="Student.Name"></span>
                 <br />
-                <label class="invisible">.................................................</label>
+                @*<label class="invisible">.................................................</label>*@
               </td>
             </tr>
             <tr>
@@ -39,13 +39,17 @@
                 <label class="h3 text-white">Uddannelse:</label>
                 <br />
               </td>
-              <td class="text-center">
-                <input class="w-75 h2" type="text" asp-for="Education" />
+              <td>
+                <select class=" w-75 form-control font-weight-bold mb-1" style="margin-left: 78px; border-radius: 0px; font-size: 25px; color: black" asp-for="Student.Education.Name">
+                  @foreach (string education in Model.EducationNameList) {
+                    <option>@education</option>
+                  }
+                </select>
               </td>
               <td>
-                <span class="text-danger h5" asp-validation-for="Education"></span>
+                <span class="text-danger h5" asp-validation-for="Student.Education"></span>
                 <br />
-                <label class="invisible">.................................................</label>
+                @*<label class="invisible">.................................................</label>*@
               </td>
             </tr>
             <tr>
@@ -53,8 +57,8 @@
                 <label class="h3 text-white">Semester:</label>
                 <br />
               </td>
-              <td class="text-center">
-                <select class=" w-75 form-control font-weight-bold" style="margin-left: 78px; border-radius: 0px; font-size: 25px; color: black" asp-for="Semester">
+              <td>
+                <select class=" w-75 form-control font-weight-bold" style="margin-left: 78px; border-radius: 0px; font-size: 25px; color: black" asp-for="Student.Semester">
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -63,7 +67,7 @@
                 </select>
               </td>
               <td>
-                <span class="text-danger h5" asp-validation-for="Semester"></span>
+                <span class="text-danger h5" asp-validation-for="Student.Semester"></span>
                 <br />
                 <label class="invisible">..................................................</label>
               </td>

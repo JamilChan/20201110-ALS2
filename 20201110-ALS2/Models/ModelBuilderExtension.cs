@@ -15,6 +15,13 @@ namespace _20201110_ALS2.Models {
       );
     }
 
+    public static void SeedEducations(this ModelBuilder modelBuilder) {
+      modelBuilder.Entity<Education>().HasData(
+      new Education { EducationId = 1, Name = "Datamatiker" },
+      new Education { EducationId = 2, Name = "Finansøkonom" }
+      );
+    }
+
     public static void SeedAdmin(this ModelBuilder modelBuilder, AlsDbContext context) {
       PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
 
@@ -32,9 +39,9 @@ namespace _20201110_ALS2.Models {
         new IdentityUserRole<string> { RoleId = role.Id, UserId = user.Id }
       );
     }
-    public static void EtEllerAndet(this ModelBuilder modelBuilder) {
-      modelBuilder.Entity<StudentCourse>().HasKey(k => new { k.CourseId, k.StudentId });
-    }
+    //public static void EtEllerAndet(this ModelBuilder modelBuilder) {
+    //  modelBuilder.Entity<StudentCourse>().HasKey(k => new { k.CourseId, k.StudentId });
+    //}
 
     public static void SeedStudents(this ModelBuilder modelBuilder) {
       modelBuilder.Entity<Student>().HasData(
