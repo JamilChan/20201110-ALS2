@@ -32,7 +32,7 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
-    public Course Delete(int courseId) {
+    public Course Delete(long courseId) {
       Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
       if (dbEntry != null) {
         context.Courses.Remove(dbEntry);

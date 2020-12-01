@@ -27,13 +27,12 @@ namespace _20201110_ALS2 {
       services.AddDbContext<AlsDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("AlsDbConnection")));
 
+      //Dependancy Injected Repositories
       services.AddScoped<IAbsenceRepository, EfAbsenceRepository>();
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
-      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
       services.AddScoped<IEducationRepository, EfEducationRepository>();
-
-      //Dependancy Injected Repositories
+      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
       services.AddScoped<IEducatorRepository, EfEducatorRepository>();
 
       //Login Policy
@@ -47,6 +46,8 @@ namespace _20201110_ALS2 {
       services.AddLiveReload(config => { });
       services.AddRazorPages().AddRazorRuntimeCompilation();
       services.AddMvc().AddRazorRuntimeCompilation();
+      services.AddMemoryCache();
+      services.AddSession();
       //ENDS HERE
     }
 
@@ -56,6 +57,8 @@ namespace _20201110_ALS2 {
       app.UseLiveReload();
       app.UseStaticFiles();
       //ENDS HERE
+      app.UseSession();
+
 
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();

@@ -1,44 +1,57 @@
 ﻿using System.Linq;
 using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace _20201110_ALS2.Controllers {
   public class StudentController : Controller {
     public IStudentRepository studentRepo;
+    public IEducationRepository educationRepo;
 
-    public StudentController(IStudentRepository studentRepo) {
+    public StudentController(IStudentRepository studentRepo, IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
+      this.educationRepo = educationRepo;
     }
 
     [HttpGet]
     public IActionResult Overview() {
-      
+      SaveSession("", 1);
+
       return View("Overview", studentRepo.Students);
     }
 
     [HttpGet]
     public IActionResult Crud(string crud, long studentId) {
       ViewBag.crud = crud;
-      Student student = new Student();
+      StudentCRUDViewModel model = new StudentCRUDViewModel();
+      model.GenerateModel(educationRepo.Educations.ToList());
+      model.Student.Education.Name = HttpContext.Session.GetString("Education");
+      model.Student.Semester = (int) HttpContext.Session.GetInt32("Semester");
 
       if (crud == "edit") {
         foreach (Student s in studentRepo.Students) {
           if (studentId == s.StudentId) {
-            student = s;
+            model.Student = s;
           }
         }
       }
 
-      return View("Crud", student);
+      return View("Crud", model);
     }
 
     [HttpPost]
-    public IActionResult Create(Student student) {
+    public IActionResult Create(StudentCRUDViewModel model) {
       if (!ModelState.IsValid) {
-        return View("Crud", student);
+        model.GenerateModel(educationRepo.Educations.ToList());
+        ViewBag.crud = "create";
+
+        return View("Crud", model);
       }
 
-      studentRepo.Create(student);
+      model.Student.Education = educationRepo.Educations.FirstOrDefault(e => e.Name == model.Student.Education.Name);
+      studentRepo.Create(model.Student);
+      SaveSession(model?.Student?.Education?.Name, model.Student.Semester);
 
       return View("Overview", studentRepo.Students);
     }
@@ -52,14 +65,20 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult Update(Student student) {
+    public IActionResult Update(StudentCRUDViewModel model) {
       if (!ModelState.IsValid) {
-        return View("Crud", student);
+        return View("Crud", model);
       }
 
-      studentRepo.Update(student);
+      model.Student.Education = educationRepo.Educations.FirstOrDefault(e => e.Name == model.Student.Education.Name);
+      studentRepo.Update(model.Student);
 
       return View("Overview", studentRepo.Students);
+    }
+
+    private void SaveSession(string educationName, int semester) {
+      HttpContext.Session.SetString("Education", educationName);
+      HttpContext.Session.SetInt32("Semester", semester);
     }
   }
 }
