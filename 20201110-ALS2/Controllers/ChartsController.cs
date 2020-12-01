@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using _20201110_ALS2.Models;
-using _20201110_ALS2.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using TimeSpan = _20201110_ALS2.Models.TimeSpan;
 
 namespace _20201110_ALS2.Controllers {
@@ -34,28 +32,27 @@ namespace _20201110_ALS2.Controllers {
       }
 
       Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-
       List<Absence> tempAbsences = absenceRepo.AbsenceByCourse(course);
-
       List<CalculateAbsence> absenceList = new CalculateAbsence().AbsenceForStudentsInCourse(tempAbsences);
 
       return View("CourseStudents", new StudentsViewModel {
         Absences = absenceList,
-        CourseId = courseId
+        Course = course,
+        Education = new Education()
       });
     }
 
     [HttpGet]
     public IActionResult EducationStudents(int educationId, int semesterNo) {
       Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
-
       List<Absence> tempAbsences = absenceRepo.AbsenceBy(education, semesterNo);
-
       List<CalculateAbsence> absenceList = new CalculateAbsence().AbsenceForStudentsInCourse(tempAbsences);
 
       return View("CourseStudents", new StudentsViewModel {
         Absences = absenceList,
-        EducationId = educationId
+        Education = education,
+        Course = new Course(),
+        SemesterNo = semesterNo
       });
     }
 
@@ -89,13 +86,13 @@ namespace _20201110_ALS2.Controllers {
         Dates = dates,
         StudentList = students,
         StudentStatuses = dic,
-        CourseId = courseId
+        Course = course,
+        Education = new Education()
       });
     }
 
     [HttpGet]
     public ViewResult EducationStudentsDays(int educationId, int semesterNo, TimeSpan span) {
-
       Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
       List<Student> studentList = studentRepo.GetAllStudentsFromEducationSemester(education, semesterNo);
       List<string> students = new List<string>();
@@ -120,7 +117,8 @@ namespace _20201110_ALS2.Controllers {
         Dates = dates,
         StudentList = students,
         StudentStatuses = dic,
-        EducationId = educationId,
+        Education = education,
+        Course = new Course(),
         SemesterNo = semesterNo
       });
     }

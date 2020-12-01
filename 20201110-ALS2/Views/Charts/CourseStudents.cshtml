@@ -8,6 +8,10 @@
   </div>
 
   <div class="col-10">
+    <div class="text-center">
+      <h2 class="pl-lg-5 text-white">@(Model.Course.CourseId != 0 ? Model.Course.Name : Model.Education.Name + " " + Model.SemesterNo)</h2>
+    </div>
+
     <div class="pt-2" style="overflow: auto">
       <div class="pt-3">
         <div class="bg-dark container p-2">
