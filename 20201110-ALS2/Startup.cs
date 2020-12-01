@@ -31,6 +31,7 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
+      services.AddScoped<IEducationRepository, EfEducationRepository>();
 
       //Dependancy Injected Repositories
       services.AddScoped<IEducatorRepository, EfEducatorRepository>();

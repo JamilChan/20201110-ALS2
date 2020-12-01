@@ -3,19 +3,25 @@
 <form asp-action="CreateCourse" method="post">
   <input type="hidden" asp-for="Course.CourseId" />
   <input type="hidden" asp-for="Course.Week.WeekId" />
-  <div asp-validation-summary="All"></div>
 
-  <label asp-for="Course.Name">Course Name:</label>
+  <span class="text-danger h6" asp-validation-for="Course.Name"></span><br />
+  <label class="h5 text-white" asp-for="Course.Name">Course Name:</label>
   <input asp-for="Course.Name" />
+  <br />
+
+  <span class="text-danger h6" asp-validation-for="Course.Education.Name"></span><br />
+  <label class="h5 text-white" asp-for="Course.Education.Name">Education:</label>
+  @Html.DropDownListFor(n => n.Course.Education.Name, new SelectList(Model.EducationNameList), "Select Education")
+  <br />
+
+  <span class="text-danger h6" asp-validation-for="Course.Educator.Name"></span><br />
+  <label class="h5 text-white" asp-for="Course.Educator.Name">Educator:</label>
+  @Html.DropDownListFor(m => m.Course.Educator.Name, new SelectList(Model.EducatorNameList), "Select Educator")
   <br /><br />
 
-  <label asp-for="SelectedEducator">Educator:</label>
-  @Html.DropDownListFor(m => m.SelectedEducator, new SelectList(Model.EducatorNameList), "Select Educator")
-  <br /><br />
-
-  <table class="table table-striped table-bordered table-sm">
+  <table class="table table-striped table-bordered table-sm bg-light">
     <thead>
-      <tr>
+      <tr class="text-center">
         <th>Mandag</th>
         <th>Tirsdag</th>
         <th>Onsdag</th>
@@ -24,62 +30,69 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>@Html.CheckBoxFor(m => m.Course.Week.Monday, true)</td>
-        <td>@Html.CheckBoxFor(m => m.Course.Week.Tuesday, true)</td>
-        <td>@Html.CheckBoxFor(m => m.Course.Week.Wednesday, true)</td>
-        <td>@Html.CheckBoxFor(m => m.Course.Week.Thursday, true)</td>
-        <td>@Html.CheckBoxFor(m => m.Course.Week.Friday, true)</td>
+      <tr class="text-center">
+        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Monday, true)</td>
+        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Tuesday, true)</td>
+        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Wednesday, true)</td>
+        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Thursday, true)</td>
+        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Friday, true)</td>
       </tr>
     </tbody>
   </table>
 
-  <br />
-  <label asp-for="Course.StartDate">Start Date:</label>
-  <input asp-for="Course.StartDate" /> <br /><br />
+  <span class="text-danger h5" asp-validation-for="Course.StartDate"></span><br />
+  <label class="h5 text-white" asp-for="Course.StartDate">Start Date:</label>
+  <input asp-for="Course.StartDate" /> <br />
 
-  <label asp-for="Course.EndDate">End Date:</label>
+  <span class="text-danger h5" asp-validation-for="Course.EndDate"></span><br />
+  <label class="h5 text-white" asp-for="Course.EndDate">End Date:</label>
   <input asp-for="Course.EndDate" /> <br /><br />
 
-  <table class="table table-striped table-bordered table-sm">
+  <table class="table table-striped table-bordered table-sm bg-light"
+         id="table"
+         data-toggle="table"
+         data-click-to-select="true"
+         data-select="true"
+         data-search="true">
     <thead>
       <tr>
+        <th class="bs-checkbox" data-checkbox="true"></th>
         <th>Navn</th>
         <th>Udannelse</th>
         <th>Semester</th>
-        <th>Vælg Studerende</th>
       </tr>
     </thead>
     <tbody>
       @foreach (Student student in Model.Students) {
         <tr>
-          <td>@student.Name</td>
-          <td>@student.Education</td>
-          <td>@student.Semester</td>
           @if (Model.Edit) {
             ViewBag.Checked = false;
             foreach (Student s in Model.CheckedStudentList) {
               if (student.StudentId == s.StudentId) {
                 ViewBag.Checked = true;
-                <td>
+                <td class="bs-checkbox">
                   <input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
                 </td>
               }
             }
             if (!ViewBag.Checked) {
-              <td>
+              <td class="bs-checkbox">
                 <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
               </td>
             }
-          } else {
-            <td>
+          }
+          else {
+            <td class="bs-checkbox">
               <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
             </td>
           }
+          <td>@student.Name</td>
+          <td>@student.Education.Name</td>
+          <td>@student.Semester</td>
         </tr>
       }
     </tbody>
   </table>
 
-  <button type="submit">Submit course</button>
+  <input class="btn btn-lg bg-success font-weight-bold text-white mt-5 w-20 mr-4" style="height: 50px" type="submit" value="Tilføj fag" />
 </form>

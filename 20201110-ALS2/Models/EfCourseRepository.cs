@@ -21,6 +21,7 @@ namespace _20201110_ALS2.Models {
         Course dbEntry = context.Courses.Include(c => c.StudentCourses).FirstOrDefault(c => c.CourseId == course.CourseId);
         if (dbEntry != null) {
           dbEntry.Name = course.Name;
+          dbEntry.Education = course.Education;
           dbEntry.Educator = course.Educator;
           dbEntry.Week = course.Week;
           dbEntry.StartDate = course.StartDate;

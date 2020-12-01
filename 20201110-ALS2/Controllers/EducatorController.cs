@@ -12,12 +12,14 @@ namespace _20201110_ALS2.Controllers {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
     private IEducatorRepository educatorRepo;
+    private IEducationRepository educationRepo;
     private readonly IAbsenceRepository absenceRepo;
 
-    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo) {
+    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo , IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
       this.courseRepo = courseRepo;
       this.educatorRepo = educatorRepo;
+      this.educationRepo = educationRepo;
       this.absenceRepo = absenceRepo;
     }
 
@@ -114,8 +116,14 @@ namespace _20201110_ALS2.Controllers {
     public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form) {
       if (ModelState.IsValid) {
         foreach (Educator educator in educatorRepo.Educators) {
-          if (educator.Name == model.SelectedEducator) {
+          if (educator.Name == model.Course.Educator.Name) {
             model.Course.Educator = educator;
+            break;
+          }
+        }
+        foreach (Education education in educationRepo.Educations) {
+          if (education.Name == model.Course.Education.Name) {
+            model.Course.Education = education;
             break;
           }
         }
@@ -152,7 +160,6 @@ namespace _20201110_ALS2.Controllers {
     public ViewResult EditCourse(int courseId) {
       CreateCourseViewModel model = CreateCCVM();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      model.SelectedEducator = model.Course.Educator.Name;
       model.CheckedStudentList = courseRepo.SelectedStudents(courseId);
       model.Edit = true;
 
@@ -178,7 +185,8 @@ namespace _20201110_ALS2.Controllers {
     public CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel model = new CreateCourseViewModel();
       model.Educators = educatorRepo.Educators;
-      model.GetEducatorsName();
+      model.Educations = educationRepo.Educations;
+      model.GetCourseInfoName();
       model.Students = studentRepo.Students;
       model.Course.Week = new Week();
       model.Course.Week.WeekId = 0;

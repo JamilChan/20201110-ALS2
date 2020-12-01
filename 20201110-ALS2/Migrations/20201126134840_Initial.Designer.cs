@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201126134840_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "78b42907-7ab4-4edb-83b4-356ab48c8e46",
+                            ConcurrencyStamp = "9a1ecc21-6f65-445a-a60c-9ef588e975c5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -148,13 +150,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "950c2352-f18e-4a50-a2bc-ea0f2c4e0a2b",
+                            ConcurrencyStamp = "8ad1d883-2efe-4853-9606-9e5261caf346",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA5fE6o3TREFHTryvcHioDkZk1v/HSDEIjV3fzCpT4YycXFSqsphX8naGU3uSpBQNQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOvdr93NUE8g15dtI9aehOG+ZCV+Mm/sBodBGOUujjEI7glF6oZRV96uNb9TaGL78g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b5c681d4-b787-49dd-bea3-efa5d808a50c",
+                            SecurityStamp = "f05ec5e9-5c2a-4d4d-aca4-375aebc545e4",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -390,29 +392,6 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("EducationId");
 
                     b.ToTable("Students");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 1L,
-                            EducationId = 1L,
-                            Name = "Mathias",
-                            Semester = 3
-                        },
-                        new
-                        {
-                            StudentId = 2L,
-                            EducationId = 1L,
-                            Name = "Hans",
-                            Semester = 3
-                        },
-                        new
-                        {
-                            StudentId = 3L,
-                            EducationId = 2L,
-                            Name = "Claus",
-                            Semester = 1
-                        });
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.StudentCourse", b =>
