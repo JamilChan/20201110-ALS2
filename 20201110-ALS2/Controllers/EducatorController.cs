@@ -33,7 +33,7 @@ namespace _20201110_ALS2.Controllers {
 
       StudentListViewModel model = new StudentListViewModel {
         StatusList = new string[studentRepo.Students.ToList().Count],
-        StudentsList = studentRepo.GetAllStudentsFromCourses(course),
+        StudentsList = studentRepo.GetAllStudentsFromCourse(course),
         AbsencesList = AbsenceForStudentList(courseId, date),
         Course = course,
         Date = date,
@@ -92,7 +92,7 @@ namespace _20201110_ALS2.Controllers {
       Course course = ApplyCourseWithId(studentList.Course.CourseId);
       studentList.Course = course;
 
-      studentList.StudentsList = studentRepo.GetAllStudentsFromCourses(course);
+      studentList.StudentsList = studentRepo.GetAllStudentsFromCourse(course);
 
       if (studentList.IsChecked == "on") {
         ViewBag.Check = true;
@@ -170,7 +170,7 @@ namespace _20201110_ALS2.Controllers {
     public ViewResult ViewThisCourse(int courseId) {
       ViewCourseViewModel model = new ViewCourseViewModel();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
+      model.StudentList = studentRepo.GetAllStudentsFromCourse(model.Course);
 
       return View("ViewThisCourse", model);
     }

@@ -8,91 +8,25 @@ namespace _20201110_ALS2.Models {
     public string StudentName { get; set; }
     public double AbsenceInPercent { get; set; }
     public List<Student> StudentList { get; set; } = new List<Student>();
-    public List<string> DaysOfAbsence { get; set; } = new List<string>();
 
     public List<CalculateAbsence> AbsenceForStudentsInCourse(List<Absence> absenceByCourseList) {
-      List<Course> courseList = new List<Course> { absenceByCourseList[0].Course };
+      List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
 
-      if (absenceByCourseList.TrueForAll(a => a.Course.CourseId == courseList[0].CourseId)) {
-        foreach (Absence absence in absenceByCourseList) {
-          if (!StudentList.Contains(absence.Student)) {
-            StudentList.Add(absence.Student);
-          }
-        }
-
-        List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
-        foreach (Student student in StudentList) {
-          studentsAbsenceList.Add(AbsenceBuilder(courseList, absenceByCourseList, student));
-        }
-
-        return studentsAbsenceList;
-      }
-
-      return null;
-    }
-
-    public List<CalculateAbsence> AbsenceByEducationAndSemester(List<Absence> absenceList, Education education, int semesterNo) {
-      List<Course> courseByEducationList = new List<Course>();
-
-      List<Absence> absenceByEducationList =
-        absenceList.FindAll(a => (a.Course.Education.EducationId == education.EducationId) && (a.Student.Semester == semesterNo));
-
-      foreach (Absence absence in absenceByEducationList) {
+      foreach (Absence absence in absenceByCourseList) {
         if (!StudentList.Contains(absence.Student)) {
           StudentList.Add(absence.Student);
-        }
-        if (!courseByEducationList.Contains(absence.Course)) {
-          courseByEducationList.Add(absence.Course);
-        }
-      }
-
-      List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
-      if (StudentList.TrueForAll(s => s.Education.EducationId == education.EducationId)) {
-        foreach (Student student in StudentList) {
-          studentsAbsenceList.Add(AbsenceBuilder(courseByEducationList, absenceByEducationList, student));
+          studentsAbsenceList.Add(AbsenceBuilder(absenceByCourseList, absence.Student));
         }
       }
 
       return studentsAbsenceList;
     }
 
-    public List<CalculateAbsence> NotoriousStudents(List<Absence> absenceByCourseList, TimeSpan timeSpan) {
-      DateTime todaysDate = DateTime.Today;
-      DateTime checkDate = FindTimeSpan(timeSpan, todaysDate);
-
-      List<Absence> absenceInTimeSpanList = new List<Absence>();
-      foreach (Absence absence in absenceByCourseList) {
-        if (checkDate <= absence.Date && absence.Date <= todaysDate) {
-          absenceInTimeSpanList.Add(absence);
-
-          if (!StudentList.Contains(absence.Student)) {
-            StudentList.Add(absence.Student);
-          }
-        }
-      }
-
-      List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
-      foreach (Student student in StudentList) {
-        CalculateAbsence entry = new CalculateAbsence();
-        entry.StudentName = student.Name;
-
-        foreach (Absence absence in absenceInTimeSpanList) {
-          if (absence.Student.StudentId == student.StudentId) {
-            entry.DaysOfAbsence.Add(absence.Date.ToString());
-          }
-        }
-
-        notoriousStudentList.Add(entry);
-      }
-
-      return notoriousStudentList;
-    }
-
-    private CalculateAbsence AbsenceBuilder(List<Course> courseList, List<Absence> absenceList, Student student) {
+    private CalculateAbsence AbsenceBuilder(List<Absence> absenceList, Student student) {
       List<Absence> absenceForStudentList = absenceList.FindAll(a => a.Student.StudentId == student.StudentId);
 
-      double daysOfAbsence = absenceForStudentList.Count;
-      double totalCourseDays = FindSchoolDays(courseList);
+      double daysOfAbsence = absenceForStudentList.FindAll(a => a.Status == "absent").Count;
+      double totalCourseDays = absenceForStudentList.Count;
       double result = (daysOfAbsence / totalCourseDays) * 100;
 
       CalculateAbsence studentAbsence = new CalculateAbsence { StudentName = student.Name, AbsenceInPercent = result };
@@ -121,46 +55,6 @@ namespace _20201110_ALS2.Models {
       }
 
       return checkDate;
-    }
-
-    private double FindSchoolDays(List<Course> courseList) {
-      double allSchoolDays = 0;
-
-      foreach (Course course in courseList) {
-        for (DateTime i = course.StartDate; i < course.EndDate; i = i.AddDays(1)) {
-          switch (i.DayOfWeek.ToString()) {
-            case "Monday":
-              if (course.Week.Monday) {
-                allSchoolDays++;
-              }
-              break;
-            case "Tuesday":
-              if (course.Week.Tuesday) {
-                allSchoolDays++;
-              }
-              break;
-            case "Wednesday":
-              if (course.Week.Wednesday) {
-                allSchoolDays++;
-              }
-              break;
-            case "Thursday":
-              if (course.Week.Thursday) {
-                allSchoolDays++;
-              }
-              break;
-            case "Friday":
-              if (course.Week.Friday) {
-                allSchoolDays++;
-              }
-              break;
-            default:
-              break;
-          }
-        }
-      }
-
-      return allSchoolDays;
     }
   }
 }

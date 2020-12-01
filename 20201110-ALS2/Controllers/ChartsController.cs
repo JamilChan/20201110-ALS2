@@ -5,15 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using TimeSpan = _20201110_ALS2.Models.TimeSpan;
 
 namespace _20201110_ALS2.Controllers {
   public class ChartsController : Controller {
     public IStudentRepository studentRepo { get; }
     public IAbsenceRepository absenceRepo { get; set; }
+    public ICourseRepository courseRepo { get; }
+    public IEducationRepository educationRepo { get; }
 
-    public ChartsController(IStudentRepository studentRepo, IAbsenceRepository absenceRepo) {
+    public ChartsController(IStudentRepository studentRepo, IAbsenceRepository absenceRepo, ICourseRepository courseRepo, IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
       this.absenceRepo = absenceRepo;
+      this.courseRepo = courseRepo;
+      this.educationRepo = educationRepo;
     }
 
     [HttpGet]
@@ -22,79 +28,101 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    public IActionResult CourseStudents() {
-      List<Absence> tempAbsences = absenceRepo.Absences.ToList();
+    public IActionResult CourseStudents(int courseId) {
+      if (courseId == 0) {
+        courseId = 1;
+      }
 
-      CalculateAbsence calculateAbsence = new CalculateAbsence();
+      Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
 
-      List<CalculateAbsence> absenceList = calculateAbsence.AbsenceForStudentsInCourse(tempAbsences);
+      List<Absence> tempAbsences = absenceRepo.AbsenceByCourse(course);
 
-      return View("CourseStudents", absenceList);
+      List<CalculateAbsence> absenceList = new CalculateAbsence().AbsenceForStudentsInCourse(tempAbsences);
+
+      return View("CourseStudents", new StudentsViewModel {
+        Absences = absenceList,
+        CourseId = courseId
+      });
     }
 
     [HttpGet]
-    public ViewResult CourseStudentsDays() {
+    public IActionResult EducationStudents(int educationId, int semesterNo) {
+      Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
 
-      List<Student> studentList = studentRepo.Students.ToList();
+      List<Absence> tempAbsences = absenceRepo.AbsenceBy(education, semesterNo);
 
-      Student s1 = new Student { Name = "Simon Markussen" };
-      Student s2 = new Student { Name = "Dean Marco Dalager Birch Nielsen" };
-      Student s3 = new Student { Name = "Emil Overgaard Jensen" };
+      List<CalculateAbsence> absenceList = new CalculateAbsence().AbsenceForStudentsInCourse(tempAbsences);
 
-      studentList.Add(s1);
-      studentList.Add(s2);
-      studentList.Add(s3);
-      
-      List<string> students = new List<string>();
+      return View("CourseStudents", new StudentsViewModel {
+        Absences = absenceList,
+        EducationId = educationId
+      });
+    }
 
-      foreach (Student student in studentList) {
-        students.Add(ShortenName(student.Name));
+    [HttpGet]
+    public ViewResult CourseStudentsDays(int courseId, TimeSpan span) {
+      if (courseId == 0) {
+        courseId = 1;
       }
 
-      List<string> dates = new List<string>{
-        DateTime.Today.AddDays(-18).ToShortDateString(),
-        DateTime.Today.AddDays(-17).ToShortDateString(),
-        DateTime.Today.AddDays(-16).ToShortDateString(),
-        DateTime.Today.AddDays(-15).ToShortDateString(),
-        DateTime.Today.AddDays(-14).ToShortDateString(),
-        DateTime.Today.AddDays(-13).ToShortDateString(),
-        DateTime.Today.AddDays(-12).ToShortDateString(),
-        DateTime.Today.AddDays(-11).ToShortDateString(),
-        DateTime.Today.AddDays(-10).ToShortDateString(),
-        DateTime.Today.AddDays(-9).ToShortDateString(),
-        DateTime.Today.AddDays(-8).ToShortDateString(),
-        DateTime.Today.AddDays(-7).ToShortDateString(),
-        DateTime.Today.AddDays(-6).ToShortDateString(),
-        DateTime.Today.AddDays(-5).ToShortDateString(),
-        DateTime.Today.AddDays(-4).ToShortDateString(),
-        DateTime.Today.AddDays(-3).ToShortDateString(),
-        DateTime.Today.AddDays(-2).ToShortDateString(),
-        DateTime.Today.AddDays(-1).ToShortDateString()
-      };
+      Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
+      List<Student> studentList = studentRepo.GetAllStudentsFromCourse(course);
+      List<string> students = new List<string>();
+      List<string> dates = GetDateSpan(span);
 
       Dictionary<string, Dictionary<string, string>> dic = new Dictionary<string, Dictionary<string, string>>();
 
-      foreach (string student in students) {
+      foreach (Student student in studentList) {
         Dictionary<string, string> dico = new Dictionary<string, string>();
 
         foreach (string date in dates) {
-          string[] statuses = { "absent", "attended", "virtual" };
-          int rng = new Random().Next(statuses.Length);
-          string s = statuses[rng];
-
-          dico.Add(date, s);
+          Absence a = absenceRepo.AbsenceForDateCourseStudent(course, DateTime.Parse(date), student);
+          dico.Add(date, a != null ? a.Status : "");
         }
 
-        dic.Add(student, dico);
+        string s = ShortenName(student.Name);
+        students.Add(s);
+        dic.Add(s, dico);
       }
 
-      StudentsDaysViewModel model = new StudentsDaysViewModel {
+      return View(new StudentsDaysViewModel {
         Dates = dates,
         StudentList = students,
-        StudentStatuses = dic
-      };
+        StudentStatuses = dic,
+        CourseId = courseId
+      });
+    }
 
-      return View(model);
+    [HttpGet]
+    public ViewResult EducationStudentsDays(int educationId, int semesterNo, TimeSpan span) {
+
+      Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
+      List<Student> studentList = studentRepo.GetAllStudentsFromEducationSemester(education, semesterNo);
+      List<string> students = new List<string>();
+      List<string> dates = GetDateSpan(span);
+
+      Dictionary<string, Dictionary<string, string>> dic = new Dictionary<string, Dictionary<string, string>>();
+
+      foreach (Student student in studentList) {
+        Dictionary<string, string> dico = new Dictionary<string, string>();
+
+        foreach (string date in dates) {
+          Absence a = absenceRepo.AbsenceForDateEducationStudent(education, DateTime.Parse(date), student);
+          dico.Add(date, a != null ? a.Status : "");
+        }
+
+        string s = ShortenName(student.Name);
+        students.Add(s);
+        dic.Add(s, dico);
+      }
+
+      return View("CourseStudentsDays", new StudentsDaysViewModel {
+        Dates = dates,
+        StudentList = students,
+        StudentStatuses = dic,
+        EducationId = educationId,
+        SemesterNo = semesterNo
+      });
     }
 
     private string ShortenName(string name) {
@@ -113,6 +141,35 @@ namespace _20201110_ALS2.Controllers {
       }
 
       return name;
+    }
+
+    private List<string> GetDateSpan(TimeSpan span) {
+      List<string> dates = new List<string>();
+
+      switch (span) {
+        case TimeSpan.Week:
+          for (DateTime i = DateTime.Today.AddDays(-6); i <= DateTime.Today; i = i.AddDays(1)) {
+            dates.Add(i.ToShortDateString());
+          }
+          break;
+        case TimeSpan.TwoWeeks:
+          for (DateTime i = DateTime.Today.AddDays(-13); i <= DateTime.Today; i = i.AddDays(1)) {
+            dates.Add(i.ToShortDateString());
+          }
+          break;
+        case TimeSpan.ThreeWeeks:
+          for (DateTime i = DateTime.Today.AddDays(-20); i <= DateTime.Today; i = i.AddDays(1)) {
+            dates.Add(i.ToShortDateString());
+          }
+          break;
+        case TimeSpan.Month:
+          for (DateTime i = DateTime.Today.AddMonths(-1).AddDays(1); i <= DateTime.Today; i = i.AddDays(1)) {
+            dates.Add(i.ToShortDateString());
+          }
+          break;
+      }
+
+      return dates;
     }
   }
 }

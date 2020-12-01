@@ -1,18 +1,29 @@
-﻿@model IEnumerable<CalculateAbsence>
+﻿@model StudentsViewModel
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<div class="pt-3">
-  <div class="bg-dark container p-2">
-    <div id="chart_div" style="height: 600px"></div>
+<div class="row">
+  <div class="col-2 text-light bg-dark pt-3 pb-3 mb-3 border">
+    <vc:course-navigation chart-view="Student"></vc:course-navigation>
+  </div>
+
+  <div class="col-10">
+    <div class="pt-2" style="overflow: auto">
+      <div class="pt-3">
+        <div class="bg-dark container p-2">
+          <div id="chart_div" style="height: 600px"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<br />
 
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#tableCollapse" aria-expanded="false">
   List med data
 </button>
+
+<br />
+<br />
 
 <div class="collapse pt-4" id="tableCollapse">
   <table class="table table-striped bg-dark text-white ">
@@ -23,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      @foreach (CalculateAbsence studentAbsence in Model) {
+      @foreach (CalculateAbsence studentAbsence in Model.Absences) {
         <tr>
           <td>@studentAbsence.StudentName</td>
           <td>@studentAbsence.AbsenceInPercent</td>
@@ -40,11 +51,11 @@
   google.charts.setOnLoadCallback(drawChart);
 
   function drawChart() {
-  var model = @Html.Raw(Json.Serialize(Model));
+  var model = @Html.Raw(Json.Serialize(Model.Absences));
   var allData = [['AbsencePercent', 'Fravær']];
 
     $.each(model, function (i, item) {
-      allData.push([item.studentName, item.absencePercent]);
+      allData.push([item.studentName, item.absenceInPercent]);
     });
 
     var data = google.visualization.arrayToDataTable(allData);
@@ -57,10 +68,11 @@
       colors: ['#b0120a', '#7b1fa2', '#ffab91', '#d95f02'],
       hAxis: {
         title: 'Studerende',
-        minValue: 0,
+        minValue: 0
       },
       vAxis: {
         title: '% fravær',
+        minValue: 0,
         maxValue: 100
       }
     };
