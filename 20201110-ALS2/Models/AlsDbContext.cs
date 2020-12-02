@@ -19,11 +19,11 @@ namespace _20201110_ALS2.Models {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
-      modelBuilder.SeedEducators();
-      modelBuilder.SeedEducations();
-      modelBuilder.Entity<Education>().HasMany(e => e.Students).WithOne(p => p.Education)
-          .HasForeignKey(p => p.EducationId)
-          .OnDelete(DeleteBehavior.NoAction);
+      modelBuilder.Entity<Education>().HasMany(e => e.Students).WithOne(s => s.Education)
+          .HasForeignKey(s => s.EducationId)
+          .OnDelete(DeleteBehavior.SetNull);
+
+
 
       modelBuilder.Entity<StudentCourse>()
           .HasKey(sc => new { sc.StudentId, sc.CourseId });
@@ -43,6 +43,8 @@ namespace _20201110_ALS2.Models {
       modelBuilder.Entity<Absence>().HasOne(a => a.Course).WithMany().OnDelete(DeleteBehavior.SetNull);
       modelBuilder.Entity<Absence>().HasOne(a => a.Student).WithMany().OnDelete(DeleteBehavior.Cascade);
 
+      modelBuilder.SeedEducators();
+      modelBuilder.SeedEducations();
       modelBuilder.SeedAdmin(this);
     }
   }
