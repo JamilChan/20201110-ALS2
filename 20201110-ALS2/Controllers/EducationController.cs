@@ -16,7 +16,7 @@ namespace _20201110_ALS2.Controllers {
     public IActionResult Overview() {
       List<Education> educations = educationRepo.Educations.ToList();
 
-      return View(educations);
+      return View("Overview", educations);
     }
 
     [HttpGet]
