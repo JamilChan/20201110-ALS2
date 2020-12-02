@@ -118,126 +118,126 @@ namespace CalcAbsenceTest {
       Assert.Equal(20, calcAbsList3[0].AbsenceInPercent);
     }
 
-    [Fact]
-    public void NotoriousStudentsTest() {
-      //Arrange
-      //Fag og Uddannelse
-      DateTime startDateTest = new DateTime(2020, 11, 30);
-      DateTime endDateTest = new DateTime(2021, 1, 02);
-      Education educationTest1 = new Education { EducationId = 1, Name = "Datamatiker" };
+    //[Fact]
+    //public void NotoriousStudentsTest() {
+    //  //Arrange
+    //  //Fag og Uddannelse
+    //  DateTime startDateTest = new DateTime(2020, 11, 30);
+    //  DateTime endDateTest = new DateTime(2021, 1, 02);
+    //  Education educationTest1 = new Education { EducationId = 1, Name = "Datamatiker" };
 
-      Week weekTest1 = new Week { Monday = true, Tuesday = true, Wednesday = false, Thursday = true, Friday = true };
-      Week weekTest2 = new Week { Monday = false, Tuesday = true, Wednesday = false, Thursday = false, Friday = true };
-      Course courseTest1 = new Course { Education = educationTest1, Name = "ProTek3", StartDate = startDateTest, EndDate = endDateTest, Week = weekTest1 };
-      Course courseTest2 = new Course { Education = educationTest1, Name = "SystemUdvikling", StartDate = startDateTest, EndDate = endDateTest, Week = weekTest2 };
+    //  Week weekTest1 = new Week { Monday = true, Tuesday = true, Wednesday = false, Thursday = true, Friday = true };
+    //  Week weekTest2 = new Week { Monday = false, Tuesday = true, Wednesday = false, Thursday = false, Friday = true };
+    //  Course courseTest1 = new Course { Education = educationTest1, Name = "ProTek3", StartDate = startDateTest, EndDate = endDateTest, Week = weekTest1 };
+    //  Course courseTest2 = new Course { Education = educationTest1, Name = "SystemUdvikling", StartDate = startDateTest, EndDate = endDateTest, Week = weekTest2 };
 
-      //Studerende
-      Student studentTest1 = new Student { StudentId = 1, Name = "Carlos", Education = educationTest1, Semester = 3 }; //5 absences
-      Student studentTest2 = new Student { StudentId = 2, Name = "Hector", Education = educationTest1, Semester = 3 }; //20 absences
-      Student studentTest3 = new Student { StudentId = 3, Name = "Gustavo", Education = educationTest1, Semester = 3 }; //4 absences
-      Student studentTest4 = new Student { StudentId = 4, Name = "Juan", Education = educationTest1, Semester = 3 }; //2 absences
+    //  //Studerende
+    //  Student studentTest1 = new Student { StudentId = 1, Name = "Carlos", Education = educationTest1, Semester = 3 }; //5 absences
+    //  Student studentTest2 = new Student { StudentId = 2, Name = "Hector", Education = educationTest1, Semester = 3 }; //20 absences
+    //  Student studentTest3 = new Student { StudentId = 3, Name = "Gustavo", Education = educationTest1, Semester = 3 }; //4 absences
+    //  Student studentTest4 = new Student { StudentId = 4, Name = "Juan", Education = educationTest1, Semester = 3 }; //2 absences
 
-      List<Absence> absenceCourse1List = new List<Absence>();
-      List<Absence> absenceCourse2List = new List<Absence>();
+    //  List<Absence> absenceCourse1List = new List<Absence>();
+    //  List<Absence> absenceCourse2List = new List<Absence>();
 
 
-      for (int i = 0; i < 16; i++) { // 10 absences for Carlos
-        if (!(i == 2 || i == 5 || i == 6 || i == 9 || i == 12 || i == 13)) {
-          absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(i), Student = studentTest1 });
-        }
-      }
+    //  for (int i = 0; i < 16; i++) { // 10 absences for Carlos
+    //    if (!(i == 2 || i == 5 || i == 6 || i == 9 || i == 12 || i == 13)) {
+    //      absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(i), Student = studentTest1 });
+    //    }
+    //  }
 
-      for (int i = 0; i < 16; i++) { // 20 absences for Hector
-        if (!(i == 2 || i == 5 || i == 6 || i == 9 || i == 12 || i == 13)) {
-          absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(i), Student = studentTest2 });
-          absenceCourse2List.Add(new Absence { Course = courseTest2, Date = startDateTest.AddDays(i), Student = studentTest2 });
-        }
-      }
+    //  for (int i = 0; i < 16; i++) { // 20 absences for Hector
+    //    if (!(i == 2 || i == 5 || i == 6 || i == 9 || i == 12 || i == 13)) {
+    //      absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(i), Student = studentTest2 });
+    //      absenceCourse2List.Add(new Absence { Course = courseTest2, Date = startDateTest.AddDays(i), Student = studentTest2 });
+    //    }
+    //  }
 
-      //2 absences for Juan
-      absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(1), Student = studentTest4 });
-      absenceCourse2List.Add(new Absence { Course = courseTest2, Date = startDateTest.AddDays(3), Student = studentTest4 });
+    //  //2 absences for Juan
+    //  absenceCourse1List.Add(new Absence { Course = courseTest1, Date = startDateTest.AddDays(1), Student = studentTest4 });
+    //  absenceCourse2List.Add(new Absence { Course = courseTest2, Date = startDateTest.AddDays(3), Student = studentTest4 });
 
-      //Act
-      List<CalculateAbsence> calcAbsList1 = NotoriousStudents(absenceCourse1List, TimeSpan.Week);
-      List<CalculateAbsence> calcAbsList2 = NotoriousStudents(absenceCourse1List, TimeSpan.TwoWeeks);
-      List<CalculateAbsence> calcAbsList3 = NotoriousStudents(absenceCourse1List, TimeSpan.ThreeWeeks);
-      List<CalculateAbsence> calcAbsList4 = NotoriousStudents(absenceCourse1List, TimeSpan.Month);
+    //  //Act
+    //  List<CalculateAbsence> calcAbsList1 = NotoriousStudents(absenceCourse1List, TimeSpan.Week);
+    //  List<CalculateAbsence> calcAbsList2 = NotoriousStudents(absenceCourse1List, TimeSpan.TwoWeeks);
+    //  List<CalculateAbsence> calcAbsList3 = NotoriousStudents(absenceCourse1List, TimeSpan.ThreeWeeks);
+    //  List<CalculateAbsence> calcAbsList4 = NotoriousStudents(absenceCourse1List, TimeSpan.Month);
 
-      List<CalculateAbsence> calcAbsList11 = NotoriousStudents(absenceCourse2List, TimeSpan.Week);
-      List<CalculateAbsence> calcAbsList22 = NotoriousStudents(absenceCourse2List, TimeSpan.TwoWeeks);
-      List<CalculateAbsence> calcAbsList33 = NotoriousStudents(absenceCourse2List, TimeSpan.ThreeWeeks);
-      List<CalculateAbsence> calcAbsList44 = NotoriousStudents(absenceCourse2List, TimeSpan.Month);
+    //  List<CalculateAbsence> calcAbsList11 = NotoriousStudents(absenceCourse2List, TimeSpan.Week);
+    //  List<CalculateAbsence> calcAbsList22 = NotoriousStudents(absenceCourse2List, TimeSpan.TwoWeeks);
+    //  List<CalculateAbsence> calcAbsList33 = NotoriousStudents(absenceCourse2List, TimeSpan.ThreeWeeks);
+    //  List<CalculateAbsence> calcAbsList44 = NotoriousStudents(absenceCourse2List, TimeSpan.Month);
 
-      //Assert
-      Assert.Empty(calcAbsList1);
-      Assert.Empty(calcAbsList2);
+    //  //Assert
+    //  Assert.Empty(calcAbsList1);
+    //  Assert.Empty(calcAbsList2);
 
-      Assert.Equal(2, calcAbsList3.Count);
-      Assert.Equal("Carlos", calcAbsList3[0].StudentName);
-      Assert.Equal(4, calcAbsList3[0].DaysOfAbsence.Count);
-      Assert.Equal("Hector", calcAbsList3[1].StudentName);
-      Assert.Equal(4, calcAbsList3[1].DaysOfAbsence.Count);
+    //  Assert.Equal(2, calcAbsList3.Count);
+    //  Assert.Equal("Carlos", calcAbsList3[0].StudentName);
+    //  Assert.Equal(4, calcAbsList3[0].DaysOfAbsence.Count);
+    //  Assert.Equal("Hector", calcAbsList3[1].StudentName);
+    //  Assert.Equal(4, calcAbsList3[1].DaysOfAbsence.Count);
 
-      Assert.Equal(3, calcAbsList4.Count);
-      Assert.Equal("Carlos", calcAbsList4[0].StudentName);
-      Assert.Equal(10, calcAbsList4[0].DaysOfAbsence.Count);
-      Assert.Equal("Hector", calcAbsList4[1].StudentName);
-      Assert.Equal(10, calcAbsList4[1].DaysOfAbsence.Count);
-      Assert.Equal("Juan", calcAbsList4[2].StudentName);
-      Assert.Single(calcAbsList4[2].DaysOfAbsence);
+    //  Assert.Equal(3, calcAbsList4.Count);
+    //  Assert.Equal("Carlos", calcAbsList4[0].StudentName);
+    //  Assert.Equal(10, calcAbsList4[0].DaysOfAbsence.Count);
+    //  Assert.Equal("Hector", calcAbsList4[1].StudentName);
+    //  Assert.Equal(10, calcAbsList4[1].DaysOfAbsence.Count);
+    //  Assert.Equal("Juan", calcAbsList4[2].StudentName);
+    //  Assert.Single(calcAbsList4[2].DaysOfAbsence);
 
-      Assert.Empty(calcAbsList11);
-      Assert.Empty(calcAbsList22);
+    //  Assert.Empty(calcAbsList11);
+    //  Assert.Empty(calcAbsList22);
 
-      Assert.Single(calcAbsList33);
-      Assert.Equal("Hector", calcAbsList33[0].StudentName);
-      Assert.Equal(4, calcAbsList33[0].DaysOfAbsence.Count);
+    //  Assert.Single(calcAbsList33);
+    //  Assert.Equal("Hector", calcAbsList33[0].StudentName);
+    //  Assert.Equal(4, calcAbsList33[0].DaysOfAbsence.Count);
 
-      Assert.Equal(2, calcAbsList44.Count);
-      Assert.Equal("Hector", calcAbsList44[0].StudentName);
-      Assert.Equal(10, calcAbsList44[0].DaysOfAbsence.Count);
-      Assert.Equal("Juan", calcAbsList44[1].StudentName);
-      Assert.Single(calcAbsList44[1].DaysOfAbsence);
-    }
+    //  Assert.Equal(2, calcAbsList44.Count);
+    //  Assert.Equal("Hector", calcAbsList44[0].StudentName);
+    //  Assert.Equal(10, calcAbsList44[0].DaysOfAbsence.Count);
+    //  Assert.Equal("Juan", calcAbsList44[1].StudentName);
+    //  Assert.Single(calcAbsList44[1].DaysOfAbsence);
+    //}
 
-    public List<CalculateAbsence> NotoriousStudents(List<Absence> absenceByCourseList, _20201110_ALS2.Models.TimeSpan timeSpan) {
-      DateTime todaysDate = new DateTime(2020, 12,30);
-      DateTime checkDate = FindTimeSpan(timeSpan, todaysDate);
+    //public List<CalculateAbsence> NotoriousStudents(List<Absence> absenceByCourseList, _20201110_ALS2.Models.TimeSpan timeSpan) {
+    //  DateTime todaysDate = new DateTime(2020, 12,30);
+    //  DateTime checkDate = FindTimeSpan(timeSpan, todaysDate);
 
-      List<Absence> absenceInTimeSpanList = new List<Absence>();
-      //Find fravær de seneste 14 dage
-      foreach (Absence absence in absenceByCourseList) {
-        if (checkDate <= absence.Date && absence.Date <= todaysDate) {
-          absenceInTimeSpanList.Add(absence);
-        }
-      }
+    //  List<Absence> absenceInTimeSpanList = new List<Absence>();
+    //  //Find fravær de seneste 14 dage
+    //  foreach (Absence absence in absenceByCourseList) {
+    //    if (checkDate <= absence.Date && absence.Date <= todaysDate) {
+    //      absenceInTimeSpanList.Add(absence);
+    //    }
+    //  }
 
-      //Find studerende
-      List<Student> studentList = new List<Student>();
-      foreach (Absence absence in absenceInTimeSpanList) {
-        if (!studentList.Contains(absence.Student)) {
-          studentList.Add(absence.Student);
-        }
-      }
+    //  //Find studerende
+    //  List<Student> studentList = new List<Student>();
+    //  foreach (Absence absence in absenceInTimeSpanList) {
+    //    if (!studentList.Contains(absence.Student)) {
+    //      studentList.Add(absence.Student);
+    //    }
+    //  }
 
-      List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
-      foreach (Student student in studentList) {
-        CalculateAbsence entry = new CalculateAbsence();
-        entry.StudentName = student.Name;
+    //  List<CalculateAbsence> notoriousStudentList = new List<CalculateAbsence>();
+    //  foreach (Student student in studentList) {
+    //    CalculateAbsence entry = new CalculateAbsence();
+    //    entry.StudentName = student.Name;
 
-        foreach (Absence absence in absenceInTimeSpanList) {
-          if (absence.Student.StudentId == student.StudentId) {
-            entry.DaysOfAbsence.Add(absence.Date.ToString());
-          }
-        }
+    //    foreach (Absence absence in absenceInTimeSpanList) {
+    //      if (absence.Student.StudentId == student.StudentId) {
+    //        entry.DaysOfAbsence.Add(absence.Date.ToString());
+    //      }
+    //    }
 
-        //Tilføj fraværsprocent i perioden? eller på fag? eller uddannelse?
-        notoriousStudentList.Add(entry);
-      }
+    //    //Tilføj fraværsprocent i perioden? eller på fag? eller uddannelse?
+    //    notoriousStudentList.Add(entry);
+    //  }
 
-      return notoriousStudentList;
-    }
+    //  return notoriousStudentList;
+    //}
 
     private List<CalculateAbsence> AbsenceForStudentsInCourse(List<Absence> absenceByCourseList) {
       List<Student> studentsList = new List<Student>();

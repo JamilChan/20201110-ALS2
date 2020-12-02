@@ -82,7 +82,7 @@ namespace _20201110_ALS2.Controllers {
         dic.Add(s, dico);
       }
 
-      return View(new StudentsDaysViewModel {
+      return View("CourseStudentsDays", new StudentsDaysViewModel {
         Dates = dates,
         StudentList = students,
         StudentStatuses = dic,
