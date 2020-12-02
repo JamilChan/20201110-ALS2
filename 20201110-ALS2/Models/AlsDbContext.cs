@@ -21,9 +21,7 @@ namespace _20201110_ALS2.Models {
       base.OnModelCreating(modelBuilder);
       modelBuilder.Entity<Education>().HasMany(e => e.Students).WithOne(s => s.Education)
           .HasForeignKey(s => s.EducationId)
-          .OnDelete(DeleteBehavior.SetNull);
-
-
+          .OnDelete(DeleteBehavior.NoAction);
 
       modelBuilder.Entity<StudentCourse>()
           .HasKey(sc => new { sc.StudentId, sc.CourseId });

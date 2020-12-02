@@ -22,7 +22,7 @@
               <form asp-controller="Education" asp-action="Delete">
                 <input type="hidden" name="educationId" value="@education.EducationId" />
                 <a class="btn btn-warning text-dark" asp-controller="Education" asp-action="Edit" asp-route-educationId="@education.EducationId">Rediger</a>
-                <input class="btn btn-danger" type="submit" value="Slet" />
+                @*<input class="btn btn-danger" type="submit" value="Slet" />*@
               </form>
             </td>
           </tr>

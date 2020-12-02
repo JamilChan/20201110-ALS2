@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using _20201110_ALS2.Models;
-using _20201110_ALS2.Models.ViewModels;
 
 namespace _20201110_ALS2.Controllers {
   public class EducationController : Controller {
