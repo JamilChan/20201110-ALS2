@@ -37,7 +37,8 @@ namespace _20201110_ALS2.Controllers {
         AbsencesList = AbsenceForStudentList(courseId, date),
         Course = course,
         Date = date,
-        Edit = edit
+        Edit = edit,
+        IsChecked = "on"
       };
 
       return View("AbsenceList", model);
@@ -89,16 +90,19 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpPost]
     public IActionResult Toggle(StudentListViewModel studentList) {
+
       Course course = ApplyCourseWithId(studentList.Course.CourseId);
       studentList.Course = course;
 
       studentList.StudentsList = studentRepo.GetAllStudentsFromCourse(course);
 
-      if (studentList.IsChecked == "on") {
-        ViewBag.Check = true;
+      if (studentList.IsChecked != "off") {
+        studentList.IsChecked = "off";
+        ViewBag.Check = false;
         return View("AbsenceList", studentList);
       } else {
-        ViewBag.Check = false;
+        studentList.IsChecked = "on";
+        ViewBag.Check = true;
         return View("AbsenceList", studentList);
       }
     }

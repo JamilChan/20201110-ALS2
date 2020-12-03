@@ -1,17 +1,14 @@
-﻿@model _20201110_ALS2.Models.ViewModels.StudentListViewModel
-
-@{
-  ViewData["Title"] = "Home Page";
-}
+﻿@model StudentListViewModel
 
 <form asp-controller="Educator" asp-action="Toggle">
   <input type="hidden" asp-for="Course.CourseId" />
   <input type="hidden" asp-for="Date" />
+  <input type="hidden" asp-for="IsChecked" value="@Model.IsChecked" />
   <div class="p-2 pt-3">
     <label class="text-white h2"> Tag Fravær </label>
     @if (!Model.Edit) {
       <label class="switch float-right">
-        <input type="checkbox" name="CourseHasAbsence" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "") @(Model.Edit ? "disabled" : "")>
+        <input type="checkbox" onchange="this.form.submit()" @(Model.IsChecked == "on" ? "checked" : "") @(Model.Edit ? "disabled" : "")>
         <span class="slider round"></span>
       </label>
 
