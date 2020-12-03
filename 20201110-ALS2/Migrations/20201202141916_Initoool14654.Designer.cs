@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    partial class AlsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201202141916_Initoool14654")]
+    partial class Initoool14654
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8190fe4f-e42d-4639-8cd9-e521afec759b",
+                            ConcurrencyStamp = "09df0135-1c6c-45fa-b874-2cc3b11e8e94",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "12808a43-7649-42ae-b9f5-38e2c73dacaf",
-                            ConcurrencyStamp = "9a7e30d8-bc08-4109-b3b9-5bc282cc142e",
+                            Id = "cd807ff1-7ce5-43c3-afd0-ffcf504fe603",
+                            ConcurrencyStamp = "4f47ea70-e2fc-41de-bc46-54de66b57e80",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -89,50 +91,85 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = 1,
+                            ClaimType = "Håndter Rolle",
+                            ClaimValue = "Håndter Rolle",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "Se Roller",
+                            ClaimValue = "Se Roller",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "Slet Rolle",
+                            ClaimValue = "Slet Rolle",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "Håndter Undervisere",
+                            ClaimValue = "Håndter Undervisere",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ClaimType = "Se Undervisere",
+                            ClaimValue = "Se Undervisere",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ClaimType = "Slet Undervisere",
+                            ClaimValue = "Slet Undervisere",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 7,
                             ClaimType = "Håndter Studerende",
                             ClaimValue = "Håndter Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 8,
                             ClaimType = "Se Studerende",
                             ClaimValue = "Se Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 9,
                             ClaimType = "Slet Studerende",
                             ClaimValue = "Slet Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 10,
                             ClaimType = "Håndter Fag",
                             ClaimValue = "Håndter Fag",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 11,
                             ClaimType = "Se Fag",
                             ClaimValue = "Se Fag",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 12,
                             ClaimType = "Slet Fag",
                             ClaimValue = "Slet Fag",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ClaimType = "Giv Fravær",
-                            ClaimValue = "Giv Fravær",
                             RoleId = "1"
                         });
                 });
@@ -200,7 +237,7 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "1fea0eaa-bffe-49d3-8f75-fb3f78712ac2",
+                            UserId = "b1d273b1-3e62-4562-a24b-90a75e0765ab",
                             RoleId = "1"
                         });
                 });
@@ -324,16 +361,16 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1fea0eaa-bffe-49d3-8f75-fb3f78712ac2",
+                            Id = "b1d273b1-3e62-4562-a24b-90a75e0765ab",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dc812ea8-66c9-493e-adb4-c2d2a1e9c407",
+                            ConcurrencyStamp = "d692aa0a-42e5-4404-8703-a4c4dbe013d5",
                             EducatorId = 1L,
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMss5txAzsMmj4GpxG8QW+mFiNS6YbQt+RIeTJvfhpHdI+anR+ZgwoWKNesfxRS4cw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFrK7XRgHvj1koRAEU2fyylPZWgF35JNezifrDNwvckSe728Xflfc2xOv37PXPSu1w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5c089318-8c72-4393-a0b9-ac8554e5c1d3",
+                            SecurityStamp = "596089cf-db99-4b4e-a2b7-d5fb7fa92ec7",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });

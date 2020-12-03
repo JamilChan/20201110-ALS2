@@ -3,17 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize]
   public class AccountController : Controller {
-    private UserManager<IdentityUser> userManager;
-    private SignInManager<IdentityUser> signInManager;
+    private UserManager<ApplicationUser> userManager;
+    private SignInManager<ApplicationUser> signInManager;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) {
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) {
       this.userManager = userManager;
       this.signInManager = signInManager;
     }
@@ -28,7 +30,7 @@ namespace _20201110_ALS2.Controllers {
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginModel model, string returnUrl) {
       if (ModelState.IsValid) {
-        IdentityUser user = await userManager.FindByNameAsync(model.Name);
+        ApplicationUser user = await userManager.FindByNameAsync(model.Name);
 
         if (user != null) {
           SignInResult result = await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
@@ -47,6 +49,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<RedirectResult> Logout(string returnUrl = "/") {
       await signInManager.SignOutAsync();
 
@@ -55,13 +58,13 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public IActionResult EditPassword() {
-      return View("ChangePassword", new ChangePasswordViewModel());
+      return View("ChangePassword", new ChangePassword());
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditPassword(ChangePasswordViewModel model) {
+    public async Task<IActionResult> EditPassword(ChangePassword model) {
       if (ModelState.IsValid) {
-        IdentityUser user = await userManager.GetUserAsync(User);
+        ApplicationUser user = await userManager.GetUserAsync(User);
 
         if (user == null) {
           return RedirectToAction("Login");

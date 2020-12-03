@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace _20201110_ALS2.Models.ViewModels {
+namespace _20201110_ALS2.Models {
   public class LoginModel {
     [Required]
     public string Name { get; set; }

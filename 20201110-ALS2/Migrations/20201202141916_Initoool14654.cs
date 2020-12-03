@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace _20201110_ALS2.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initoool14654 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,31 +19,6 @@ namespace _20201110_ALS2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,6 +82,94 @@ namespace _20201110_ALS2.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    StudentId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EducationId = table.Column<long>(type: "bigint", nullable: false),
+                    Semester = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.StudentId);
+                    table.ForeignKey(
+                        name: "FK_Students_Educations_EducationId",
+                        column: x => x.EducationId,
+                        principalTable: "Educations",
+                        principalColumn: "EducationId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EducatorId = table.Column<long>(type: "bigint", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Educators_EducatorId",
+                        column: x => x.EducatorId,
+                        principalTable: "Educators",
+                        principalColumn: "EducatorId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    CourseId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EducatorId = table.Column<long>(type: "bigint", nullable: false),
+                    EducationId = table.Column<long>(type: "bigint", nullable: true),
+                    WeekId = table.Column<long>(type: "bigint", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.CourseId);
+                    table.ForeignKey(
+                        name: "FK_Courses_Educations_EducationId",
+                        column: x => x.EducationId,
+                        principalTable: "Educations",
+                        principalColumn: "EducationId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Courses_Educators_EducatorId",
+                        column: x => x.EducatorId,
+                        principalTable: "Educators",
+                        principalColumn: "EducatorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Courses_Weeks_WeekId",
+                        column: x => x.WeekId,
+                        principalTable: "Weeks",
+                        principalColumn: "WeekId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -196,62 +259,6 @@ namespace _20201110_ALS2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    StudentId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EducationId = table.Column<long>(type: "bigint", nullable: false),
-                    Semester = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.StudentId);
-                    table.ForeignKey(
-                        name: "FK_Students_Educations_EducationId",
-                        column: x => x.EducationId,
-                        principalTable: "Educations",
-                        principalColumn: "EducationId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    CourseId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EducatorId = table.Column<long>(type: "bigint", nullable: false),
-                    EducationId = table.Column<long>(type: "bigint", nullable: true),
-                    WeekId = table.Column<long>(type: "bigint", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.CourseId);
-                    table.ForeignKey(
-                        name: "FK_Courses_Educations_EducationId",
-                        column: x => x.EducationId,
-                        principalTable: "Educations",
-                        principalColumn: "EducationId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Courses_Educators_EducatorId",
-                        column: x => x.EducatorId,
-                        principalTable: "Educators",
-                        principalColumn: "EducatorId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Courses_Weeks_WeekId",
-                        column: x => x.WeekId,
-                        principalTable: "Weeks",
-                        principalColumn: "WeekId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Absences",
                 columns: table => new
                 {
@@ -306,12 +313,11 @@ namespace _20201110_ALS2.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "1", "0d187f9a-e919-4261-8228-4105bc6cc17c", "Admin", "ADMIN" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1", 0, "81222e57-d1f6-4101-af8e-d3f8acfe0f02", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEHyHF09bvtTuxMScIIJaxCLhbvHkh+NoH+0hwuMJabgTYpsQCgQBTNF3KoTcHXDMLg==", null, false, "ced2a1ca-3085-4663-bd3a-937857369a64", false, "admin" });
+                values: new object[,]
+                {
+                    { "1", "09df0135-1c6c-45fa-b874-2cc3b11e8e94", "Admin", "ADMIN" },
+                    { "cd807ff1-7ce5-43c3-afd0-ffcf504fe603", "4f47ea70-e2fc-41de-bc46-54de66b57e80", "User", "USER" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Educations",
@@ -327,14 +333,39 @@ namespace _20201110_ALS2.Migrations
                 columns: new[] { "EducatorId", "Name" },
                 values: new object[,]
                 {
-                    { 1L, "God Flemse" },
-                    { 2L, "Big Daddy D" }
+                    { 1L, "John Johnson" },
+                    { 3L, "Flemming" },
+                    { 2L, "Hans Hansen" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoleClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "Håndter Rolle", "Håndter Rolle", "1" },
+                    { 2, "Se Roller", "Se Roller", "1" },
+                    { 3, "Slet Rolle", "Slet Rolle", "1" },
+                    { 4, "Håndter Undervisere", "Håndter Undervisere", "1" },
+                    { 5, "Se Undervisere", "Se Undervisere", "1" },
+                    { 6, "Slet Undervisere", "Slet Undervisere", "1" },
+                    { 7, "Håndter Studerende", "Håndter Studerende", "1" },
+                    { 8, "Se Studerende", "Se Studerende", "1" },
+                    { 9, "Slet Studerende", "Slet Studerende", "1" },
+                    { 10, "Håndter Fag", "Håndter Fag", "1" },
+                    { 11, "Se Fag", "Se Fag", "1" },
+                    { 12, "Slet Fag", "Slet Fag", "1" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "EducatorId", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "b1d273b1-3e62-4562-a24b-90a75e0765ab", 0, "d692aa0a-42e5-4404-8703-a4c4dbe013d5", 1L, null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEFrK7XRgHvj1koRAEU2fyylPZWgF35JNezifrDNwvckSe728Xflfc2xOv37PXPSu1w==", null, false, "596089cf-db99-4b4e-a2b7-d5fb7fa92ec7", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "1", "1" });
+                values: new object[] { "1", "b1d273b1-3e62-4562-a24b-90a75e0765ab" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Absences_CourseId",
@@ -377,6 +408,11 @@ namespace _20201110_ALS2.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_EducatorId",
+                table: "AspNetUsers",
+                column: "EducatorId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

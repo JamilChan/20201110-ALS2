@@ -1,4 +1,4 @@
-﻿@model EditRoleViewModel
+﻿@model EditRole
 @{
   ViewBag.Title = "Rediger rolle";
   Layout = "_AdminLayout";
@@ -26,22 +26,42 @@
         <a class="btn btn-lg btn-light" asp-action="ListRoles">Annuller</a>
       </div>
     </div>
-    
-    <div class="card mb-3">
-      <div class="card-header">
-        <h3> Brugere i denne rolle</h3>
-      </div>
-      <div class="card-body">
-        @if (Model.AllUsers.Any()) {
-          foreach (string user in Model.AllUsers) {
-            <h5 class="card-title">@user</h5>
+
+    <div class="row">
+      <div class="card mb-3 col-6">
+        <div class="card-header">
+          <h3> Brugere i denne rolle</h3>
+        </div>
+        <div class="card-body">
+          @if (Model.AllUsers.Any()) {
+            foreach (string user in Model.AllUsers) {
+              <h5 class="card-title">@user</h5>
+            }
+          } else {
+            <h5 class="card-title">Ingen brugere i øjeblikket</h5>
           }
-        } else {
-          <h5 class="card-title">Ingen brugere i øjeblikket</h5>
-        }
+        </div>
+        <div class="card-footer">
+          <a class="btn btn-primary" style="width: auto" asp-action="EditUsersInRole" asp-controller="Admin" asp-route-roleId="@Model.RoleId">Tilføj eller fjern brugere</a>
+        </div>
       </div>
-      <div class="card-footer">
-        <a class="btn btn-primary" style="width: auto" asp-action="EditUsersInRole" asp-controller="Admin" asp-route-roleId="@Model.RoleId">Tilføj eller fjern brugere</a>
+
+      <div class="card mb-3 col-6">
+        <div class="card-header">
+          <h3> Rettigheder til brugere i denne rolle</h3>
+        </div>
+        <div class="card-body">
+          @if (Model.RoleClaims.Any()) {
+            foreach (string claim in Model.RoleClaims) {
+              <h5 class="card-title">@claim</h5>
+            }
+          } else {
+            <h5 class="card-title">Ingen rettigheder givet i øjeblikket</h5>
+          }
+        </div>
+        <div class="card-footer">
+          <a class="btn btn-primary" style="width: auto" asp-action="EditPermissionsForRole" asp-controller="Admin" asp-route-roleId="@Model.RoleId">Tilføj eller fjern rettigheder</a>
+        </div>
       </div>
     </div>
   </form>
