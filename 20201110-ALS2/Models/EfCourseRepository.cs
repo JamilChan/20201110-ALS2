@@ -12,7 +12,7 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week);
+    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week).Include(c => c.Education);
 
     public void SaveCourse(Course course) {
       if (course.CourseId == 0) {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace _20201110_ALS2.Models {
   public class Education {
 
-    public long EducationId { get; set; }
+    public long? EducationId { get; set; }
     [Required(ErrorMessage = "Indtast et navn for uddannelsen.")]
     public string Name { get; set; }
     public ICollection<Student> Students { get; set; }

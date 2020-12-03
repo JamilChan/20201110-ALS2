@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
   public class EfStudentRepository : IStudentRepository {
@@ -32,7 +31,7 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
-    public List<Student> GetAllStudentsFromCourses(Course course) {
+    public List<Student> GetAllStudentsFromCourse(Course course) {
       IQueryable<StudentCourse> studentCourse = context.StudentCourses.Include(sc => sc.Course).Where(sc => sc.CourseId == course.CourseId).Include(sc => sc.Student);
       List<Student> studentList = new List<Student>();
       
@@ -41,6 +40,12 @@ namespace _20201110_ALS2.Models {
       }
 
       return studentList;
+    }
+
+    public List<Student> GetAllStudentsFromEducationSemester(Education education, int semester) {
+      List<Student> students = context.Students.Where(s => s.Education.EducationId == education.EducationId && s.Semester == semester).ToList();
+
+      return students;
     }
   }
 }

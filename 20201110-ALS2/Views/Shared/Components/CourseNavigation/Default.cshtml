@@ -1,0 +1,34 @@
+﻿@model CourseEducationNavigationViewModel
+
+<h4 class="text-center">Uddannelser</h4>
+@for (int i = 0; i < Model.Educations.Count(); i++) {
+  string stringId = "educationCollapse" + i;
+  <button class="text-light btn btn-block bg-info btn-outline-light font-weight-bold mb-2" type="button" data-toggle="collapse" data-target="#@stringId" aria-expanded="false">
+    @Model.Educations.ToList()[i].Name
+  </button>
+
+  <div class="collapse mb-2 btn-group-vertical w-100 float-md-right" id="@stringId">
+    @for (int ii = 1; ii <= 5; ii++) {
+      <a class="text-light btn btn-block btn-outline-light font-weight-bold"
+         style="background-color: #5bc0de"
+         asp-action="@(Model.ChartView == "Student" ? "EducationStudents" : "EducationStudentsDays")"
+         asp-controller="Charts"
+         asp-route-educationId="@Model.Educations.ToList()[i].EducationId"
+         asp-route-semesterNo="@ii">
+        Semester @ii
+      </a>
+    }
+  </div>
+}
+
+<hr class="bg-white" />
+
+<h4 class="text-center">Klasser</h4>
+@foreach (Course course in Model.Courses) {
+  <a class="text-dark btn btn-block bg-warning btn-outline-light font-weight-bold"
+     asp-action="@(Model.ChartView == "Student" ? "CourseStudents" : "CourseStudentsDays")"
+     asp-controller="Charts"
+     asp-route-courseId="@course.CourseId">
+    @course.Name
+  </a>
+}
