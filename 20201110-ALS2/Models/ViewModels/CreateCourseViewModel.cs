@@ -12,8 +12,8 @@ namespace _20201110_ALS2.Models.ViewModels {
     public List<string> EducatorNameList { get; set; } = new List<string>();
     public IQueryable<Education> Educations { get; set; }
     public List<string> EducationNameList { get; set; } = new List<string>();
-    public IQueryable<Student> Students { get; set; } = Enumerable.Empty<Student>().AsQueryable();
-    public List<Student> CheckedStudentList { get; set; }
+    public List<Student> StudentList { get; set; } = new List<Student>();
+    public List<Student> CheckedStudentList { get; set; } = new List<Student>();
     public bool Edit { get; set; }
 
     public void GetCourseInfoName() {

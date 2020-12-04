@@ -15,7 +15,7 @@ namespace _20201110_ALS2.Controllers {
     private IEducationRepository educationRepo;
     private readonly IAbsenceRepository absenceRepo;
 
-    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo , IEducationRepository educationRepo) {
+    public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo, IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
       this.courseRepo = courseRepo;
       this.educatorRepo = educatorRepo;
@@ -108,46 +108,69 @@ namespace _20201110_ALS2.Controllers {
     [HttpGet]
     public ViewResult CreateCourse() {
       CreateCourseViewModel model = CreateCCVM();
+      ViewBag.search = false;
 
       return View("CreateCourse", model);
     }
 
     [HttpPost]
-    public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form) {
-      if (ModelState.IsValid) {
-        foreach (Educator educator in educatorRepo.Educators) {
-          if (educator.Name == model.Course.Educator.Name) {
-            model.Course.Educator = educator;
-            break;
-          }
-        }
-        foreach (Education education in educationRepo.Educations) {
-          if (education.Name == model.Course.Education.Name) {
-            model.Course.Education = education;
-            break;
+    public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form, long educationId, int semesterNo, bool search) {
+      for (int i = 0; i < model.CheckedStudentList.Count(); i++) {
+        ModelState.Remove("CheckedStudentList[" + i + "].Name");
+        ModelState.Remove("CheckedStudentList[" + i + "].Education");
+      }
+
+      if (ModelState.IsValid && !search) {
+        model.Course.Educator = educatorRepo.Educators.FirstOrDefault(e => e.Name == model.Course.Educator.Name);
+
+        List<StudentCourse> studentCourseList = new List<StudentCourse>();
+        string selected = Request.Form["SelectedStudents"].ToString();
+
+        if (!model.Edit) {
+          foreach (Student student in model.CheckedStudentList) {
+            StudentCourse studentCourse = new StudentCourse { Course = model.Course, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == student.StudentId) };
+            studentCourseList.Add(studentCourse);
           }
         }
 
-        string selected = Request.Form["SelectedStudents"].ToString();
         string[] selectedList = selected.Split(',');
-        List<StudentCourse> studentCourseList = new List<StudentCourse>();
 
         if (selectedList[0] != "") {
           foreach (string studentId in selectedList) {
             StudentCourse studentCourse = new StudentCourse { Course = model.Course, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int64.Parse(studentId)) };
             studentCourseList.Add(studentCourse);
           }
-
-          model.Course.StudentCourses = studentCourseList;
         }
-        
+
+
+        model.Course.StudentCourses = studentCourseList;
+
         courseRepo.SaveCourse(model.Course);
         TempData["message"] = $"{model.Course.Name} has been saved";
+
         return RedirectToAction("ViewCourses");
       } else {
+        List<Student> checkedStudentList = model.CheckedStudentList;
+        string selected = Request.Form["SelectedStudents"].ToString();
         model = CreateCCVM();
 
-        return View("CreateCourse", model); 
+        if (educationId != 0) {
+          Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
+          model.StudentList = model.StudentList.FindAll(s => s.Education.Name == education.Name);
+
+          ViewBag.selectedEducationId = educationId;
+        }
+
+        if (semesterNo != 0) {
+          model.StudentList = model.StudentList.FindAll(s => s.Semester == semesterNo);
+
+          ViewBag.selectedSemesterNo = semesterNo;
+        }
+
+        model.CheckedStudentList = GetSelectedStudents(model, checkedStudentList, selected);
+        ViewBag.search = search;
+
+        return View("CreateCourse", model);
       }
     }
 
@@ -162,6 +185,7 @@ namespace _20201110_ALS2.Controllers {
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
       model.CheckedStudentList = courseRepo.SelectedStudents(courseId);
       model.Edit = true;
+      ViewBag.search = false;
 
       return View("CreateCourse", model);
     }
@@ -182,16 +206,42 @@ namespace _20201110_ALS2.Controllers {
       return View("ViewThisCourse", model);
     }
 
-    public CreateCourseViewModel CreateCCVM() {
+    private CreateCourseViewModel CreateCCVM() {
       CreateCourseViewModel model = new CreateCourseViewModel();
       model.Educators = educatorRepo.Educators;
       model.Educations = educationRepo.Educations;
       model.GetCourseInfoName();
-      model.Students = studentRepo.Students;
+      model.StudentList = studentRepo.Students.OrderBy(s => s.Name).ToList();
       model.Course.Week = new Week();
       model.Course.Week.WeekId = 0;
 
       return model;
+    }
+
+    private List<Student> GetSelectedStudents(CreateCourseViewModel model, List<Student> checkedStudentList, string selected) {
+      string[] selectedList = selected.Split(',');
+      List<Student> selectedStudentList = new List<Student>();
+
+      if (selectedList[0] != "") {
+        foreach (string studentId in selectedList) {
+          Student student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int64.Parse(studentId));
+          selectedStudentList.Add(student);
+        }
+      }
+
+      foreach (Student checkedStudent in checkedStudentList) {
+        if (model.StudentList.Find(s => s.StudentId == checkedStudent.StudentId) != null) {
+          if (selectedStudentList.Find(s => s.StudentId == checkedStudent.StudentId) == null) {
+            selectedStudentList.Add(checkedStudent);
+          } else {
+            selectedStudentList.Remove(checkedStudent);
+          }
+        } else {
+          selectedStudentList.Add(checkedStudent);
+        }
+      }
+
+      return selectedStudentList;
     }
 
     private Course ApplyCourseWithId(long courseId) {

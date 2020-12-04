@@ -10,8 +10,8 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201127081920_seedStudents")]
-    partial class seedStudents
+    [Migration("20201202141547_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,7 +51,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "3e505e76-d030-42a5-8596-2ee060604bbc",
+                            ConcurrencyStamp = "ab3c7c88-21c1-4eeb-9c77-d1d32acfa4c7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -150,13 +150,13 @@ namespace _20201110_ALS2.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ac1c2d63-4151-416d-a5b0-97a77b5904d6",
+                            ConcurrencyStamp = "9b673c59-5afd-4f7a-87e5-b4d27b61fe34",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGgasU94Va+g9UlzUKvx9z58Do4t4rj/27edj/NuUvzjf5LR9rd57mTC+++m7Ag3Lw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB293f4uypGD2CnsQ/egKEbJ0aoGqWLQJDACXX22XPlq6c49kIU3t9kM92iIMnr2HA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "52567ad8-852c-4dcb-9a46-e8664383b330",
+                            SecurityStamp = "13a9f2af-21a2-4ea3-90ba-9247c1b826e1",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -284,9 +284,6 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
-                    b.Property<long>("EducationId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("EducatorId")
                         .HasColumnType("bigint");
 
@@ -304,8 +301,6 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("CourseId");
-
-                    b.HasIndex("EducationId");
 
                     b.HasIndex("EducatorId");
 
@@ -338,7 +333,7 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             EducationId = 2L,
-                            Name = "AltAndet"
+                            Name = "Finansøkonom"
                         });
                 });
 
@@ -377,7 +372,8 @@ namespace _20201110_ALS2.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
-                    b.Property<long>("EducationId")
+                    b.Property<long?>("EducationId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
@@ -392,15 +388,6 @@ namespace _20201110_ALS2.Migrations
                     b.HasIndex("EducationId");
 
                     b.ToTable("Students");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 3L,
-                            EducationId = 1L,
-                            Name = "Claus",
-                            Semester = 1
-                        });
                 });
 
             modelBuilder.Entity("_20201110_ALS2.Models.StudentCourse", b =>
@@ -500,11 +487,13 @@ namespace _20201110_ALS2.Migrations
                 {
                     b.HasOne("_20201110_ALS2.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("_20201110_ALS2.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 
@@ -513,12 +502,6 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Course", b =>
                 {
-                    b.HasOne("_20201110_ALS2.Models.Education", "Education")
-                        .WithMany()
-                        .HasForeignKey("EducationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("_20201110_ALS2.Models.Educator", "Educator")
                         .WithMany()
                         .HasForeignKey("EducatorId")
@@ -530,8 +513,6 @@ namespace _20201110_ALS2.Migrations
                         .HasForeignKey("WeekId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Education");
 
                     b.Navigation("Educator");
 

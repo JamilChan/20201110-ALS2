@@ -22,4 +22,9 @@
     <PackageReference Include="westwind.aspnetcore.LiveReload" Version="0.3.0" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

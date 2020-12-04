@@ -14,12 +14,6 @@ namespace _20201110_ALS2.Models {
       new Educator { EducatorId = 2, Name = "Big Daddy D" }
       );
     }
-    public static void SeedEducations(this ModelBuilder modelBuilder) {
-      modelBuilder.Entity<Education>().HasData(
-      new Education { EducationId = 1, Name = "Datamatiker" },
-      new Education { EducationId = 2, Name = "AltAndet" }
-      );
-    }
 
     public static void SeedEducations(this ModelBuilder modelBuilder) {
       modelBuilder.Entity<Education>().HasData(
