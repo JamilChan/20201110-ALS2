@@ -46,7 +46,8 @@ namespace _20201110_ALS2.Models {
         new IdentityRoleClaim<string> { ClaimType = "Håndter Fag", ClaimValue = "Håndter Fag", RoleId = "1", Id = 4 },
         new IdentityRoleClaim<string> { ClaimType = "Se Fag", ClaimValue = "Se Fag", RoleId = "1", Id = 5},
         new IdentityRoleClaim<string> { ClaimType = "Slet Fag", ClaimValue = "Slet Fag", RoleId = "1", Id = 6 },
-        new IdentityRoleClaim<string> { ClaimType = "Giv Fravær", ClaimValue = "Giv Fravær", RoleId = "1", Id = 7 }
+        new IdentityRoleClaim<string> { ClaimType = "Giv Fravær", ClaimValue = "Giv Fravær", RoleId = "1", Id = 7 },
+        new IdentityRoleClaim<string> { ClaimType = "Se Fravær", ClaimValue = "Se Fravær", RoleId = "1", Id = 8 }
 
       );
     }

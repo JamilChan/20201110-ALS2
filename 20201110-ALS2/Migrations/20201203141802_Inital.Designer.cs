@@ -10,8 +10,8 @@ using _20201110_ALS2.Models;
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201202141916_Initoool14654")]
-    partial class Initoool14654
+    [Migration("20201203141802_Inital")]
+    partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,14 +51,14 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "09df0135-1c6c-45fa-b874-2cc3b11e8e94",
+                            ConcurrencyStamp = "476bb955-ac0a-4bfb-9708-00d910f60bce",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cd807ff1-7ce5-43c3-afd0-ffcf504fe603",
-                            ConcurrencyStamp = "4f47ea70-e2fc-41de-bc46-54de66b57e80",
+                            Id = "632342e7-6823-478a-ad3f-b8f61fb191a1",
+                            ConcurrencyStamp = "86f107e6-d51e-4d6c-b63b-58f26c6c887b",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -91,85 +91,50 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = 1,
-                            ClaimType = "Håndter Rolle",
-                            ClaimValue = "Håndter Rolle",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "Se Roller",
-                            ClaimValue = "Se Roller",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "Slet Rolle",
-                            ClaimValue = "Slet Rolle",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "Håndter Undervisere",
-                            ClaimValue = "Håndter Undervisere",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "Se Undervisere",
-                            ClaimValue = "Se Undervisere",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "Slet Undervisere",
-                            ClaimValue = "Slet Undervisere",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 7,
                             ClaimType = "Håndter Studerende",
                             ClaimValue = "Håndter Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 8,
+                            Id = 2,
                             ClaimType = "Se Studerende",
                             ClaimValue = "Se Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 9,
+                            Id = 3,
                             ClaimType = "Slet Studerende",
                             ClaimValue = "Slet Studerende",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 10,
+                            Id = 4,
                             ClaimType = "Håndter Fag",
                             ClaimValue = "Håndter Fag",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 11,
+                            Id = 5,
                             ClaimType = "Se Fag",
                             ClaimValue = "Se Fag",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 12,
+                            Id = 6,
                             ClaimType = "Slet Fag",
                             ClaimValue = "Slet Fag",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ClaimType = "Giv Fravær",
+                            ClaimValue = "Giv Fravær",
                             RoleId = "1"
                         });
                 });
@@ -237,7 +202,7 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "b1d273b1-3e62-4562-a24b-90a75e0765ab",
+                            UserId = "a6b588fd-5290-4108-91e4-42de9788341e",
                             RoleId = "1"
                         });
                 });
@@ -361,16 +326,16 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b1d273b1-3e62-4562-a24b-90a75e0765ab",
+                            Id = "a6b588fd-5290-4108-91e4-42de9788341e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d692aa0a-42e5-4404-8703-a4c4dbe013d5",
+                            ConcurrencyStamp = "89d7d1f3-4b86-46ac-a1d8-0dbcf1c3a160",
                             EducatorId = 1L,
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFrK7XRgHvj1koRAEU2fyylPZWgF35JNezifrDNwvckSe728Xflfc2xOv37PXPSu1w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIYMyWwRnQmi8m4X0eLKhvycPjnJJ86GUUWmEcgcTbd80kExhyiFF5JeYUxkElHfoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "596089cf-db99-4b4e-a2b7-d5fb7fa92ec7",
+                            SecurityStamp = "89c5ba21-0634-46f0-846a-2ac673bd69fc",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -415,7 +380,7 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Education", b =>
                 {
-                    b.Property<long>("EducationId")
+                    b.Property<long?>("EducationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .UseIdentityColumn();

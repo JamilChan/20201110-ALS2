@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 
 namespace _20201110_ALS2.Controllers {
-  [Authorize]
+  [Authorize(Policy = "GivFraværPolicy")]
   public class HomeController : Controller {
     private readonly ICourseRepository courseRepo;
     private readonly IAbsenceRepository absenceRepo;
@@ -18,7 +18,6 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    [Authorize(Policy = "FraværPolicy")]
     public IActionResult Index() {
       HomeIndexViewModel model = new HomeIndexViewModel {
         Date = DateTime.Now,

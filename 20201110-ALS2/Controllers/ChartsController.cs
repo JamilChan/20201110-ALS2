@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using TimeSpan = _20201110_ALS2.Models.TimeSpan;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize(Policy = "SeFraværPolicy")]
   public class ChartsController : Controller {
     public IStudentRepository studentRepo { get; }
     public IAbsenceRepository absenceRepo { get; set; }

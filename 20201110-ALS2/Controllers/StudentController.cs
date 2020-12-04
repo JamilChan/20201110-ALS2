@@ -24,7 +24,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    [Authorize(Policy = "HåndterStuderendePolicy")]
+    [Authorize(Policy = "HåndterStuderendePolicy")] 
     public IActionResult Crud(string crud, long studentId) {
       ViewBag.crud = crud;
       StudentCRUDViewModel model = new StudentCRUDViewModel();
@@ -44,7 +44,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    [Authorize(Policy = "HåndterStuderendePolicy")]
+    [Authorize(Policy = "HåndterStuderendePolicy")] 
     public IActionResult Create(StudentCRUDViewModel model) {
       if (!ModelState.IsValid) {
         model.GenerateModel(educationRepo.Educations.ToList());
@@ -61,7 +61,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    [Authorize(Policy = "SletStuderendePolicy")]
+    [Authorize(Policy = "SletStuderendePolicy")] 
     public IActionResult DeleteStudent(long studentId) {
 
       studentRepo.Delete(studentId);

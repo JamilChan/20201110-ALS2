@@ -35,18 +35,19 @@ namespace _20201110_ALS2 {
       services.AddScoped<IEducatorRepository, EfEducatorRepository>();
 
       services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
+      //Login Filter
       //services.AddControllersWithViews(options => {
       //  AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
       //  options.Filters.Add(new AuthorizeFilter(policy));
       //});
 
       services.AddAuthorization(
-        options =>
-        {
+        options => {
           options.AddPolicy("SeFagPolicy", policy => policy.RequireClaim("Se Fag"));
           options.AddPolicy("HåndterFagPolicy", policy => policy.RequireClaim("Håndter Fag"));
           options.AddPolicy("SletFagPolicy", policy => policy.RequireClaim("Slet Fag"));
-          options.AddPolicy("FraværPolicy", policy => policy.RequireClaim("Giv Fravær"));
+          options.AddPolicy("GivFraværPolicy", policy => policy.RequireClaim("Giv Fravær"));
+          options.AddPolicy("SeFraværPolicy", policy => policy.RequireClaim("Se Fravær"));
           options.AddPolicy("HåndterStuderendePolicy", policy => policy.RequireClaim("Håndter Studerende"));
           options.AddPolicy("SletStuderendePolicy", policy => policy.RequireClaim("Slet Studerende"));
           options.AddPolicy("SeStuderendePolicy", policy => policy.RequireClaim("Se Studerende"));

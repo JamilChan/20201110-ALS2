@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _20201110_ALS2.Models;
 
 namespace _20201110_ALS2.Migrations
 {
     [DbContext(typeof(AlsDbContext))]
-    [Migration("20201203133505_Policies1")]
-    partial class Policies1
+    partial class AlsDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,14 +49,14 @@ namespace _20201110_ALS2.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8190fe4f-e42d-4639-8cd9-e521afec759b",
+                            ConcurrencyStamp = "476bb955-ac0a-4bfb-9708-00d910f60bce",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "12808a43-7649-42ae-b9f5-38e2c73dacaf",
-                            ConcurrencyStamp = "9a7e30d8-bc08-4109-b3b9-5bc282cc142e",
+                            Id = "632342e7-6823-478a-ad3f-b8f61fb191a1",
+                            ConcurrencyStamp = "86f107e6-d51e-4d6c-b63b-58f26c6c887b",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -202,7 +200,7 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "1fea0eaa-bffe-49d3-8f75-fb3f78712ac2",
+                            UserId = "a6b588fd-5290-4108-91e4-42de9788341e",
                             RoleId = "1"
                         });
                 });
@@ -326,16 +324,16 @@ namespace _20201110_ALS2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1fea0eaa-bffe-49d3-8f75-fb3f78712ac2",
+                            Id = "a6b588fd-5290-4108-91e4-42de9788341e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dc812ea8-66c9-493e-adb4-c2d2a1e9c407",
+                            ConcurrencyStamp = "89d7d1f3-4b86-46ac-a1d8-0dbcf1c3a160",
                             EducatorId = 1L,
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMss5txAzsMmj4GpxG8QW+mFiNS6YbQt+RIeTJvfhpHdI+anR+ZgwoWKNesfxRS4cw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIYMyWwRnQmi8m4X0eLKhvycPjnJJ86GUUWmEcgcTbd80kExhyiFF5JeYUxkElHfoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5c089318-8c72-4393-a0b9-ac8554e5c1d3",
+                            SecurityStamp = "89c5ba21-0634-46f0-846a-2ac673bd69fc",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -380,7 +378,7 @@ namespace _20201110_ALS2.Migrations
 
             modelBuilder.Entity("_20201110_ALS2.Models.Education", b =>
                 {
-                    b.Property<long>("EducationId")
+                    b.Property<long?>("EducationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .UseIdentityColumn();

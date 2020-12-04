@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize]
   public class EducatorController : Controller {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
@@ -24,7 +25,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    [Authorize(Policy = "FraværPolicy")]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public ViewResult AbsenceList(long courseId, string dateString, bool edit) {
       ViewBag.Check = true;
 
@@ -47,7 +48,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    [Authorize(Policy = "FraværPolicy")]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public IActionResult AbsenceList(StudentListViewModel model) {
       List<string> statusList = model.StatusList.ToList();
 
@@ -92,7 +93,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    [Authorize(Policy = "FraværPolicy")]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public IActionResult Toggle(StudentListViewModel studentList) {
       Course course = ApplyCourseWithId(studentList.Course.CourseId);
       studentList.Course = course;
@@ -151,7 +152,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    [Authorize(Policy = "SeFagPolicy")]
+    [Authorize(Policy = "SeFagPolicy")] 
     public ViewResult ViewCourses() {
       return View("ViewCourses", courseRepo.Courses);
     }

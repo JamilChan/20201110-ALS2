@@ -3,8 +3,10 @@ using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize(Roles = "Admin")]
   public class EducationController : Controller {
     private IEducationRepository educationRepo;
 
