@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Student>
+﻿@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<Student>
+@inject IAuthorizationService authorizationService
 
 <div class="row mt-3 justify-content-center">
   <table class="table table-striped bg-white col-12">
@@ -22,8 +24,12 @@
           <td>
             <form asp-controller="Student" asp-action="DeleteStudent">
               <input type="hidden" name="studentId" value="@s.StudentId" />
-              <a class="btn btn-warning" asp-controller="Student" asp-action="Crud" asp-route-crud="edit" asp-route-studentId="@s.StudentId">Rediger</a>
-              <input class="btn btn-danger" type="submit" value="Slet" />
+              @if ((await authorizationService.AuthorizeAsync(User, "HåndterStuderendePolicy")).Succeeded) {
+                <a class="btn btn-warning" asp-controller="Student" asp-action="Crud" asp-route-crud="edit" asp-route-studentId="@s.StudentId">Rediger</a>
+              }
+              @if ((await authorizationService.AuthorizeAsync(User, "SletStuderendePolicy")).Succeeded) {
+                <input class="btn btn-danger" type="submit" value="Slet" />
+              }
             </form>
           </td>
         </tr>

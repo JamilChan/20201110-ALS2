@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize]
   public class EducatorController : Controller {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
@@ -22,6 +25,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public ViewResult AbsenceList(long courseId, string dateString, bool edit) {
       ViewBag.Check = true;
 
@@ -33,7 +37,7 @@ namespace _20201110_ALS2.Controllers {
 
       StudentListViewModel model = new StudentListViewModel {
         StatusList = new string[studentRepo.Students.ToList().Count],
-        StudentsList = studentRepo.GetAllStudentsFromCourses(course),
+        StudentsList = studentRepo.GetAllStudentsFromCourse(course),
         AbsencesList = AbsenceForStudentList(courseId, date),
         Course = course,
         Date = date,
@@ -44,6 +48,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public IActionResult AbsenceList(StudentListViewModel model) {
       List<string> statusList = model.StatusList.ToList();
 
@@ -88,11 +93,12 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public IActionResult Toggle(StudentListViewModel studentList) {
       Course course = ApplyCourseWithId(studentList.Course.CourseId);
       studentList.Course = course;
 
-      studentList.StudentsList = studentRepo.GetAllStudentsFromCourses(course);
+      studentList.StudentsList = studentRepo.GetAllStudentsFromCourse(course);
 
       if (studentList.IsChecked == "on") {
         ViewBag.Check = true;
@@ -104,6 +110,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public ViewResult CreateCourse() {
       CreateCourseViewModel model = CreateCCVM();
 
@@ -111,6 +118,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form) {
       if (ModelState.IsValid) {
         foreach (Educator educator in educatorRepo.Educators) {
@@ -144,11 +152,13 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "SeFagPolicy")] 
     public ViewResult ViewCourses() {
       return View("ViewCourses", courseRepo.Courses);
     }
 
     [HttpGet]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public ViewResult EditCourse(int courseId) {
       CreateCourseViewModel model = CreateCCVM();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
@@ -160,6 +170,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "SletFagPolicy")]
     public IActionResult DeleteCourse(int courseId) {
       courseRepo.Delete(courseId);
 
@@ -167,10 +178,11 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "SeFagPolicy")]
     public ViewResult ViewThisCourse(int courseId) {
-      ViewCourseViewModel model = new ViewCourseViewModel();
+      ViewCourse model = new ViewCourse();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
+      model.StudentList = studentRepo.GetAllStudentsFromCourse(model.Course);
 
       return View("ViewThisCourse", model);
     }

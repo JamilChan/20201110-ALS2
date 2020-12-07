@@ -1,0 +1,88 @@
+﻿@model StudentsDaysViewModel
+
+<div class="row">
+  <div class="col-2 text-light bg-dark pt-3 pb-3 mb-3 border">
+    <vc:course-navigation chart-view="StudentDays"></vc:course-navigation>
+  </div>
+
+  <div class="col-10">
+    <div class="row pl-3">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle btn-info" style="width: 160px" type="button" id="dropDownAssignments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tidsrum</button>
+        <div class="dropdown-menu bg-dark border border-info p-2 rounded" aria-labelledby="dropDownAssignments">
+          @{
+            string[] options = { "Week", "TwoWeeks", "ThreeWeeks", "Month" };
+            string[] names = { "1 Uge", "2 Uger", "3 Uger", "1 Måned" };
+          }
+
+          @for (int i = 0; i < options.Length; i++) {
+            <a class="dropdown-item bg-info text-light"
+               asp-controller="Charts"
+               asp-action="@(Model.Course.CourseId != 0 ? "CourseStudentsDays" : "EducationStudentsDays")"
+               asp-route-educationId="@Model.Education.EducationId"
+               asp-route-courseId="@Model.Course.CourseId"
+               asp-route-semesterNo="@Model.SemesterNo"
+               asp-route-span="@options[i]">
+              @names[i]
+            </a>
+          }
+        </div>
+      </div>
+      
+      <div class="w-75 text-center">
+        <h2 class="pl-lg-5 text-white">@(Model.Course.CourseId != 0 ? Model.Course.Name : Model.Education.Name + " " + Model.SemesterNo)</h2>
+      </div>
+    </div>
+
+
+    <div class="pt-2" style="overflow: auto">
+      <table class="table table-striped bg-dark text-white table-bordered">
+        <thead>
+        <tr>
+          <th class="sticky-col first-col bg-dark" style="width: 170px">Studerende</th>
+          @foreach (string date in Model.Dates) {
+            <th class="text-center" style="width: 120px">@date</th>
+          }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (string student in Model.StudentList) {
+          <tr>
+            <td class="sticky-col first-col bg-dark">@student</td>
+            @foreach (string date in Model.Dates) {
+              var dico = @Model.StudentStatuses[student];
+              var status = dico[date];
+
+              <td class="text-center @(status == "absent" ? "bg-danger" : (status == "attended" ? "bg-success" : (status == "virtual" ? "bg-info" : "bg-warning")))">@status</td>
+            }
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+<style type="text/css">
+  td {
+    height: 70px
+  }
+
+  table {
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+
+  .sticky-col {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  .first-col {
+    min-width: 100px;
+    max-width: 100px;
+    left: 0px;
+  }
+</style>

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
   public class EfAbsenceRepository : IAbsenceRepository {
@@ -54,10 +53,30 @@ namespace _20201110_ALS2.Models {
       return absences;
     }
 
+    public Absence AbsenceForDateCourseStudent(Course course, DateTime date, Student student) {
+      Absence absence = context.Absences.Include(a => a.Student).Include(a => a.Course).FirstOrDefault(a => a.Date.Date == date.Date && a.Course == course && a.Student == student);
+
+      return absence;
+    }
+
+    public Absence AbsenceForDateEducationStudent(Education education, DateTime date, Student student) {
+      Absence absence = context.Absences.Include(a => a.Student).Include(a => a.Course)
+        .FirstOrDefault(a => a.Date.Date == date.Date && a.Student.Education == education && a.Student == student);
+
+      return absence;
+    }
+
     public List<Absence> AbsenceByCourse(Course course) {
-      List<Absence> absenceByCourseList = context.Absences.Include(a => a.Course).ToList();
+      List<Absence> absenceByCourseList = context.Absences.Include(a => a.Course).Include(a => a.Student).Where(a => a.CourseId == course.CourseId).ToList();
 
       return absenceByCourseList;
+    }
+
+    public List<Absence> AbsenceBy(Education education, int semesterNo) {
+      List<Absence> absencyByEducationAndSemester = context.Absences.Include(a => a.Student).Include(a => a.Course).Include(a => a.Course.Education).Where(a =>
+        (a.Student.Education == education) && (a.Student.Semester == semesterNo)).ToList();
+
+      return absencyByEducationAndSemester;
     }
   }
 }

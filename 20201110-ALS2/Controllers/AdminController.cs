@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
@@ -11,12 +12,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize(Roles = "Admin")]
   public class AdminController : Controller {
     private IEducatorRepository educatorRepo;
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly UserManager<ApplicationUser> userManager;
     private readonly RoleManager<IdentityRole> roleManager;
 
-    public AdminController(IEducatorRepository educatorRepo, UserManager<IdentityUser> userManager,
+    public AdminController(IEducatorRepository educatorRepo, UserManager<ApplicationUser> userManager,
       RoleManager<IdentityRole> roleManager) {
       this.educatorRepo = educatorRepo;
       this.userManager = userManager;
@@ -24,8 +26,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    public IActionResult Index()
-    {
+    public IActionResult Index() {
       IQueryable<Educator> educators = educatorRepo.Educators;
 
       return View("Index", educators);
@@ -39,11 +40,13 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public async Task<IActionResult> CreateEducator(RegisterEducatorViewModel model) {
       if (ModelState.IsValid) {
-        educatorRepo.SaveEducator(model.Educator);
-        TempData["Message"] = model.Educator.Name + " er blevet oprettet";
 
-        IdentityUser newUser = new IdentityUser { UserName = model.UserName };
-        await userManager.CreateAsync(newUser, model.Password);
+        ApplicationUser newUser = new ApplicationUser { UserName = model.UserName, Educator = model.Educator };
+
+        IdentityResult result = await userManager.CreateAsync(newUser, model.Password);
+        if (result.Succeeded) {
+          TempData["Message"] = model.Educator.Name + " er blevet oprettet";
+        }
 
         return RedirectToAction("Index");
       } else {
@@ -53,7 +56,7 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult EditEducator(long educatorId) {
-      Educator educator = educatorRepo.Get(educatorId);
+      Educator educator = educatorRepo.Educators.FirstOrDefault(e => e.EducatorId == educatorId);
 
       return View("Edit", educator);
     }
@@ -61,7 +64,7 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public IActionResult EditEducator(Educator educator) {
       if (ModelState.IsValid) {
-        educatorRepo.SaveEducator(educator);
+        educatorRepo.EditEducator(educator);
         TempData["Message"] = educator.Name + " er blevet gemt";
 
         return RedirectToAction("Index");
@@ -71,15 +74,22 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult DeleteEducator(long educatorId) {
-      Educator educatorDeleted = educatorRepo.Delete(educatorId);
+    public async Task<IActionResult> DeleteEducator(long educatorId) {
+      ApplicationUser user = userManager.Users.FirstOrDefault(u => u.Educator.EducatorId == educatorId);
 
-      if (educatorDeleted != null) {
-        TempData["Message"] = educatorDeleted.Name + " er blevet slettet";
+
+      if (user != null) {
+        educatorRepo.Delete(educatorId);
+        IdentityResult result = await userManager.DeleteAsync(user);
+
+
+        foreach (IdentityError error in result.Errors) {
+          ModelState.AddModelError("", error.Description);
+        }
       }
-
       return RedirectToAction("Index");
     }
+
 
     [HttpGet]
     public IActionResult ListRoles() {
@@ -90,11 +100,11 @@ namespace _20201110_ALS2.Controllers {
 
     [HttpGet]
     public ViewResult CreateRole() {
-      return View(new CreateRoleViewModel());
+      return View(new CreateRole());
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRole(CreateRoleViewModel model) {
+    public async Task<IActionResult> CreateRole(CreateRole model) {
       if (ModelState.IsValid) {
         IdentityRole newRole = new IdentityRole { Name = model.RoleName };
         IdentityResult result = await roleManager.CreateAsync(newRole);
@@ -116,12 +126,18 @@ namespace _20201110_ALS2.Controllers {
       IdentityRole role = await roleManager.FindByIdAsync(roleId);
 
       if (role != null) {
-        EditRoleViewModel model = new EditRoleViewModel { RoleId = roleId, RoleName = role.Name };
+        EditRole model = new EditRole { RoleId = roleId, RoleName = role.Name };
 
-        foreach (IdentityUser user in userManager.Users) {
+        foreach (ApplicationUser user in userManager.Users) {
           if (await userManager.IsInRoleAsync(user, role.Name)) {
             model.AllUsers.Add(user.UserName);
           }
+        }
+
+        Task<IList<Claim>> roleClaims = roleManager.GetClaimsAsync(role);
+
+        foreach (Claim claim in roleClaims.Result) {
+          model.RoleClaims.Add(claim.Value);
         }
 
         return View("EditRole", model);
@@ -132,7 +148,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditRole(EditRoleViewModel model) {
+    public async Task<IActionResult> EditRole(EditRole model) {
       IdentityRole role = await roleManager.FindByIdAsync(model.RoleId);
 
       if (role != null) {
@@ -160,10 +176,10 @@ namespace _20201110_ALS2.Controllers {
       IdentityRole role = await roleManager.FindByIdAsync(roleId);
 
       if (role != null) {
-        List<UserRoleViewModel> modelList = new List<UserRoleViewModel>();
+        List<UserRole> modelList = new List<UserRole>();
 
-        foreach (IdentityUser user in userManager.Users) {
-          UserRoleViewModel model = new UserRoleViewModel {
+        foreach (ApplicationUser user in userManager.Users) {
+          UserRole model = new UserRole {
             UserId = user.Id,
             UserName = user.UserName
           };
@@ -184,12 +200,12 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> usrList, string roleId) {
+    public async Task<IActionResult> EditUsersInRole(List<UserRole> usrList, string roleId) {
       IdentityRole role = await roleManager.FindByIdAsync(roleId);
 
       if (role != null) {
         for (int i = 0; i < usrList.Count; i++) {
-          IdentityUser user = await userManager.FindByIdAsync(usrList[i].UserId);
+          ApplicationUser user = await userManager.FindByIdAsync(usrList[i].UserId);
 
           IdentityResult result = null;
 
@@ -208,6 +224,46 @@ namespace _20201110_ALS2.Controllers {
               return RedirectToAction("EditRole", new { roleId = roleId });
             }
           }
+        }
+
+        return RedirectToAction("EditRole", new { roleId = roleId });
+      }
+      ViewBag.ErrorMessage = "Rolle med id = " + roleId + " kunne ikke findes";
+
+      return View("NotFound");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditPermissionsForRole(string roleId) {
+      ViewBag.roleId = roleId;
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+
+      if (role != null) {
+        Dictionary<string, bool> roleClaimsStore = RoleClaimsStore(role);
+
+        return View("EditPermissionsInRole", roleClaimsStore);
+      }
+      ViewBag.ErrorMessage = "Rolle med id = " + roleId + " kunne ikke findes";
+
+      return View("NotFound");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditPermissionsForRole(Dictionary<string, bool> claimsConnectedToRole, string roleId) {
+      IdentityRole role = await roleManager.FindByIdAsync(roleId);
+      
+      if (role != null) {
+        Dictionary<string, bool> roleClaimsStore = RoleClaimsStore(role);
+
+        foreach (string claim in claimsConnectedToRole.Keys) {
+          Claim  newClaim = new Claim(claim, claim);
+          if (claimsConnectedToRole[claim] && claimsConnectedToRole[claim] != roleClaimsStore[claim]) {
+            await roleManager.AddClaimAsync(role, newClaim);
+          } else {
+            await roleManager.RemoveClaimAsync(role, newClaim);
+          }
+
+
         }
 
         return RedirectToAction("EditRole", new { roleId = roleId });
@@ -238,6 +294,30 @@ namespace _20201110_ALS2.Controllers {
 
         return View("NotFound");
       }
+    }
+
+    private Dictionary<string, bool> RoleClaimsStore(IdentityRole role) {
+      Dictionary<string, bool> claimsConnectedToRole = new Dictionary<string, bool>();
+
+      IdentityRole adminRole = roleManager.Roles.FirstOrDefault(r => r.Name == "Admin");
+      Task<IList<Claim>> adminClaims = roleManager.GetClaimsAsync(adminRole);
+      List<Claim> adminClaimList = (List<Claim>)adminClaims.Result;
+
+      Task<IList<Claim>> roleClaims = roleManager.GetClaimsAsync(role);
+      List<Claim> claimsList = (List<Claim>)roleClaims.Result;
+      
+      foreach (Claim claimAdmin in adminClaimList) {
+        bool claimIsInRole = false;
+        foreach (Claim claim in claimsList) {
+          if (claim.Type == claimAdmin.Type) {
+            claimIsInRole = true;
+            break;
+          }
+        }
+        claimsConnectedToRole.Add(claimAdmin.Type, claimIsInRole);
+      }
+
+      return claimsConnectedToRole;
     }
   }
 }

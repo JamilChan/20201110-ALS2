@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
@@ -15,6 +16,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "SeStuderendePolicy")]
     public IActionResult Overview() {
       SaveSession("", 1);
 
@@ -22,6 +24,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "HåndterStuderendePolicy")] 
     public IActionResult Crud(string crud, long studentId) {
       ViewBag.crud = crud;
       StudentCRUDViewModel model = new StudentCRUDViewModel();
@@ -41,6 +44,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "HåndterStuderendePolicy")] 
     public IActionResult Create(StudentCRUDViewModel model) {
       if (!ModelState.IsValid) {
         model.GenerateModel(educationRepo.Educations.ToList());
@@ -57,6 +61,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "SletStuderendePolicy")] 
     public IActionResult DeleteStudent(long studentId) {
 
       studentRepo.Delete(studentId);
@@ -65,6 +70,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "HåndterStuderendePolicy")]
     public IActionResult Update(StudentCRUDViewModel model) {
       if (!ModelState.IsValid) {
         return View("Crud", model);

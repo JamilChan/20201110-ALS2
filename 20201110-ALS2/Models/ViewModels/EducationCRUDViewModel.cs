@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace _20201110_ALS2.Models.ViewModels {
-  public class ViewCourseViewModel {
-    public Course Course { get; set; }
-    public List<Student> StudentList { get; set; }
+  public class EducationCRUDViewModel {
+    public Education Education { get; set; }
   }
 }
