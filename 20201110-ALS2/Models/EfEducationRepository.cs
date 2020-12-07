@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace _20201110_ALS2.Models.DAL.Education {
+namespace _20201110_ALS2.Models {
   public class EfEducationRepository : IEducationRepository {
     private readonly AlsDbContext context;
 
@@ -8,6 +11,6 @@ namespace _20201110_ALS2.Models.DAL.Education {
       this.context = context;
     }
 
-    public IQueryable<Models.Education> Educations => context.Educations;
+    public IQueryable<Education> Educations => context.Educations;
   }
 }

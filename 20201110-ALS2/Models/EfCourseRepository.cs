@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
-namespace _20201110_ALS2.Models.DAL.Course {
+namespace _20201110_ALS2.Models {
   public class EfCourseRepository : ICourseRepository {
     private AlsDbContext context;
 
@@ -10,13 +12,13 @@ namespace _20201110_ALS2.Models.DAL.Course {
       this.context = context;
     }
 
-    public IQueryable<Models.Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week);
+    public IQueryable<Course> Courses => context.Courses.Include(c => c.Educator).Include(c => c.Week);
 
-    public void SaveCourse(Models.Course course) {
+    public void SaveCourse(Course course) {
       if (course.CourseId == 0) {
         context.Courses.Add(course);
       } else {
-        Models.Course dbEntry = context.Courses.Include(c => c.StudentCourses).FirstOrDefault(c => c.CourseId == course.CourseId);
+        Course dbEntry = context.Courses.Include(c => c.StudentCourses).FirstOrDefault(c => c.CourseId == course.CourseId);
         if (dbEntry != null) {
           dbEntry.Name = course.Name;
           dbEntry.Educator = course.Educator;
@@ -29,8 +31,8 @@ namespace _20201110_ALS2.Models.DAL.Course {
       context.SaveChanges();
     }
 
-    public Models.Course Delete(long courseId) {
-      Models.Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
+    public Course Delete(long courseId) {
+      Course dbEntry = context.Courses.FirstOrDefault(c => c.CourseId == courseId);
       if (dbEntry != null) {
         context.Courses.Remove(dbEntry);
         context.SaveChanges();
@@ -39,9 +41,9 @@ namespace _20201110_ALS2.Models.DAL.Course {
       return dbEntry;
     }
 
-    public List<Models.Student> SelectedStudents(long courseId) {
+    public List<Student> SelectedStudents(long courseId) {
       IQueryable<StudentCourse> ss = context.StudentCourses.Include(sc => sc.Course).Include(sc => sc.Student).Where(sc => sc.CourseId == courseId);
-      List<Models.Student> sStudents = new List<Models.Student>();
+      List<Student> sStudents = new List<Student>();
       foreach (StudentCourse sc in ss) {
         sStudents.Add(sc.Student);
       }
