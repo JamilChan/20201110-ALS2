@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.DAL.Educator;
 using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

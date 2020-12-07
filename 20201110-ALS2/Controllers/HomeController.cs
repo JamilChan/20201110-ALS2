@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _20201110_ALS2.Models.DAL.Absence;
+using _20201110_ALS2.Models.DAL.Course;
 
 namespace _20201110_ALS2.Controllers {
   public class HomeController : Controller {

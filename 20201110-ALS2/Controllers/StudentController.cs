@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using _20201110_ALS2.Models;
+using _20201110_ALS2.Models.DAL.Education;
+using _20201110_ALS2.Models.DAL.Student;
 using _20201110_ALS2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;

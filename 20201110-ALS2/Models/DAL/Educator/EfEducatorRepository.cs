@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
-namespace _20201110_ALS2.Models {
+namespace _20201110_ALS2.Models.DAL.Educator {
   public class EfEducatorRepository : IEducatorRepository {
 
     private readonly AlsDbContext context;
@@ -12,17 +9,17 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public Educator Get(long educatorId) {
+    public Models.Educator Get(long educatorId) {
       return context.Educators.Find(educatorId);
     }
 
-    public IQueryable<Educator> Educators => context.Educators;
+    public IQueryable<Models.Educator> Educators => context.Educators;
 
-    public void SaveEducator(Educator educator) {
+    public void SaveEducator(Models.Educator educator) {
       if (educator.EducatorId == 0) {
         context.Educators.Add(educator);
       } else {
-        Educator dbEntryEducator =
+        Models.Educator dbEntryEducator =
           context.Educators.FirstOrDefault(e => e.EducatorId == educator.EducatorId);
         if (dbEntryEducator != null) {
           dbEntryEducator.Name = educator.Name;
@@ -31,8 +28,8 @@ namespace _20201110_ALS2.Models {
       context.SaveChanges();
     }
 
-    public Educator Delete(long educatorId) {
-      Educator educator = context.Educators.Find(educatorId);
+    public Models.Educator Delete(long educatorId) {
+      Models.Educator educator = context.Educators.Find(educatorId);
       if (educator != null) {
         context.Educators.Remove((educator));
         context.SaveChanges();
