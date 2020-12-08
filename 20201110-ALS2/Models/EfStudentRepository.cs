@@ -42,6 +42,10 @@ namespace _20201110_ALS2.Models {
       return studentList;
     }
 
+    public List<Student> GetAllStudentsFromEducation(Education education) {
+      return context.Students.Where(s => s.Education.EducationId == education.EducationId).ToList();
+    }
+
     public List<Student> GetAllStudentsFromEducationSemester(Education education, int semester) {
       List<Student> students = context.Students.Where(s => s.Education.EducationId == education.EducationId && s.Semester == semester).ToList();
 

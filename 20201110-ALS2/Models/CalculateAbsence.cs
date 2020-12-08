@@ -56,5 +56,23 @@ namespace _20201110_ALS2.Models {
 
       return checkDate;
     }
+
+    public List<int> IndicationForStudents(List<Student> students, List<Absence> absenceList) {
+      List<int> indications = new List<int>();
+
+      foreach (Student student in students) {
+        List<Absence> absences = absenceList.FindAll(a => a.Student == student);
+        double absenceDays = 0;
+        foreach (Absence absence in absences) {
+          if (absence.Status == "absent") {
+            absenceDays++;
+          }
+        }
+
+        indications.Add(absences.Count > 0 ? Convert.ToInt32(absenceDays / absences.Count * 100) : 0);
+      }
+
+      return indications;
+    }
   }
 }

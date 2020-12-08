@@ -28,7 +28,7 @@
           }
         </div>
       </div>
-      
+
       <div class="w-75 text-center">
         <h2 class="pl-lg-5 text-white">@(Model.Course.CourseId != 0 ? Model.Course.Name : Model.Education.Name + " " + Model.SemesterNo)</h2>
       </div>
@@ -38,25 +38,25 @@
     <div class="pt-2" style="overflow: auto">
       <table class="table table-striped bg-dark text-white table-bordered">
         <thead>
-        <tr>
-          <th class="sticky-col first-col bg-dark" style="width: 170px">Studerende</th>
-          @foreach (string date in Model.Dates) {
-            <th class="text-center" style="width: 120px">@date</th>
-          }
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (string student in Model.StudentList) {
           <tr>
-            <td class="sticky-col first-col bg-dark">@student</td>
+            <th class="sticky-col first-col bg-dark" style="width: 170px">Studerende</th>
             @foreach (string date in Model.Dates) {
-              var dico = @Model.StudentStatuses[student];
-              var status = dico[date];
-
-              <td class="text-center @(status == "absent" ? "bg-danger" : (status == "attended" ? "bg-success" : (status == "virtual" ? "bg-info" : "bg-warning")))">@status</td>
+              <th class="text-center" style="width: 120px">@date</th>
             }
           </tr>
-        }
+        </thead>
+        <tbody>
+          @foreach (string student in Model.StudentList) {
+            <tr>
+              <td class="sticky-col first-col bg-dark">@student</td>
+              @foreach (string date in Model.Dates) {
+                var dico = @Model.StudentStatuses[student];
+                var status = dico[date];
+
+                <td class="text-center @(status == "absent" ? "bg-danger" : (status == "attended" ? "bg-success" : (status == "virtual" ? "bg-info" : "bg-warning")))">@status</td>
+              }
+            </tr>
+          }
         </tbody>
       </table>
     </div>

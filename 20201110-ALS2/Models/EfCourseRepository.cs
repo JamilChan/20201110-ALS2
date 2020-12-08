@@ -50,5 +50,31 @@ namespace _20201110_ALS2.Models {
 
       return sStudents;
     }
+
+    public List<Course> CoursesByEducator(Educator educator) {
+      return context.Courses.Include(c => c.Week).Where(c => c.Educator.EducatorId == educator.EducatorId).ToList();
+    }
+
+    public List<Course> CoursesByEducationAndDate(Education education, in DateTime date) {
+      IQueryable courses = context.Courses.Include(c => c.Week).Include(c => c.StudentCourses).Where(c => c.Education.EducationId == education.EducationId);
+
+      List<Course> courseList = new List<Course>();
+
+      foreach (Course course in courses) {
+        if (date.DayOfWeek == DayOfWeek.Monday && course.Week.Monday) {
+          courseList.Add(course);
+        } else if (date.DayOfWeek == DayOfWeek.Tuesday && course.Week.Tuesday) {
+          courseList.Add(course);
+        } else if (date.DayOfWeek == DayOfWeek.Wednesday && course.Week.Wednesday) {
+          courseList.Add(course);
+        } else if (date.DayOfWeek == DayOfWeek.Thursday && course.Week.Thursday) {
+          courseList.Add(course);
+        } else if (date.DayOfWeek == DayOfWeek.Friday && course.Week.Friday) {
+          courseList.Add(course);
+        }
+      }
+
+      return courseList;
+    }
   }
 }
