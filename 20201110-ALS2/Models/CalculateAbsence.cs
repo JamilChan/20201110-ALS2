@@ -34,29 +34,6 @@ namespace _20201110_ALS2.Models {
       return studentAbsence;
     }
 
-    private DateTime FindTimeSpan(TimeSpan timeSpan, DateTime todaysDate) {
-      DateTime checkDate = new DateTime();
-
-      switch (timeSpan) {
-        case TimeSpan.Week:
-          checkDate = todaysDate.AddDays(-7);
-          break;
-        case TimeSpan.TwoWeeks:
-          checkDate = todaysDate.AddDays(-14);
-          break;
-        case TimeSpan.ThreeWeeks:
-          checkDate = todaysDate.AddDays(-21);
-          break;
-        case TimeSpan.Month:
-          checkDate = todaysDate.AddMonths(-1);
-          break;
-        default:
-          break;
-      }
-
-      return checkDate;
-    }
-
     public List<int> IndicationForStudents(List<Student> students, List<Absence> absenceList) {
       List<int> indications = new List<int>();
 

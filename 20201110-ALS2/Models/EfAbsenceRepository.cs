@@ -41,11 +41,7 @@ namespace _20201110_ALS2.Models {
       foreach (Course course in courseList) {
         Absence absence = context.Absences.Where(a => a.Date.Date == date.Date).FirstOrDefault(a => a.Course.CourseId == course.CourseId);
 
-        if (absence != null) {
-          courseHasAbsence.Add(course, true);
-        } else {
-          courseHasAbsence.Add(course, false);
-        }
+        courseHasAbsence.Add(course, absence != null);
       }
 
       return courseHasAbsence;

@@ -40,7 +40,7 @@ namespace _20201110_ALS2.Controllers {
         }
 
         courseList = courseList.Distinct().ToList();
-        DayOfWeekCheckEducation(courseList, education, model);
+        DayOfWeekCheck(courseList, education, model);
       }
 
       model.EducationList = model.EducationList.Distinct().ToList();
@@ -67,7 +67,8 @@ namespace _20201110_ALS2.Controllers {
 
       if (model.IsChecked) {
         List<Course> identityCourses = courseRepo.CoursesByEducator(educator);
-        DayOfWeekCheckCourse(identityCourses, model);
+        DayOfWeekCheck(identityCourses, null, model);
+
         model.CheckedCourse = absenceRepo.CourseHasAbsence(model.CourseList, model.Date);
 
         ViewBag.TypeOfView = "course";
@@ -84,7 +85,7 @@ namespace _20201110_ALS2.Controllers {
           }
 
           courseList = courseList.Distinct().ToList();
-          DayOfWeekCheckEducation(courseList, education, model);
+          DayOfWeekCheck(courseList, education, model);
         }
 
         model.EducationList = model.EducationList.Distinct().ToList();
@@ -96,7 +97,7 @@ namespace _20201110_ALS2.Controllers {
       return View("Index", model);
     }
 
-    private void DayOfWeekCheckCourse(List<Course> identityCourses, HomeIndexViewModel model) {
+    private void DayOfWeekCheck(List<Course> identityCourses, Education education, HomeIndexViewModel model) {
       string[] date = model.Date.ToString("O").Split("T", 2);
       model.DateAsString = date[0];
 
@@ -105,38 +106,35 @@ namespace _20201110_ALS2.Controllers {
       foreach (Course course in identityCourses) {
         if (course.StartDate < model.Date && model.Date < course.EndDate) {
           if (dayOfWeek == DayOfWeek.Monday && course.Week.Monday) {
-            model.CourseList.Add(course);
+            if (education != null) {
+              model.EducationList.Add(education);
+            } else {
+              model.CourseList.Add(course);
+            }
           } else if (dayOfWeek == DayOfWeek.Tuesday && course.Week.Tuesday) {
-            model.CourseList.Add(course);
+            if (education != null) {
+              model.EducationList.Add(education);
+            } else {
+              model.CourseList.Add(course);
+            }
           } else if (dayOfWeek == DayOfWeek.Wednesday && course.Week.Wednesday) {
-            model.CourseList.Add(course);
+            if (education != null) {
+              model.EducationList.Add(education);
+            } else {
+              model.CourseList.Add(course);
+            }
           } else if (dayOfWeek == DayOfWeek.Thursday && course.Week.Thursday) {
-            model.CourseList.Add(course);
+            if (education != null) {
+              model.EducationList.Add(education);
+            } else {
+              model.CourseList.Add(course);
+            }
           } else if (dayOfWeek == DayOfWeek.Friday && course.Week.Friday) {
-            model.CourseList.Add(course);
-          }
-        }
-      }
-    }
-
-    private void DayOfWeekCheckEducation(List<Course> identityCourses, Education education, HomeIndexViewModel model) {
-      string[] date = model.Date.ToString("O").Split("T", 2);
-      model.DateAsString = date[0];
-
-      DayOfWeek dayOfWeek = model.Date.DayOfWeek;
-
-      foreach (Course course in identityCourses) {
-        if (course.StartDate < model.Date && model.Date < course.EndDate) {
-          if (dayOfWeek == DayOfWeek.Monday && course.Week.Monday) {
-            model.EducationList.Add(education);
-          } else if (dayOfWeek == DayOfWeek.Tuesday && course.Week.Tuesday) {
-            model.EducationList.Add(education);
-          } else if (dayOfWeek == DayOfWeek.Wednesday && course.Week.Wednesday) {
-            model.EducationList.Add(education);
-          } else if (dayOfWeek == DayOfWeek.Thursday && course.Week.Thursday) {
-            model.EducationList.Add(education);
-          } else if (dayOfWeek == DayOfWeek.Friday && course.Week.Friday) {
-            model.EducationList.Add(education);
+            if (education != null) {
+              model.EducationList.Add(education);
+            } else {
+              model.CourseList.Add(course);
+            }
           }
         }
       }
