@@ -32,15 +32,26 @@ namespace _20201110_ALS2 {
       services.AddScoped<IStudentRepository, EfStudentRepository>();
       services.AddScoped<ICourseRepository, EfCourseRepository>();
       services.AddScoped<IEducationRepository, EfEducationRepository>();
-      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
       services.AddScoped<IEducatorRepository, EfEducatorRepository>();
 
-      //Login Policy
-      services.AddControllersWithViews(options =>
-      {
-        AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-        options.Filters.Add(new AuthorizeFilter(policy));
-      });
+      services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AlsDbContext>();
+      //Login Filter
+      //services.AddControllersWithViews(options => {
+      //  AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+      //  options.Filters.Add(new AuthorizeFilter(policy));
+      //});
+
+      services.AddAuthorization(
+        options => {
+          options.AddPolicy("SeFagPolicy", policy => policy.RequireClaim("Se Fag"));
+          options.AddPolicy("HåndterFagPolicy", policy => policy.RequireClaim("Håndter Fag"));
+          options.AddPolicy("SletFagPolicy", policy => policy.RequireClaim("Slet Fag"));
+          options.AddPolicy("GivFraværPolicy", policy => policy.RequireClaim("Giv Fravær"));
+          options.AddPolicy("SeFraværPolicy", policy => policy.RequireClaim("Se Fravær"));
+          options.AddPolicy("HåndterStuderendePolicy", policy => policy.RequireClaim("Håndter Studerende"));
+          options.AddPolicy("SletStuderendePolicy", policy => policy.RequireClaim("Slet Studerende"));
+          options.AddPolicy("SeStuderendePolicy", policy => policy.RequireClaim("Se Studerende"));
+        });
 
       //LIVE UPDATE STUFF STARTS HERE
       services.AddLiveReload(config => { });
@@ -52,7 +63,6 @@ namespace _20201110_ALS2 {
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-
       //LIVE UPDATE STUFF STARTS HERE
       app.UseLiveReload();
       app.UseStaticFiles();
@@ -66,10 +76,11 @@ namespace _20201110_ALS2 {
         app.UseExceptionHandler("/Home/Error");
       }
 
-      app.UseRouting();
-
-      app.UseAuthorization();
       app.UseAuthentication();
+
+      app.UseRouting();
+      app.UseAuthorization();
+
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllerRoute(
