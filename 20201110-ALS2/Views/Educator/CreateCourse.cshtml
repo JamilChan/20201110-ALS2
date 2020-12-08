@@ -1,130 +1,138 @@
 ﻿@model _20201110_ALS2.Models.ViewModels.CreateCourseViewModel
 
-<form asp-action="CreateCourse" method="post">
-  <input type="hidden" asp-for="Course.CourseId" />
-  <input type="hidden" asp-for="Course.Week.WeekId" />
-  <input type="hidden" asp-for="Edit" />
-  @for (int i = 0; i < Model.CheckedStudentList.Count(); i++) {
-    @Html.HiddenFor(m => m.CheckedStudentList[i].StudentId);
-  }
+<form asp-action="CreateCourse" asp-controller="Educator" method="post">
+	<input type="hidden" asp-for="Course.CourseId" />
+	<input type="hidden" asp-for="Course.Week.WeekId" />
+	<input type="hidden" asp-for="Edit" />
 
-  <div style="display: inline-block">
-    @if (!@ViewBag.search) {
-      <span class="text-danger h6" asp-validation-for="Course.Name"></span><br />
-    } else {
-      <span class="text-danger h6"></span><br />
-    }
-    <label class="h5 text-white" asp-for="Course.Name">Kursus navn:</label>
-    <input asp-for="Course.Name" /> <br />
-  </div>
+	<div style="display: inline-block">
+		@if (!@ViewBag.search) {
+			<span class="text-danger h6" asp-validation-for="Course.Name"></span><br />
+		} else {
+			<span class="text-danger h6"></span><br />
+		}
+		<label class="h5 text-white" asp-for="Course.Name">Kursus navn:</label>
+		<input asp-for="Course.Name" /> <br />
+	</div>
 
-  <div style="display: inline-block">
-    @if (!@ViewBag.search) {
-      <span class="text-danger h6 ml-5" asp-validation-for="Course.Educator.Name"></span><br />
-    } else {
-      <span class="text-danger h6"></span><br />
-    }
-    <label class="h5 text-white ml-5" asp-for="Course.Educator.Name">Underviser:</label>
-    @Html.DropDownListFor(m => m.Course.Educator.Name, new SelectList(Model.EducatorNameList), "Select Educator") <br />
-  </div> <br /> <br />
+	<div style="display: inline-block">
+		@if (!@ViewBag.search) {
+			<span class="text-danger h6 ml-5" asp-validation-for="Course.Educator.Name"></span><br />
+		} else {
+			<span class="text-danger h6"></span><br />
+		}
+		<label class="h5 text-white ml-5" asp-for="Course.Educator.Name">Underviser:</label>
+		@Html.DropDownListFor(m => m.Course.Educator.Name, new SelectList(Model.EducatorNameList), "Select Educator") <br />
+	</div> <br /> <br />
 
-  <table class="table table-striped table-bordered table-sm bg-light">
-    <thead>
-      <tr class="text-center">
-        <th>Mandag</th>
-        <th>Tirsdag</th>
-        <th>Onsdag</th>
-        <th>Torsdag</th>
-        <th>Fridag</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="text-center">
-        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Monday, true)</td>
-        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Tuesday, true)</td>
-        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Wednesday, true)</td>
-        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Thursday, true)</td>
-        <td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Friday, true)</td>
-      </tr>
-    </tbody>
-  </table>
+	<table class="table table-striped table-bordered table-sm bg-light">
+		<thead>
+			<tr class="text-center">
+				<th>Mandag</th>
+				<th>Tirsdag</th>
+				<th>Onsdag</th>
+				<th>Torsdag</th>
+				<th>Fridag</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-center">
+				<td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Monday, true)</td>
+				<td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Tuesday, true)</td>
+				<td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Wednesday, true)</td>
+				<td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Thursday, true)</td>
+				<td type="checkbox">@Html.CheckBoxFor(m => m.Course.Week.Friday, true)</td>
+			</tr>
+		</tbody>
+	</table>
 
-  <div style="display: inline-block">
-    @if (!@ViewBag.search) {
-      <span class="text-danger h5" asp-validation-for="Course.StartDate"></span><br />
-    } else {
-      <span class="text-danger h6"></span><br />
-    }
-    <label class="h5 text-white" asp-for="Course.StartDate">Start dato:</label>
-    <input asp-for="Course.StartDate" />
-  </div>
-  <div style="display: inline-block">
-    @if (!@ViewBag.search) {
-      <span class="text-danger h5 ml-5" asp-validation-for="Course.EndDate"></span><br />
-    } else {
-      <span class="text-danger h6"></span><br />
-    }
-    <label class="h5 text-white ml-5" asp-for="Course.EndDate">Slut dato:</label>
-    <input asp-for="Course.EndDate" />
-  </div> <br /><br />
+	<div style="display: inline-block">
+		@if (!@ViewBag.search) {
+			<span class="text-danger h5" asp-validation-for="Course.StartDate"></span><br />
+		} else {
+			<span class="text-danger h6"></span><br />
+		}
+		<label class="h5 text-white" asp-for="Course.StartDate">Start dato:</label>
+		<input asp-for="Course.StartDate" />
+	</div>
+	<div style="display: inline-block">
+		@if (!@ViewBag.search) {
+			<span class="text-danger h5 ml-5" asp-validation-for="Course.EndDate"></span><br />
+		} else {
+			<span class="text-danger h6"></span><br />
+		}
+		<label class="h5 text-white ml-5" asp-for="Course.EndDate">Slut dato:</label>
+		<input asp-for="Course.EndDate" />
+	</div> <br /><br />
 
-  <table class="table table-striped table-bordered table-sm bg-light" style="display: block; height: 300px; overflow-y: auto"
-         id="table"
-         data-toggle="table"
-         data-click-to-select="true"
-         data-select="true">
-    <thead>
-      <tr>
-        @*<th class="bs-checkbox align-middle" data-width="50" data-checkbox="true"></th>*@
-        <th class="align-middle" data-width="50"></th>
-        <th class="align-middle" data-width="450">Navn</th>
-        <th class="dropdown" data-width="450">
-          <button class="btn dropdown-toggle font-weight-bold" type="button" id="dropDownAssignments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Udannelse</button>
-          <div class="dropdown-menu border border-info p-2 m-2 rounded" aria-labelledby="dropDownAssignments">
-            <button class="dropdown-item bg-light" type="submit" asp-route-educationId="0" asp-route-semesterNo="@ViewBag.selectedSemesterNo" asp-route-search="@true">Alle</button>
-            @foreach (Education education in Model.Educations) {
-              <button class="dropdown-item bg-light" type="submit" asp-route-educationId="@education.EducationId" asp-route-semesterNo="@ViewBag.selectedSemesterNo" asp-route-search="@true">@education.Name</button>
-            }
-          </div>
-        </th>
-        <th class="dropdown" data-width="250">
-          <button class="btn dropdown-toggle font-weight-bold" type="button" id="dropDownAssignments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Semester</button>
-          <div class="dropdown-menu border border-info p-2 m-2 rounded" aria-labelledby="dropDownAssignments">
-            <button class="dropdown-item bg-light" type="submit" asp-route-educationId="@ViewBag.selectedEducationId" asp-route-semesterId="0" asp-route-search="@true">Alle</button>
-            @for (int i = 1; i <= 5; i++) {
-              <button class="dropdown-item bg-light" type="submit" asp-route-educationId="@ViewBag.selectedEducationId" asp-route-semesterNo="@i" asp-route-search="@true">@i</button>
-            }
-          </div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach (Student student in Model.StudentList) {
-        bool check = false;
-        <tr>
-          @foreach (Student s in Model.CheckedStudentList) {
-            if (student.StudentId == s.StudentId) {
-              check = true;
-              break;
-            }
-          }
+	<table class="table table-striped table-bordered table-sm bg-light" style="display: block; height: 300px; overflow-y: auto"
+				 id="table"
+				 data-toggle="table"
+				 data-click-to-select="true"
+				 data-select="true">
+		<thead>
+			<tr>
+				<th class="align-middle" data-width="50"></th>
+				<th class="align-middle" data-width="450">Navn</th>
+				@if (!Model.Edit) {
+					<th class="dropdown" data-width="450">
+						<button class="btn dropdown-toggle font-weight-bold" type="button" id="dropDownAssignments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Udannelse</button>
+						<div class="dropdown-menu border border-info p-2 m-2 rounded" aria-labelledby="dropDownAssignments">
+							@foreach (Education education in Model.Educations) {
+								<button class="dropdown-item bg-light" type="submit" asp-route-educationId="@education.EducationId" asp-route-semesterNo="@ViewBag.selectedSemesterNo" asp-route-search="@true">@education.Name</button>
+							}
+						</div>
+					</th>
+				} else {
+					<th class="align-middle" data-width="450">Udannelse</th>
+				}
 
-          @if (check) {
-            <td class="bs-checkbox">
-              <input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
-            </td>
-          } else {
-            <td class="bs-checkbox">
-              <input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
-            </td>
-          }
-          <td>@student.Name</td>
-          <td>@student.Education.Name</td>
-          <td>@student.Semester</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+				@if (!Model.Edit) {
+					<th class="dropdown" data-width="250">
+						<button class="btn dropdown-toggle font-weight-bold" type="button" id="dropDownAssignments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Semester</button>
+						<div class="dropdown-menu border border-info p-2 m-2 rounded" aria-labelledby="dropDownAssignments">
+							<button class="dropdown-item bg-light" type="submit" asp-route-educationId="@ViewBag.selectedEducationId" asp-route-semesterId="0" asp-route-search="@true">Alle</button>
+							@for (int i = 1; i <= 5; i++) {
+								<button class="dropdown-item bg-light" type="submit" asp-route-educationId="@ViewBag.selectedEducationId" asp-route-semesterNo="@i" asp-route-search="@true">@i</button>
+							}
+						</div>
+					</th>
+				} else {
+					<th class="align-middle" data-width="450">Semester</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (Student student in Model.StudentList) {
+				bool check = false;
+				<tr>
+					@foreach (Student s in Model.CheckedStudentList) {
+						if (student.StudentId == s.StudentId) {
+							check = true;
+							break;
+						}
+					}
 
-  <input class="btn btn-lg bg-success font-weight-bold text-white mt-5 w-20 mr-4" style="height: 50px" type="submit" value="@(Model.Edit ? "Ret fag" : "Tilføj fag")" />
+					@if (check) {
+						<td class="bs-checkbox">
+							<input type="checkbox" name="SelectedStudents" value="@student.StudentId" checked />
+						</td>
+					} else {
+						<td class="bs-checkbox">
+							<input type="checkbox" name="SelectedStudents" value="@student.StudentId" />
+						</td>
+					}
+					<td>@student.Name</td>
+					<td>@student.Education.Name</td>
+					<td>@student.Semester</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	@if (Model.Edit) {
+		<input class="btn btn-lg bg-success font-weight-bold text-white mt-5 w-20 mr-4" style="height: 50px" type="submit" value="@(Model.Edit ? "Ret fag" : "Tilføj fag")" />
+	} else {
+		<input class="btn btn-lg bg-success font-weight-bold text-white mt-5 w-20 mr-4" style="height: 50px" type="submit" asp-route-educationId="@ViewBag.selectedEducationId" value="@(Model.Edit ? "Ret fag" : "Tilføj fag")" />
+	}
 </form>

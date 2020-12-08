@@ -10,10 +10,10 @@ namespace _20201110_ALS2.Models {
     public long CourseId { get; set; }
     [Required(ErrorMessage = "Vælg et navn kurset.")]
     public string Name { get; set; }
-    //[ForeignKey("Education")]
-    //public long? EducationId { get; set; }
-    //public Education Education { get; set; }
-    [ForeignKey("Educator")]
+		[ForeignKey("Education")]
+		public long? EducationId { get; set; }
+		public Education Education { get; set; }
+		[ForeignKey("Educator")]
     public long EducatorId { get; set; }
     public Educator Educator { get; set; }
     [ForeignKey("Week")]
