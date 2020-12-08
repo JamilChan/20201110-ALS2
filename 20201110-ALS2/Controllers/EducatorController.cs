@@ -118,23 +118,22 @@ namespace _20201110_ALS2.Controllers {
       if (ModelState.IsValid && !search) {
         model.Course.Educator = educatorRepo.Educators.FirstOrDefault(e => e.Name == model.Course.Educator.Name);
 
-        List<StudentCourse> studentCourseList = new List<StudentCourse>();
         string selected = Request.Form["SelectedStudents"].ToString();
-
         string[] selectedList = selected.Split(',');
 
-				if (selectedList[0] != "") {
+        if (selectedList[0] != "") {
 					foreach (string studentId in selectedList) {
-						StudentCourse studentCourse = new StudentCourse { Course = model.Course, Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == Int64.Parse(studentId)) };
-						studentCourseList.Add(studentCourse);
+						StudentCourse studentCourse = new StudentCourse {
+              Course = model.Course, 
+              Student = studentRepo.Students.FirstOrDefault(s => s.StudentId == long.Parse(studentId))
+            };
+            model.Course.StudentCourses.Add(studentCourse);
 					}
 				}
 
 				model.Course.Education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
-				model.Course.StudentCourses = studentCourseList;
 
         courseRepo.SaveCourse(model.Course);
-        TempData["message"] = $"{model.Course.Name} has been saved";
 
         return RedirectToAction("ViewCourses");
       } else {
@@ -142,7 +141,6 @@ namespace _20201110_ALS2.Controllers {
 
         if (semesterNo != 0) {
           model.StudentList = model.StudentList.FindAll(s => s.Semester == semesterNo);
-          model.CheckedStudentList = model.StudentList;
 
           ViewBag.selectedSemesterNo = semesterNo;
         }
@@ -159,7 +157,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
-    public ViewResult EditCourse(int courseId) {
+    public ViewResult EditCourse(long courseId) {
       Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
 
       CreateCourseViewModel model = CreateCCVM((long) course.EducationId);
@@ -172,14 +170,14 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult DeleteCourse(int courseId) {
+    public IActionResult DeleteCourse(long courseId) {
       courseRepo.Delete(courseId);
 
       return View("ViewCourses", courseRepo.Courses);
     }
 
     [HttpGet]
-    public ViewResult ViewThisCourse(int courseId) {
+    public ViewResult ViewThisCourse(long courseId) {
       ViewCourseViewModel model = new ViewCourseViewModel();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
       model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
@@ -195,9 +193,7 @@ namespace _20201110_ALS2.Controllers {
       model.Educations = educationRepo.Educations;
       model.GetCourseInfoName();
       model.StudentList = studentRepo.Students.Where(s => s.Education == education).OrderBy(s => s.Name).ToList();
-      model.CheckedStudentList = model.StudentList;
-      model.Course.Week = new Week();
-      model.Course.Week.WeekId = 0;
+      model.Course.Week = new Week {WeekId = 0};
 
       ViewBag.selectedEducationId = educationId;
 

@@ -42,13 +42,13 @@ namespace _20201110_ALS2.Models {
     }
 
     public List<Student> SelectedStudents(long courseId) {
-      IQueryable<StudentCourse> ss = context.StudentCourses.Include(sc => sc.Course).Include(sc => sc.Student).Where(sc => sc.CourseId == courseId);
-      List<Student> sStudents = new List<Student>();
-      foreach (StudentCourse sc in ss) {
-        sStudents.Add(sc.Student);
+      IQueryable<StudentCourse> studentCourses = context.StudentCourses.Include(sc => sc.Course).Include(sc => sc.Student).Where(sc => sc.CourseId == courseId);
+      List<Student> students = new List<Student>();
+      foreach (StudentCourse studentCourse in studentCourses) {
+        students.Add(studentCourse.Student);
       }
 
-      return sStudents;
+      return students;
     }
   }
 }

@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace _20201110_ALS2.Models.ViewModels {
   public class CreateCourseViewModel {
 
-    public Course Course { get; set; } = new Course();
+    public Course Course { get; set; } = new Course {
+      StudentCourses = new List<StudentCourse>()
+    };
     public IQueryable<Educator> Educators { get; set; }
     public List<string> EducatorNameList { get; set; } = new List<string>();
     public IQueryable<Education> Educations { get; set; }
