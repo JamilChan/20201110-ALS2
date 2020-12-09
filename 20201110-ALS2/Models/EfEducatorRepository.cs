@@ -14,6 +14,11 @@ namespace _20201110_ALS2.Models {
 
     public IQueryable<Educator> Educators => context.Educators;
 
+
+    public Educator Get(long educatorId) {
+      return context.Educators.Find(educatorId);
+    }
+
     public void AddEducator(Educator educator) {
       if (educator.EducatorId == 0) {
         context.Educators.Add(educator);
