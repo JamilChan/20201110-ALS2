@@ -1,34 +1,35 @@
 ﻿@model List<UserRole>
 @{
   ViewBag.Title = "Rediger rolle medlemskab";
-  Layout = "_AdminLayout";
 
   string roleId = ViewBag.roleId;
 }
 
-<form method="post">
-  <div class="card mb-3">
-    <div class="card-header">
-      <h2> Tilføj eller fjern brugere til en rolle</h2>
-    </div>
+<div class="container">
+  <form method="post">
+    <div class="card mb-3">
+      <div class="card-header">
+        <h2> Tilføj eller fjern brugere til en rolle</h2>
+      </div>
 
-    <div class="card-body">
-      @for (int i = 0; i < Model.Count; i++) {
-        <div class="form-check m-1">
-          <input type="hidden" asp-for="@Model[i].UserId" />
-          <input type="hidden" asp-for="@Model[i].UserName" />
-          <input class="form-check-input" asp-for="@Model[i].IsSelected" />
-          <label class="form-check-label" asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
-        </div>
-      }
-    </div>
+      <div class="card-body">
+        @for (int i = 0; i < Model.Count; i++) {
+          <div class="form-check m-1">
+            <input type="hidden" asp-for="@Model[i].UserId" />
+            <input type="hidden" asp-for="@Model[i].UserName" />
+            <input class="form-check-input" asp-for="@Model[i].IsSelected" />
+            <label class="form-check-label" asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
+          </div>
+        }
+      </div>
 
-    <div class="card-footer">
-      <input class="btn btn-primary" type="submit" value="Opdater" />
-      <a class="btn btn-secondary" asp-action="EditRole" asp-route-roleId="@roleId">Annuller</a>
-    </div>
+      <div class="card-footer">
+        <input class="btn btn-primary" type="submit" value="Opdater" />
+        <a class="btn btn-secondary" asp-action="EditRole" asp-route-roleId="@roleId">Annuller</a>
+      </div>
 
-  </div>
-</form>
+    </div>
+  </form>
+</div>
 
 

@@ -1,13 +1,13 @@
 ﻿@model HomeIndexViewModel
 
 <body class="bg-dark">
-  <div class="pt-3">
+  <div class="">
     <div class="row">
       <h1 class="text-white col-11">
         Main Menu
       </h1>
 
-      <div class="col-1">
+      <div class="col-1 mt-3">
         <form asp-controller="Home" asp-action="Index">
           @{
             bool reverseChecked = !Model.IsChecked;

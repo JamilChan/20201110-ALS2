@@ -2,10 +2,9 @@
 
 @{
   ViewBag.Title = "Opret Rolle";
-  Layout = "_AdminLayout";
 }
 
-<body>
+<div class="container text-white">
   <form asp-action="CreateRole" method="post">
     <div class="form-group">
       <label asp-for="RoleName">Rolle navn</label>
@@ -18,5 +17,5 @@
       <a class="btn btn-lg btn-light" asp-action="ListRoles">Annuller</a>
     </div>
   </form>
-</body>
+</div>
 

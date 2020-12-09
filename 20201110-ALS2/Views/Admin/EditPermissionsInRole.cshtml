@@ -2,28 +2,29 @@
 @model Dictionary<string, bool>
 @{
   ViewBag.Title = "Rediger rolle rettigheder";
-  Layout = "_AdminLayout";
 
   string roleId = ViewBag.roleId;
 }
 
-<form method="post">
-  <div class="card mb-3">
-    <div class="card-header">
-      <h2> Tilføj eller fjern rettigheder</h2>
+<div class="container">
+  <form method="post">
+    <div class="card mb-3">
+      <div class="card-header">
+        <h2> Tilføj eller fjern rettigheder</h2>
+      </div>
+      <div class="card-body">
+        @foreach (string claim in Model.Keys) {
+          <div class="form-check m-1">
+            <input class="form-check-input" asp-for="@Model[claim]" />
+            <label class="form-check-label" asp-for="@Model[claim]">@claim</label>
+          </div>
+        }
+      </div>
+      <div class="card-footer">
+        <input class="btn btn-primary" type="submit" value="Opdater" />
+        <a class="btn btn-secondary" asp-action="EditRole" asp-route-roleId="@roleId">Annuller</a>
+      </div>
     </div>
-    <div class="card-body">
-      @foreach (string claim in Model.Keys) {
-        <div class="form-check m-1">
-          <input class="form-check-input" asp-for="@Model[claim]" />
-          <label class="form-check-label" asp-for="@Model[claim]">@claim</label>
-        </div>
-      }
-    </div>
-    <div class="card-footer">
-      <input class="btn btn-primary" type="submit" value="Opdater" />
-      <a class="btn btn-secondary" asp-action="EditRole" asp-route-roleId="@roleId">Annuller</a>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
 

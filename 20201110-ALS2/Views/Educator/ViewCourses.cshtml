@@ -6,21 +6,23 @@
   Layout = "_Layout";
 }
 
-<body>
+<div class="container">
   <br />
   <table class="table table-striped table-bordered table-sm bg-light">
     <tr>
       <th>Fag</th>
       <th>Underviser</th>
+      <th>Uddannelse</th>
       <th>Starttid</th>
       <th>Sluttid</th>
-      <th>Redigere</th>
+      <th></th>
     </tr>
 
     @foreach (Course course in Model) {
       <tr>
         <td>@course.Name</td>
         <td>@course.Educator</td>
+        <td>@course.Education.Name</td>
         <td>@course.StartDate.ToShortDateString()</td>
         <td>@course.EndDate.ToShortDateString()</td>
         <td class="text-center">
@@ -44,4 +46,4 @@
       <a class="btn btn-lg btn-success" asp-action="CreateCourse">Tilføj Fag</a>
     }
   </div>
-</body>
+</div>

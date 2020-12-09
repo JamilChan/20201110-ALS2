@@ -2,9 +2,10 @@
 @model IEnumerable<Student>
 @inject IAuthorizationService authorizationService
 
-<div class="row mt-3 justify-content-center">
-  <table class="table table-striped bg-white col-12">
-    <thead>
+<div class="container">
+  <div class="row mt-3 justify-content-center">
+    <table class="table table-striped bg-white col-12">
+      <thead>
       <tr>
         <th>ID</th>
         <th class="w-25">Navn</th>
@@ -12,9 +13,9 @@
         <th>Semester</th>
         <th></th>
       </tr>
-    </thead>
+      </thead>
 
-    <tbody>
+      <tbody>
       @foreach (Student s in Model) {
         <tr>
           <td>@s.StudentId</td>
@@ -34,8 +35,10 @@
           </td>
         </tr>
       }
-    </tbody>
-  </table>
-  <a class="btn btn-lg bg-success font-weight-bold text-white mt-3 w-25" style="padding-top: 20px; padding-bottom: 20px" asp-controller="Student" asp-action="Crud" asp-route-crud="create">Opret en Studerende</a>
-</div>
+      </tbody>
+    </table>
+    <a class="btn btn-lg bg-success font-weight-bold text-white mt-3 w-25" style="padding-top: 20px; padding-bottom: 20px" asp-controller="Student" asp-action="Crud" asp-route-crud="create">Opret en Studerende</a>
+  </div>
 
+
+</div>
