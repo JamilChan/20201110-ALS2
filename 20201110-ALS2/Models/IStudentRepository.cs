@@ -11,7 +11,7 @@ namespace _20201110_ALS2.Models {
     void Delete(long studentId);
     void Update(Student student);
     
-    List<Student> GetAllStudentsFromCourse(Course course);
+    List<Student> GetAllStudentsFromCourses(Course course);
     List<Student> GetAllStudentsFromEducation(Education education);
     List<Student> GetAllStudentsFromEducationSemester(Education education, int semester);
   }

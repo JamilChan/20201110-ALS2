@@ -65,7 +65,7 @@ namespace _20201110_ALS2.Controllers {
       }
 
       Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      List<Student> studentList = studentRepo.GetAllStudentsFromCourse(course);
+      List<Student> studentList = studentRepo.GetAllStudentsFromCourses(course);
       List<string> students = new List<string>();
       List<string> dates = GetDateSpan(span);
 

@@ -17,7 +17,6 @@ namespace _20201110_ALS2.Controllers {
     private IEducatorRepository educatorRepo;
     private IEducationRepository educationRepo;
     private readonly IAbsenceRepository absenceRepo;
-    private readonly IEducationRepository educationRepo;
 
     public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo, IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
@@ -25,7 +24,6 @@ namespace _20201110_ALS2.Controllers {
       this.educatorRepo = educatorRepo;
       this.educationRepo = educationRepo;
       this.absenceRepo = absenceRepo;
-      this.educationRepo = educationRepo;
     }
 
     [HttpGet]
@@ -51,7 +49,7 @@ namespace _20201110_ALS2.Controllers {
         };
       } else if (courseId != 0) {
         Course course = ApplyCourseWithId(courseId);
-        List<Student> students = studentRepo.GetAllStudentsFromCourse(course);
+        List<Student> students = studentRepo.GetAllStudentsFromCourses(course);
 
         model = new StudentListViewModel {
           Date = date,
@@ -170,7 +168,7 @@ namespace _20201110_ALS2.Controllers {
         Course course = ApplyCourseWithId(model.Course.CourseId);
         model.Course = course;
 
-        model.StudentsList = studentRepo.GetAllStudentsFromCourse(course);
+        model.StudentsList = studentRepo.GetAllStudentsFromCourses(course);
         model.IndicationList = new CalculateAbsence().IndicationForStudents(model.StudentsList, absenceRepo.AbsenceByCourse(course));
       }
 
@@ -266,7 +264,7 @@ namespace _20201110_ALS2.Controllers {
     public ViewResult ViewThisCourse(long courseId) {
       ViewCourse model = new ViewCourse();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      model.StudentList = studentRepo.GetAllStudentsFromCourse(model.Course);
+      model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
 
       return View("ViewThisCourse", model);
     }
