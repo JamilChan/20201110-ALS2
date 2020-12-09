@@ -1,4 +1,6 @@
-﻿@model IQueryable<Course>
+﻿@using Microsoft.AspNetCore.Authorization
+@model IQueryable<Course>
+@inject IAuthorizationService authorizationService
 
 @{
   Layout = "_Layout";
@@ -12,28 +14,34 @@
       <th>Underviser</th>
       <th>Starttid</th>
       <th>Sluttid</th>
-      <th>Redigere</th> 
+      <th>Redigere</th>
     </tr>
 
     @foreach (Course course in Model) {
-  <tr>
-    <td>@course.Name</td>
-    <td>@course.Educator</td>
-    <td>@course.StartDate.ToShortDateString()</td>
-    <td>@course.EndDate.ToShortDateString()</td>
-    <td class="text-center">
-      <form asp-action="DeleteCourse" method="post">
-        <a class="btn btn-sm btn-primary" asp-action="ViewThisCourse" asp-route-courseId="@course.CourseId">Se mere</a>
-        <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Ændre</a>
-        <input type="hidden" name="courseId" value="@course.CourseId" />
-        <button class="btn btn-sm btn-info" type="submit">Slet</button>
-      </form>
-    </td>
-  </tr>
+      <tr>
+        <td>@course.Name</td>
+        <td>@course.Educator</td>
+        <td>@course.StartDate.ToShortDateString()</td>
+        <td>@course.EndDate.ToShortDateString()</td>
+        <td class="text-center">
+          <form asp-action="DeleteCourse" method="post">
+            <a class="btn btn-sm btn-primary" asp-action="ViewThisCourse" asp-route-courseId="@course.CourseId">Se mere</a>
+            @if ((await authorizationService.AuthorizeAsync(User, "HåndterFagPolicy")).Succeeded) {
+              <a class="btn btn-sm btn-primary" asp-action="EditCourse" asp-route-courseId="@course.CourseId">Ændre</a>
+            }
+            <input type="hidden" name="courseId" value="@course.CourseId" />
+            @if ((await authorizationService.AuthorizeAsync(User, "SeFagPolicy")).Succeeded) {
+              <button class="btn btn-sm btn-info" type="submit">Slet</button>
+            }
+          </form>
+        </td>
+      </tr>
     }
   </table>
 
   <div class="text-center">
-    <a class="btn btn-lg btn-success" asp-action="CreateCourse">Tilføj Fag</a>
+    @if ((await authorizationService.AuthorizeAsync(User, "HåndterFagPolicy")).Succeeded) {
+      <a class="btn btn-lg btn-success" asp-action="CreateCourse">Tilføj Fag</a>
+    }
   </div>
 </body>

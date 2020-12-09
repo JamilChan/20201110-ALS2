@@ -12,13 +12,9 @@ namespace _20201110_ALS2.Models {
       this.context = context;
     }
 
-    public Educator Get(long educatorId) {
-      return context.Educators.Find(educatorId);
-    }
-
     public IQueryable<Educator> Educators => context.Educators;
 
-    public void SaveEducator(Educator educator) {
+    public void AddEducator(Educator educator) {
       if (educator.EducatorId == 0) {
         context.Educators.Add(educator);
       } else {
@@ -28,6 +24,16 @@ namespace _20201110_ALS2.Models {
           dbEntryEducator.Name = educator.Name;
         }
       }
+      context.SaveChanges();
+    }
+
+    public void EditEducator(Educator educator) {
+      Educator dbEntryEducator =
+          context.Educators.FirstOrDefault(e => e.EducatorId == educator.EducatorId);
+      if (dbEntryEducator != null) {
+        dbEntryEducator.Name = educator.Name;
+      }
+
       context.SaveChanges();
     }
 

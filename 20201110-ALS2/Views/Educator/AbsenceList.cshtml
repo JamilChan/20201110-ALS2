@@ -1,84 +1,148 @@
-﻿@model _20201110_ALS2.Models.ViewModels.StudentListViewModel
+﻿@model StudentListViewModel
 
-@{
-  ViewData["Title"] = "Home Page";
-}
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-<form asp-controller="Educator" asp-action="Toggle">
-  <input type="hidden" asp-for="Course.CourseId" />
-  <input type="hidden" asp-for="Date" />
-  <div class="p-2 pt-3">
-    <label class="text-white h2"> Tag Fravær </label>
-    @if (!Model.Edit) {
-      <label class="switch float-right">
-        <input type="checkbox" name="CourseHasAbsence" onchange="this.form.submit()" @(ViewBag.Check ? "checked" : "") @(Model.Edit ? "disabled" : "")>
-        <span class="slider round"></span>
-      </label>
+<body onload="sortTable(0)">
+  <div class="container">
+    <form asp-controller="Educator" asp-action="Toggle">
+      <input type="hidden" asp-for="Course.CourseId" />
+      <input type="hidden" asp-for="Education.EducationId" />
+      <input type="hidden" asp-for="Date" />
+      <input type="hidden" asp-for="IsChecked" value="@Model.IsChecked" />
+      <div class="p-2">
+        @if (Model.Course != null) {
+          <label class="text-white h2"> @Model.Course.Name - @Model.Date.ToShortDateString()</label>
+        } else {
+          <label class="text-white h2"> @Model.Education.Name - @Model.Date.ToShortDateString()</label>
+        }
+        @if (!Model.Edit) {
+          <label class="switch float-right">
+            <input type="checkbox" onchange="this.form.submit()" @(Model.IsChecked == "on" ? "checked" : "") @(Model.Edit ? "disabled" : "")>
+            <span class="slider round"></span>
+          </label>
 
-      <label class="text-white h6 float-right pt-2 pr-3 @(ViewBag.Check ? "text-success" : "text-danger")"> @(ViewBag.Check ? "Fremmødt" : "Fraværende") </label>
-      <label class="text-white h6 float-right pt-2 pr-1"> Automatisk vælg: </label>
-    }
-  </div>
-</form>
+          <label class="text-white h6 float-right pt-2 pr-3 @(ViewBag.Check ? "text-success" : "text-danger")"> @(ViewBag.Check ? "Fremmødt" : "Fraværende") </label>
+          <label class="text-white h6 float-right pt-2 pr-1"> Automatisk vælg: </label>
+        }
+      </div>
+    </form>
 
-<form asp-controller="Educator" asp-action="AbsenceList" method="post">
-  <input type="hidden" asp-for="Course.CourseId" />
-  <input type="hidden" asp-for="Date" />
-  <input type="hidden" asp-for="Edit" />
-  <table class="table-bordered table-sm table-striped table-dark text-white">
-    <thead>
-      <tr>
-        <th class="w-25 text-center">Navn</th>
-        <th class="w-25 text-center">Fremmødt</th>
-        <th class="w-25 text-center">Fraværende</th>
-        <th class="w-25 text-center">Virtuelt Tilstede</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (Model.Edit) {
-        for (int i = 0; i < Model.StudentsList.Count; i++) {
-          foreach (Absence a in Model.AbsencesList) {
-            if (Model.StudentsList[i].StudentId == a.Student.StudentId) {
+    @*<a class="btn btn-danger text-white" onclick="sortTable(4)">Sorter efter fravær</a>*@
+
+    <form asp-controller="Educator" asp-action="AbsenceList" method="post">
+      <input type="hidden" asp-for="Course.CourseId" />
+      <input type="hidden" asp-for="Education.EducationId" />
+      <input type="hidden" asp-for="Date" />
+      <input type="hidden" asp-for="Edit" />
+      <table id="myTable" class="table-bordered table-sm table-striped table-dark text-white w-100">
+        <thead>
+          <tr>
+            <th class="text-center w-25" style="cursor: pointer" onclick="sortTable(0)">Navn<i class="fa fa-fw fa-sort float-right m-1"></i></th>
+            <th class="text-center">Fremmødt</th>
+            <th class="text-center">Virtuelt Tilstede</th>
+            <th class="text-center" style="cursor: pointer" onclick="sortTable(4)">Fraværende</th>
+            <th class="text-center" style="display: none">Fravær</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (Model.Edit) {
+            for (int i = 0; i < Model.StudentsList.Count; i++) {
+              foreach (Absence a in Model.AbsencesList) {
+                if (Model.StudentsList[i].StudentId == a.Student.StudentId) {
+                  <tr>
+                    <td>
+                      <h6 class="ml-2 @(Model.IndicationList[i] > 50 ? "text-danger" : "text-white")">
+                        @Model.StudentsList[i].Name
+                      </h6>
+                    </td>
+                    <td class="text-center">
+                      <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(a.Status == "attended")">
+                    </td>
+                    <td class="text-center">
+                      <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]" checked="@(a.Status == "virtual")">
+                    </td>
+                    <td class="text-center">
+                      <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(a.Status == "absent")">
+                    </td>
+                    <td class="text-center" style="display: none">
+                      <h5>@Model.IndicationList[i]</h5>
+                    </td>
+                  </tr>
+                }
+              }
+            }
+          } else {
+            for (int i = 0; i < Model.StudentsList.Count; i++) {
               <tr>
                 <td>
-                  @Model.StudentsList[i].Name
+                  <h6 class="ml-2 @(Model.IndicationList[i] > 50 ? "text-danger" : "text-white")">
+                    @Model.StudentsList[i].Name
+                  </h6>
                 </td>
                 <td class="text-center">
-                  <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(a.Status == "attended")">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == true)">
                 </td>
                 <td class="text-center">
-                  <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(a.Status == "absent")">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]">
                 </td>
                 <td class="text-center">
-                  <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]" checked="@(a.Status == "virtual")">
+                  <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == false)">
+                </td>
+                <td class="text-center" style="display: none">
+                  <h5>@Model.IndicationList[i]</h5>
                 </td>
               </tr>
             }
           }
+        </tbody>
+      </table>
+
+      <div class="pt-3">
+        <input class="btn btn-success" type="submit" value="Submit" />
+      </div>
+    </form>
+  </div>
+</body>
+
+<script>
+  function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("myTable");
+    switching = true;
+    dir = "asc";
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        var element = "TD";
+        if (n == 0) {
+          element = "H6";
         }
-      } else {
-        for (int i = 0; i < Model.StudentsList.Count; i++) {
-          <tr>
-            <td>
-              @Model.StudentsList[i].Name
-            </td>
-            <td class="text-center">
-              <input type="radio" value="@Model.StudentsList[i].StudentId:attended" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == true)">
-            </td>
-            <td class="text-center">
-              <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == false)">
-            </td>
-            <td class="text-center">
-              <input type="radio" value="@Model.StudentsList[i].StudentId:virtual" asp-for="@Model.StatusList[i]">
-            </td>
-          </tr>
+        x = rows[i].getElementsByTagName(element)[n];
+        y = rows[i + 1].getElementsByTagName(element)[n];
+        if (dir == "asc") {
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
         }
       }
-    </tbody>
-  </table>
-
-  <div class="pt-3">
-    <input class="btn btn-success" type="submit" value="Submit" />
-  </div>
-</form>
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script>

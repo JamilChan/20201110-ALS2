@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace _20201110_ALS2.Models {
-  public class AlsDbContext : IdentityDbContext {
-    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options) { }
+  public class AlsDbContext : IdentityDbContext<ApplicationUser> {
+    public AlsDbContext(DbContextOptions<AlsDbContext> options) : base(options)
+    {
+    }
 
     public DbSet<Student> Students { get; set; }
     public DbSet<Absence> Absences { get; set; }
@@ -19,10 +22,8 @@ namespace _20201110_ALS2.Models {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
       base.OnModelCreating(modelBuilder);
-      modelBuilder.SeedEducators();
-      modelBuilder.SeedEducations();
-      modelBuilder.Entity<Education>().HasMany(e => e.Students).WithOne(p => p.Education)
-          .HasForeignKey(p => p.EducationId)
+      modelBuilder.Entity<Education>().HasMany(e => e.Students).WithOne(s => s.Education)
+          .HasForeignKey(s => s.EducationId)
           .OnDelete(DeleteBehavior.NoAction);
 
       modelBuilder.Entity<StudentCourse>()
@@ -50,6 +51,8 @@ namespace _20201110_ALS2.Models {
           .HasForeignKey(p => p.EducationId)
           .OnDelete(DeleteBehavior.NoAction);
 
+      modelBuilder.SeedEducators();
+      modelBuilder.SeedEducations();
       modelBuilder.SeedAdmin(this);
     }
   }

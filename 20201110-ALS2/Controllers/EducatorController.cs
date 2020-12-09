@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using _20201110_ALS2.Models;
 using _20201110_ALS2.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _20201110_ALS2.Controllers {
+  [Authorize]
   public class EducatorController : Controller {
     private IStudentRepository studentRepo;
     private ICourseRepository courseRepo;
     private IEducatorRepository educatorRepo;
     private IEducationRepository educationRepo;
     private readonly IAbsenceRepository absenceRepo;
+    private readonly IEducationRepository educationRepo;
 
     public EducatorController(IStudentRepository studentRepo, ICourseRepository courseRepo, IEducatorRepository educatorRepo, IAbsenceRepository absenceRepo, IEducationRepository educationRepo) {
       this.studentRepo = studentRepo;
@@ -21,67 +25,129 @@ namespace _20201110_ALS2.Controllers {
       this.educatorRepo = educatorRepo;
       this.educationRepo = educationRepo;
       this.absenceRepo = absenceRepo;
+      this.educationRepo = educationRepo;
     }
 
     [HttpGet]
-    public ViewResult AbsenceList(long courseId, string dateString, bool edit) {
-      ViewBag.Check = true;
-
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
+    public ViewResult AbsenceList(long courseId, long educationId, string dateString, bool edit) {
+      StudentListViewModel model = new StudentListViewModel();
       string[] dateSplit = dateString.Split("-", 3);
+      DateTime date = new DateTime(int.Parse(dateSplit[2].Split(" ", 2)[0]), Int32.Parse(dateSplit[1]), int.Parse(dateSplit[0]));
 
-      DateTime date = new DateTime(Int32.Parse(dateSplit[2].Split(" ", 2)[0]), Int32.Parse(dateSplit[1]), int.Parse(dateSplit[0]));
+      if (educationId != 0) {
+        Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == educationId);
+        List<Student> students = studentRepo.GetAllStudentsFromEducation(education);
 
-      Course course = ApplyCourseWithId(courseId);
+        model = new StudentListViewModel {
+          Date = date,
+          AbsencesList = AbsenceForStudentListByEducation(education, date),
+          Edit = edit,
+          IndicationList = new CalculateAbsence().IndicationForStudents(students, absenceRepo.AbsenceByEducation(education)),
+          IsChecked = "on",
+          StatusList = new string[students.Count],
+          StudentsList = students,
+          Education = education
+        };
+      } else if (courseId != 0) {
+        Course course = ApplyCourseWithId(courseId);
+        List<Student> students = studentRepo.GetAllStudentsFromCourse(course);
 
-      StudentListViewModel model = new StudentListViewModel {
-        StatusList = new string[studentRepo.Students.ToList().Count],
-        StudentsList = studentRepo.GetAllStudentsFromCourses(course),
-        AbsencesList = AbsenceForStudentList(courseId, date),
-        Course = course,
-        Date = date,
-        Edit = edit
-      };
+        model = new StudentListViewModel {
+          Date = date,
+          AbsencesList = AbsenceForStudentList(courseId, date),
+          Edit = edit,
+          IndicationList = new CalculateAbsence().IndicationForStudents(students, absenceRepo.AbsenceByCourse(course)),
+          IsChecked = "on",
+          StatusList = new string[students.Count],
+          StudentsList = students,
+          Course = course,
+        };
+      }
+
+      ViewBag.Check = true;
 
       return View("AbsenceList", model);
     }
 
     [HttpPost]
+    [Authorize(Policy = "GivFraværPolicy")] //mangler implementation i visning
     public IActionResult AbsenceList(StudentListViewModel model) {
       List<string> statusList = model.StatusList.ToList();
-
       List<Absence> absenceList = new List<Absence>();
 
-      if (!model.Edit) {
-        foreach (string s in statusList) {
-          string[] split = s.Split(":", 2);
+      // If education is selected
+      if (model.Education.EducationId != 0) {
+        Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == model.Education.EducationId);
+        List<Course> courses = courseRepo.CoursesByEducationAndDate(education, model.Date);
 
-          foreach (Student student in studentRepo.Students) {
-            if (student.StudentId.ToString() == split[0]) {
+        if (!model.Edit) {
+          foreach (string s in statusList) {
+            string[] split = s.Split(":", 2);
 
-              Course selectedCourse = new Course();
-              foreach (Course course in courseRepo.Courses) {
-                if (course.CourseId == model.Course.CourseId) {
-                  selectedCourse = course;
+            foreach (Student student in studentRepo.Students) {
+              if (student.StudentId.ToString() == split[0]) {
+
+                foreach (Course course in courses) {
+
+                  foreach (StudentCourse studentCourse in course.StudentCourses) {
+                    if (student.StudentId == studentCourse.StudentId) {
+                      Absence absence = new Absence {
+                        Student = student,
+                        Date = model.Date,
+                        Course = course,
+                        Status = split[1]
+                      };
+                      absenceList.Add(absence);
+                    }
+                  }
                 }
+                break;
               }
-
-              Absence absence = new Absence {
-                Student = student,
-                Date = model.Date,
-                Course = selectedCourse,
-                Status = split[1]
-              };
-              absenceList.Add(absence);
-              break;
             }
           }
+
+          absenceRepo.CreateAbsence(absenceList);
+        } else {
+          absenceList = absenceRepo.AbsencesForDateEducation(model.Education, model.Date).ToList();
+
+          absenceRepo.UpdateAbsence(absenceList, statusList);
         }
 
-        absenceRepo.CreateAbsence(absenceList);
-      } else {
-        absenceList = absenceRepo.AbsencesForDateCourse(model.Course, model.Date).ToList();
+        // If course is selected
+      } else if (model.Course.CourseId != 0) {
+        if (!model.Edit) {
+          foreach (string s in statusList) {
+            string[] split = s.Split(":", 2);
 
-        absenceRepo.UpdateAbsence(absenceList, statusList);
+            foreach (Student student in studentRepo.Students) {
+              if (student.StudentId.ToString() == split[0]) {
+
+                Course selectedCourse = new Course();
+                foreach (Course course in courseRepo.Courses) {
+                  if (course.CourseId == model.Course.CourseId) {
+                    selectedCourse = course;
+                  }
+                }
+
+                Absence absence = new Absence {
+                  Student = student,
+                  Date = model.Date,
+                  Course = selectedCourse,
+                  Status = split[1]
+                };
+                absenceList.Add(absence);
+                break;
+              }
+            }
+          }
+
+          absenceRepo.CreateAbsence(absenceList);
+        } else {
+          absenceList = absenceRepo.AbsencesForDateCourse(model.Course, model.Date).ToList();
+
+          absenceRepo.UpdateAbsence(absenceList, statusList);
+        }
       }
 
       ViewBag.Check = false;
@@ -90,22 +156,37 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
-    public IActionResult Toggle(StudentListViewModel studentList) {
-      Course course = ApplyCourseWithId(studentList.Course.CourseId);
-      studentList.Course = course;
+    public IActionResult Toggle(StudentListViewModel model) {
 
-      studentList.StudentsList = studentRepo.GetAllStudentsFromCourses(course);
+      if (model.Education.EducationId != 0) {
+        Education education = educationRepo.Educations.FirstOrDefault(e => e.EducationId == model.Education.EducationId);
+        model.Education = education;
 
-      if (studentList.IsChecked == "on") {
-        ViewBag.Check = true;
-        return View("AbsenceList", studentList);
-      } else {
+        model.StudentsList = studentRepo.GetAllStudentsFromEducation(education);
+        model.IndicationList =
+          new CalculateAbsence().IndicationForStudents(model.StudentsList, absenceRepo.AbsenceByEducation(education));
+        model.Course = null;
+      } else if (model.Course.CourseId != 0) {
+        Course course = ApplyCourseWithId(model.Course.CourseId);
+        model.Course = course;
+
+        model.StudentsList = studentRepo.GetAllStudentsFromCourse(course);
+        model.IndicationList = new CalculateAbsence().IndicationForStudents(model.StudentsList, absenceRepo.AbsenceByCourse(course));
+      }
+
+      if (model.IsChecked != "off") {
+        model.IsChecked = "off";
         ViewBag.Check = false;
-        return View("AbsenceList", studentList);
+        return View("AbsenceList", model);
+      } else {
+        model.IsChecked = "on";
+        ViewBag.Check = true;
+        return View("AbsenceList", model);
       }
     }
 
     [HttpGet]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public ViewResult CreateCourse() {
       CreateCourseViewModel model = CreateCCVM(1);
       ViewBag.search = false;
@@ -114,6 +195,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public IActionResult CreateCourse(CreateCourseViewModel model, IFormCollection form, long educationId, int semesterNo, bool search) {
       if (ModelState.IsValid && !search) {
         model.Course.Educator = educatorRepo.Educators.FirstOrDefault(e => e.Name == model.Course.Educator.Name);
@@ -152,11 +234,13 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "SeFagPolicy")] 
     public ViewResult ViewCourses() {
       return View("ViewCourses", courseRepo.Courses);
     }
 
     [HttpGet]
+    [Authorize(Policy = "HåndterFagPolicy")]
     public ViewResult EditCourse(long courseId) {
       Course course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
 
@@ -170,6 +254,7 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpPost]
+    [Authorize(Policy = "SletFagPolicy")]
     public IActionResult DeleteCourse(long courseId) {
       courseRepo.Delete(courseId);
 
@@ -177,10 +262,11 @@ namespace _20201110_ALS2.Controllers {
     }
 
     [HttpGet]
+    [Authorize(Policy = "SeFagPolicy")]
     public ViewResult ViewThisCourse(long courseId) {
-      ViewCourseViewModel model = new ViewCourseViewModel();
+      ViewCourse model = new ViewCourse();
       model.Course = courseRepo.Courses.FirstOrDefault(c => c.CourseId == courseId);
-      model.StudentList = studentRepo.GetAllStudentsFromCourses(model.Course);
+      model.StudentList = studentRepo.GetAllStudentsFromCourse(model.Course);
 
       return View("ViewThisCourse", model);
     }
@@ -217,6 +303,18 @@ namespace _20201110_ALS2.Controllers {
 
       foreach (Absence absence in absenceRepo.Absences) {
         if (absence.Course.CourseId == courseId && absence.Date.Date == date.Date) {
+          absenceList.Add(absence);
+        }
+      }
+
+      return absenceList;
+    }
+
+    private List<Absence> AbsenceForStudentListByEducation(Education education, DateTime date) {
+      List<Absence> absenceList = new List<Absence>();
+
+      foreach (Absence absence in absenceRepo.Absences) {
+        if (absence.Student.Education == education && absence.Date.Date == date.Date && !absenceList.Exists(a => a.Student.StudentId == absence.Student.StudentId)) {
           absenceList.Add(absence);
         }
       }

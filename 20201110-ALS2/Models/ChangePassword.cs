@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace _20201110_ALS2.Models.ViewModels {
-  public class ChangePasswordViewModel {
+namespace _20201110_ALS2.Models {
+  public class ChangePassword {
     [Required(ErrorMessage = "Dit nuværende kodeord var ikke korrekt")]
     [DataType(DataType.Password)]
     [Display(Name = "Nuværende kodeord")]

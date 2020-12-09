@@ -7,24 +7,26 @@ namespace _20201110_ALS2.Models {
   public class CalculateAbsence {
     public string StudentName { get; set; }
     public double AbsenceInPercent { get; set; }
+    public List<Student> StudentList { get; set; } = new List<Student>();
 
-    public List<CalculateAbsence> CalcAllAbsences(Course course, List<Absence> absenceByCourseList,
-      List<Student> studentList) {
-      List<CalculateAbsence> studentAbsenceList = new List<CalculateAbsence>();
+    public List<CalculateAbsence> AbsenceForStudentsInCourse(List<Absence> absenceByCourseList) {
+      List<CalculateAbsence> studentsAbsenceList = new List<CalculateAbsence>();
 
-      foreach (Student student in studentList) {
-        studentAbsenceList.Add(AbsenceForStudent(course, absenceByCourseList, student));
+      foreach (Absence absence in absenceByCourseList) {
+        if (!StudentList.Contains(absence.Student)) {
+          StudentList.Add(absence.Student);
+          studentsAbsenceList.Add(AbsenceBuilder(absenceByCourseList, absence.Student));
+        }
       }
 
-      return studentAbsenceList;
+      return studentsAbsenceList;
     }
 
-    private CalculateAbsence AbsenceForStudent(Course course, List<Absence> absenceByCourseList, Student student) {
-      List<Absence> studentAbsenceList = absenceByCourseList.FindAll(a => a.Student.StudentId == student.StudentId);
+    private CalculateAbsence AbsenceBuilder(List<Absence> absenceList, Student student) {
+      List<Absence> absenceForStudentList = absenceList.FindAll(a => a.Student.StudentId == student.StudentId);
 
-      double daysOfAbsence = studentAbsenceList.Count;
-      double totalCourseDays = TotalDays(course);
-
+      double daysOfAbsence = absenceForStudentList.FindAll(a => a.Status == "absent").Count;
+      double totalCourseDays = absenceForStudentList.Count;
       double result = (daysOfAbsence / totalCourseDays) * 100;
 
       CalculateAbsence studentAbsence = new CalculateAbsence { StudentName = student.Name, AbsenceInPercent = result };
@@ -32,48 +34,22 @@ namespace _20201110_ALS2.Models {
       return studentAbsence;
     }
 
-    private double TotalDays(Course course) {
-      double allSchoolDays = 0;
-      DateTime days = course.StartDate;
+    public List<int> IndicationForStudents(List<Student> students, List<Absence> absenceList) {
+      List<int> indications = new List<int>();
 
-      double startEndDiff = (course.EndDate - course.StartDate).TotalDays;
-
-      for (double i = 0; i < startEndDiff; i++) {
-        switch (days.DayOfWeek.ToString()) {
-          case "Monday":
-            if (course.Week.Monday) {
-              allSchoolDays++;
-            }
-            break;
-          case "Tuesday":
-            if (course.Week.Tuesday) {
-              allSchoolDays++;
-            }
-            break;
-          case "Wednesday":
-            if (course.Week.Wednesday) {
-              allSchoolDays++;
-            }
-            break;
-          case "Thursday":
-            if (course.Week.Thursday) {
-              allSchoolDays++;
-            }
-            break;
-          case "Friday":
-            if (course.Week.Friday) {
-              allSchoolDays++;
-            }
-            break;
-          default:
-            break;
+      foreach (Student student in students) {
+        List<Absence> absences = absenceList.FindAll(a => a.Student == student);
+        double absenceDays = 0;
+        foreach (Absence absence in absences) {
+          if (absence.Status == "absent") {
+            absenceDays++;
+          }
         }
 
-        days = days.AddDays(1);
+        indications.Add(absences.Count > 0 ? Convert.ToInt32(absenceDays / absences.Count * 100) : 0);
       }
 
-      return allSchoolDays;
+      return indications;
     }
-
   }
 }

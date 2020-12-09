@@ -1,10 +1,26 @@
-﻿@model _20201110_ALS2.Models.ViewModels.HomeIndexViewModel
+﻿@model HomeIndexViewModel
 
 <body class="bg-dark">
   <div class="pt-3">
-    <h1 class="text-white">
-      Main Menu
-    </h1>
+    <div class="row">
+      <h1 class="text-white col-11">
+        Main Menu
+      </h1>
+
+      <div class="col-1">
+        <form asp-controller="Home" asp-action="Index">
+          @{
+            bool reverseChecked = !Model.IsChecked;
+          }
+          <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
+          <input type="hidden" asp-for="@Model.IsChecked" value="@reverseChecked" />
+          <label class="switch">
+            <input type="checkbox" onchange="this.form.submit()" @(Model.IsChecked ? "checked" : "")>
+            <span class="slider round"></span>
+          </label>
+        </form>
+      </div>
+    </div>
 
     <hr class="bg-white" />
 
@@ -13,6 +29,7 @@
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
           <input type="hidden" asp-for="@Model.Direction" value="Backward" />
+          <input type="hidden" asp-for="@Model.IsChecked" value="@Model.IsChecked" />
           <input class="btn btn-lg btn-success" type="submit" value="<">
         </form>
       </div>
@@ -21,23 +38,51 @@
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Direction" value="" />
           <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()" />
+          <input type="hidden" asp-for="@Model.IsChecked" value="@Model.IsChecked" />
         </form>
       </div>
       <div class="col-1 pt-2">
         <form asp-controller="Home" asp-action="Index" method="post">
           <input type="hidden" asp-for="@Model.Date" value="@Model.Date" />
           <input type="hidden" asp-for="@Model.Direction" value="Forward" />
+          <input type="hidden" asp-for="@Model.IsChecked" value="@Model.IsChecked" />
           <input class="btn btn-lg btn-success float-right" type="submit" value=">">
         </form>
       </div>
     </div>
 
-    @if (Model.CourseList != null) {
-      @foreach (Course course in Model.CourseList) {
-        <a class="col-6 card mt-3 mb-1 p-5 bg-dark btn text-white @(Model.CheckedCourse[course] ? "border-success" :  "border-white")" asp-controller="Educator" asp-action="AbsenceList" asp-route-courseId="@course.CourseId" asp-route-dateString="@Model.Date.Date" asp-route-edit="@Model.CheckedCourse[course]">
-          <h2>@course.Name</h2>
-        </a>
+    <div class="row">
+      @if (ViewBag.TypeOfView == "course") {
+        @if (Model.CourseList != null) {
+          @foreach (Course course in Model.CourseList) {
+            <div class="col-6">
+              <a class="card mt-3 mb-1 p-5 bg-dark btn text-white @(Model.CheckedCourse[course] ? "border-success" : "border-white")"
+                 asp-controller="Educator"
+                 asp-action="AbsenceList"
+                 asp-route-courseId="@course.CourseId"
+                 asp-route-dateString="@Model.Date.Date"
+                 asp-route-edit="@Model.CheckedCourse[course]">
+                <h2>@course.Name</h2>
+              </a>
+            </div>
+          }
+        }
+      } else if (ViewBag.TypeOfView == "education") {
+        @if (Model.EducationList != null) {
+          @foreach (Education education in Model.EducationList) {
+            <div class="col-6">
+              <a class="card mt-3 mb-1 p-5 bg-dark btn text-white @(Model.CheckedEducation[education] ? "border-success" :  "border-white")"
+                 asp-controller="Educator"
+                 asp-action="AbsenceList"
+                 asp-route-educationId="@education.EducationId"
+                 asp-route-dateString="@Model.Date.Date"
+                 asp-route-edit="@Model.CheckedEducation[education]">
+                <h2>@education.Name</h2>
+              </a>
+            </div>
+          }
+        }
       }
-    }
+    </div>
   </div>
 </body>
