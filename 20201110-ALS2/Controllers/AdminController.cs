@@ -243,7 +243,6 @@ namespace _20201110_ALS2.Controllers {
 
         return View("EditPermissionsInRole", roleClaimsStore);
       }
-      ViewBag.ErrorMessage = "Rolle med id = " + roleId + " kunne ikke findes";
 
       return View("NotFound");
     }
@@ -251,24 +250,23 @@ namespace _20201110_ALS2.Controllers {
     [HttpPost]
     public async Task<IActionResult> EditPermissionsForRole(Dictionary<string, bool> claimsConnectedToRole, string roleId) {
       IdentityRole role = await roleManager.FindByIdAsync(roleId);
-      
+
       if (role != null) {
         Dictionary<string, bool> roleClaimsStore = RoleClaimsStore(role);
 
         foreach (string claim in claimsConnectedToRole.Keys) {
-          Claim  newClaim = new Claim(claim, claim);
-          if (claimsConnectedToRole[claim] && claimsConnectedToRole[claim] != roleClaimsStore[claim]) {
-            await roleManager.AddClaimAsync(role, newClaim);
-          } else {
-            await roleManager.RemoveClaimAsync(role, newClaim);
+          if (claim != "__RequestVerificationToken") {
+            Claim newClaim = new Claim(claim, claim);
+            if (claimsConnectedToRole[claim] && claimsConnectedToRole[claim] != roleClaimsStore[claim]) {
+              await roleManager.AddClaimAsync(role, newClaim);
+            } else if (!claimsConnectedToRole[claim] && claimsConnectedToRole[claim] != roleClaimsStore[claim]) {
+              await roleManager.RemoveClaimAsync(role, newClaim);
+            }
           }
-
-
         }
 
         return RedirectToAction("EditRole", new { roleId = roleId });
       }
-      ViewBag.ErrorMessage = "Rolle med id = " + roleId + " kunne ikke findes";
 
       return View("NotFound");
     }
@@ -289,11 +287,9 @@ namespace _20201110_ALS2.Controllers {
         }
 
         return View("ListRoles");
-      } else {
-        ViewBag.ErrorMessage = "Rolle med id = " + roleId + " kunne ikke findes";
-
-        return View("NotFound");
       }
+
+      return View("NotFound");
     }
 
     private Dictionary<string, bool> RoleClaimsStore(IdentityRole role) {
@@ -305,7 +301,7 @@ namespace _20201110_ALS2.Controllers {
 
       Task<IList<Claim>> roleClaims = roleManager.GetClaimsAsync(role);
       List<Claim> claimsList = (List<Claim>)roleClaims.Result;
-      
+
       foreach (Claim claimAdmin in adminClaimList) {
         bool claimIsInRole = false;
         foreach (Claim claim in claimsList) {

@@ -27,7 +27,7 @@
             </span>
 
             <span id="deleteSpan_@role.Id">
-              <a class="btn btn-danger" onclick="confirmDelete('@role.Id', true)">Slet</a>
+              <a class="btn btn-danger text-white" onclick="confirmDelete('@role.Id', true)">Slet</a>
             </span>
           </form>
         </div>
@@ -45,6 +45,10 @@
       </div>
     </div>
   }
-  
+
   <a class="btn btn-success" style="width: auto" asp-controller="Admin" asp-action="CreateRole"> Opret rolle</a>
 </div>
+
+@section Scripts{
+  <script src="~/js/CustomConfirmDeleteSpanScript.js"></script>
+}

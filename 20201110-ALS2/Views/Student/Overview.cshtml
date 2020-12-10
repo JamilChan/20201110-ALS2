@@ -6,38 +6,40 @@
   <div class="row mt-3 justify-content-center">
     <table class="table table-striped bg-white col-12">
       <thead>
-      <tr>
-        <th>ID</th>
-        <th class="w-25">Navn</th>
-        <th>Uddannelse</th>
-        <th>Semester</th>
-        <th></th>
-      </tr>
+        <tr>
+          <th>ID</th>
+          <th class="w-25">Navn</th>
+          <th>Uddannelse</th>
+          <th>Semester</th>
+          <th></th>
+        </tr>
       </thead>
 
       <tbody>
-      @foreach (Student s in Model) {
-        <tr>
-          <td>@s.StudentId</td>
-          <td>@s.Name</td>
-          <td>@s.Education.Name</td>
-          <td>@s.Semester</td>
-          <td>
-            <form asp-controller="Student" asp-action="DeleteStudent">
-              <input type="hidden" name="studentId" value="@s.StudentId" />
-              @if ((await authorizationService.AuthorizeAsync(User, "HåndterStuderendePolicy")).Succeeded) {
-                <a class="btn btn-warning" asp-controller="Student" asp-action="Crud" asp-route-crud="edit" asp-route-studentId="@s.StudentId">Rediger</a>
-              }
-              @if ((await authorizationService.AuthorizeAsync(User, "SletStuderendePolicy")).Succeeded) {
-                <input class="btn btn-danger" type="submit" value="Slet" />
-              }
-            </form>
-          </td>
-        </tr>
-      }
+        @foreach (Student s in Model) {
+          <tr>
+            <td>@s.StudentId</td>
+            <td>@s.Name</td>
+            <td>@s.Education.Name</td>
+            <td>@s.Semester</td>
+            <td>
+              <form asp-controller="Student" asp-action="DeleteStudent">
+                <input type="hidden" name="studentId" value="@s.StudentId" />
+                @if ((await authorizationService.AuthorizeAsync(User, "HåndterStuderendePolicy")).Succeeded) {
+                  <a class="btn btn-warning" asp-controller="Student" asp-action="Crud" asp-route-crud="edit" asp-route-studentId="@s.StudentId">Rediger</a>
+                }
+                @if ((await authorizationService.AuthorizeAsync(User, "SletStuderendePolicy")).Succeeded) {
+                  <input class="btn btn-danger" type="submit" value="Slet" />
+                }
+              </form>
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
-    <a class="btn btn-lg bg-success font-weight-bold text-white mt-3 w-25" style="padding-top: 20px; padding-bottom: 20px" asp-controller="Student" asp-action="Crud" asp-route-crud="create">Opret en Studerende</a>
+    @if ((await authorizationService.AuthorizeAsync(User, "HåndterStuderendePolicy")).Succeeded) {
+      <a class="btn btn-lg bg-success font-weight-bold text-white mt-3 w-25" style="padding-top: 20px; padding-bottom: 20px" asp-controller="Student" asp-action="Crud" asp-route-crud="create">Opret en Studerende</a>
+    }
   </div>
 
 

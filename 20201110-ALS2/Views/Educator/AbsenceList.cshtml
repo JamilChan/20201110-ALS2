@@ -40,8 +40,8 @@
             <th class="text-center w-25" style="cursor: pointer" onclick="sortTable(0)">Navn<i class="fa fa-fw fa-sort float-right m-1"></i></th>
             <th class="text-center">Fremmødt</th>
             <th class="text-center">Virtuelt Tilstede</th>
-            <th class="text-center" style="cursor: pointer" onclick="sortTable(4)">Fraværende</th>
-            <th class="text-center" style="display: none">Fravær</th>
+            <th class="text-center">Fraværende</th>
+            <th class="text-center" style="cursor: pointer" onclick="sortTable(4)">Fravær</th>
           </tr>
         </thead>
         <tbody>
@@ -64,7 +64,7 @@
                     <td class="text-center">
                       <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(a.Status == "absent")">
                     </td>
-                    <td class="text-center" style="display: none">
+                    <td class="text-center" style="display: ">
                       <h5>@Model.IndicationList[i]</h5>
                     </td>
                   </tr>
@@ -88,7 +88,7 @@
                 <td class="text-center">
                   <input type="radio" value="@Model.StudentsList[i].StudentId:absent" asp-for="@Model.StatusList[i]" checked="@(ViewBag.Check == false)">
                 </td>
-                <td class="text-center" style="display: none">
+                <td class="text-center" style="display: ">
                   <h5>@Model.IndicationList[i]</h5>
                 </td>
               </tr>

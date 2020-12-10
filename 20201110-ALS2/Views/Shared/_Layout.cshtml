@@ -16,62 +16,63 @@
 </head>
 
 <body style="background-color: #454b52">
-  <header>
-    <nav class="bg-dark col-12 pt-2 border-bottom">
-      <div class="row ml-5">
-        <div class="col-10 row">
 
-          <a class="astuff" asp-controller="Home" asp-action="Index">Home</a>
+  @if (signInManager.IsSignedIn(User)) {
+    <header>
+      <nav class="bg-dark col-12 pt-2 border-bottom">
+        <div class="row ml-5">
+          <div class="col-10 row">
 
-          @if ((await authorizationService.AuthorizeAsync(User, "SeStuderendePolicy")).Succeeded) {
-            <a class="astuff" asp-action="Overview" asp-controller="Student">Studerende</a>
-          }
-          @if ((await authorizationService.AuthorizeAsync(User, "SeFagPolicy")).Succeeded) {
-            <a class="astuff" asp-action="ViewCourses" asp-controller="Educator">Fag</a>
-          }
-          @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin")) {
-            <a class="astuff" asp-action="Overview" asp-controller="Education">Uddannelse</a>
-          }
-          @if ((await authorizationService.AuthorizeAsync(User, "SeFraværPolicy")).Succeeded) {
-            <a class="text-white astuff" id="dropDownStats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Statestik</a>
-            <div class="dropdown-menu border border-info p-2 rounded" aria-labelledby="dropDownStats">
-              <a class="dropdown-item bg-light" asp-controller="Charts" asp-action="CourseStudentsDays">Dage</a>
-              <hr />
-              <a class="dropdown-item bg-light" asp-controller="Charts" asp-action="CourseStudents">Semester</a>
-            </div>
-          }
+            <a class="astuff" asp-controller="Home" asp-action="Index">Hjem</a>
 
-          @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin")) {
-            <div class="pl-3 mt-3" style="border-left:1px solid white; height: 50px;"></div>
-            <a class="astuff" asp-controller="Admin" asp-action="Index">Undervisere</a>
-            <a class="astuff" asp-controller="Admin" asp-action="ListRoles">Roller</a>
-          }
-        </div>
+            @if ((await authorizationService.AuthorizeAsync(User, "SeStuderendePolicy")).Succeeded) {
+              <a class="astuff" asp-action="Overview" asp-controller="Student">Studerende</a>
+            }
+            @if ((await authorizationService.AuthorizeAsync(User, "SeFagPolicy")).Succeeded) {
+              <a class="astuff" asp-action="ViewCourses" asp-controller="Educator">Fag</a>
+            }
+            @if ((await authorizationService.AuthorizeAsync(User, "SeFraværPolicy")).Succeeded) {
+              <a class="text-white astuff"  id="dropDownStats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Statestik</a>
+              <div class="dropdown-menu border border-info p-2 rounded" aria-labelledby="dropDownStats">
+                <a class="dropdown-item bg-light" asp-controller="Charts" asp-action="CourseStudentsDays">Dage</a>
+                <hr />
+                <a class="dropdown-item bg-light" asp-controller="Charts" asp-action="CourseStudents">Semester</a>
+              </div>
+            }
 
-        <div class="col-2 ml-4">
-          @if (signInManager.IsSignedIn(User)) {
-            <div class="row">
-              <div>
-                <form method="post" asp-action="Logout" asp-controller="Account">
-                  <input class="p-3 mt-2" type="submit" value="Log out" />
-                </form>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin")) {
+              <div class="pl-3 mt-3" style="border-left: 1px solid white; height: 50px;"></div>
+              <a class="astuff" asp-action="Overview" asp-controller="Education">Uddannelse</a>
+              <a class="astuff" asp-controller="Admin" asp-action="ListRoles">Roller</a>
+              <a class="astuff" asp-controller="Admin" asp-action="Index">Undervisere</a>
+            }
+          </div>
+
+          <div class="col-2 ml-4">
+            @if (signInManager.IsSignedIn(User)) {
+              <div class="row">
+                <div>
+                  <form method="post" asp-action="Logout" asp-controller="Account">
+                    <input class="p-3 mt-2" style="color: white; font-size: 20px; cursor: pointer; background-color: transparent; border: transparent" type="submit" value="Log ud" />
+                  </form>
+                </div>
+
+                <a class="pt-0 text-center" asp-action="EditPassword" asp-controller="Account">
+                  <i class="fas fa-user-cog offset-1" style="font-size: 50px"></i>
+                  <h5>@User.Identity.Name</h5>
+                </a>
               </div>
 
-              <a class="pt-0 text-center" asp-action="EditPassword" asp-controller="Account">
-                <i class="fas fa-user-cog offset-1" style="font-size: 50px"></i>
-                <h5>@User.Identity.Name</h5>
-              </a>
-            </div>
-
-
-          } else {
-            <a asp-action="Login" asp-controller="Account">Log In</a>
-          }
+            } else {
+              <div class="mt-4 mb-4">
+                <a asp-action="Login" asp-controller="Account">Log In</a>
+              </div>
+            }
+          </div>
         </div>
-      </div>
-    </nav>
-  </header>
-
+      </nav>
+    </header>
+  }
   <div class="p-5">
     <main role="main" class="pb-3 ">
       @RenderBody()
@@ -90,6 +91,9 @@
 </body>
 </html>
 
+@if (IsSectionDefined("Scripts")) {
+  @await RenderSectionAsync("Scripts", required: true)
+}
 
 <style>
   .vl {
@@ -107,14 +111,6 @@
       color: #17a2b8;
       text-decoration: none;
     }
-
-  input {
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: transparent;
-    border: transparent
-  }
 
   input:hover {
     color: #17a2b8;

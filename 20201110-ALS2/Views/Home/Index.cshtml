@@ -4,7 +4,7 @@
   <div class="">
     <div class="row">
       <h1 class="text-white col-11">
-        Main Menu
+        Oversigt
       </h1>
 
       <div class="col-1 mt-3">
@@ -34,11 +34,11 @@
         </form>
       </div>
       <div class="col-10 text-center">
-        <h3 class="text-white">@Model.Date.DayOfWeek</h3>
+        <h3 class="text-white">@ViewBag.Dag</h3>
         <form asp-controller="Home" asp-action="Index" method="post">
-          <input type="hidden" asp-for="@Model.Direction" value="" />
-          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()" />
-          <input type="hidden" asp-for="@Model.IsChecked" value="@Model.IsChecked" />
+          <input type="hidden" asp-for="@Model.Direction" value=""/>
+          <input type="date" asp-for="Date" value="@Model.DateAsString" onchange="this.form.submit()"/>
+          <input type="hidden" asp-for="@Model.IsChecked" value="@Model.IsChecked"/>
         </form>
       </div>
       <div class="col-1 pt-2">

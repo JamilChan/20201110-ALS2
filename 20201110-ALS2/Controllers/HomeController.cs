@@ -4,26 +4,32 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace _20201110_ALS2.Controllers {
-  [Authorize(Policy = "GivFraværPolicy")]
+  [Authorize]
   public class HomeController : Controller {
     private readonly ICourseRepository courseRepo;
     private readonly IAbsenceRepository absenceRepo;
     private readonly IEducatorRepository educatorRepo;
     private readonly IEducationRepository educationRepo;
+    private readonly UserManager<ApplicationUser> userManager;
+    private readonly SignInManager<ApplicationUser> signInManager;
 
-    public HomeController(ICourseRepository courseRepo, IAbsenceRepository absenceRepo, IEducatorRepository educatorRepo, IEducationRepository educationRepo) {
+    public HomeController(ICourseRepository courseRepo, IAbsenceRepository absenceRepo, IEducatorRepository educatorRepo, IEducationRepository educationRepo, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) {
       this.courseRepo = courseRepo;
       this.absenceRepo = absenceRepo;
       this.educatorRepo = educatorRepo;
       this.educationRepo = educationRepo;
+      this.userManager = userManager;
+      this.signInManager = signInManager;
     }
 
     [HttpGet]
-    public IActionResult Index() {
-      Educator educator = educatorRepo.Get(2);
+    public async Task<IActionResult> Index() {
+      Educator educator = educatorRepo.Get((await userManager.GetUserAsync(User)).EducatorId);
       List<Education> identityEducation = educationRepo.EducationsByEducator(educator);
 
       HomeIndexViewModel model = new HomeIndexViewModel {
@@ -49,13 +55,14 @@ namespace _20201110_ALS2.Controllers {
       model.CheckedEducation = absenceRepo.EducationHasAbsence(model.EducationList, model.Date);
 
       ViewBag.TypeOfView = "education";
+      ViewBag.Dag = new System.Globalization.CultureInfo("da-DA").DateTimeFormat.GetDayName(model.Date.DayOfWeek).ToUpper();
 
       return View("Index", model);
     }
 
     [HttpPost]
-    public IActionResult Index(HomeIndexViewModel model) {
-      Educator educator = educatorRepo.Get(2);
+    public async Task<IActionResult> Index(HomeIndexViewModel model) {
+      Educator educator = educatorRepo.Get((await userManager.GetUserAsync(User)).EducatorId);
       DateTime dateTime = model.Date;
       model.CourseList = new List<Course>();
 
@@ -95,6 +102,7 @@ namespace _20201110_ALS2.Controllers {
 
         ViewBag.TypeOfView = "education";
       }
+      ViewBag.Dag = new System.Globalization.CultureInfo("da-DA").DateTimeFormat.GetDayName(model.Date.DayOfWeek).ToUpper();
 
       return View("Index", model);
     }
